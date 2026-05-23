@@ -1,21 +1,23 @@
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
+import Navbar from "@/components/layout/Navbar"
+import Footer from "@/components/layout/Footer"
+import Hero from "@/components/landing/Hero"
+import Features from "@/components/landing/Features"
+import Levels from "@/components/landing/Levels"
+import HowItWorks from "@/components/landing/HowItWorks"
+import Teachers from "@/components/landing/Teachers"
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 text-center">
-      <h1 className="text-6xl font-display text-primary mb-4">Maestria</h1>
-      <p className="text-2xl font-body text-secondary mb-8 italic">
-        &quot;Domina l&apos;italiano. Un testo alla volta.&quot;
-      </p>
-      <div className="flex gap-4">
-        <Link href="/login">
-          <Button>Accedi</Button>
-        </Link>
-        <Link href="/register">
-          <Button variant="outline">Registrati</Button>
-        </Link>
-      </div>
-    </main>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        <Hero />
+        <Features />
+        <Levels />
+        <HowItWorks />
+        <Teachers />
+      </main>
+      <Footer />
+    </div>
   )
 }
