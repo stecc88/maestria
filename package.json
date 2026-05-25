@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "latest",
     "@google/generative-ai": "latest",
+    "@hookform/resolvers": "^5.4.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "class-variance-authority": "latest",
@@ -21,11 +22,13 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.76.1",
     "react-hot-toast": "latest",
     "recharts": "latest",
     "shadcn": "latest",
     "tailwind-merge": "latest",
-    "tailwindcss-animate": "latest"
+    "tailwindcss-animate": "latest",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
