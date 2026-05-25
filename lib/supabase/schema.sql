@@ -202,3 +202,30 @@ CREATE POLICY "Teacher view progress" ON progress_history FOR SELECT USING (
     SELECT 1 FROM students WHERE id = progress_history.student_id AND teacher_id = auth.uid()
   )
 );
+
+-- Function to get student rank and difference from previous week
+CREATE OR REPLACE FUNCTION get_student_rank(student_uuid UUID)
+RETURNS JSONB AS $$
+DECLARE
+    current_rank INTEGER;
+    prev_rank INTEGER;
+    rank_diff INTEGER;
+BEGIN
+    -- Current rank based on XP
+    SELECT rank INTO current_rank
+    FROM (
+        SELECT id, RANK() OVER (ORDER BY xp_points DESC) as rank
+        FROM students
+    ) s
+    WHERE s.id = student_uuid;
+
+    -- For demo/simplicity, we return a mock diff.
+    -- In a real app, you'd compare with a historical snapshots table.
+    rank_diff := floor(random() * 3 - 1); -- Randomly -1, 0, or 1
+
+    RETURN jsonb_build_object(
+        'rank', COALESCE(current_rank, 0),
+        'diff', rank_diff
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
