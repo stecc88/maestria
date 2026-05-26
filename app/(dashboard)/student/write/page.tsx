@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
+import React, { useState, useEffect, useCallback, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   Mail,
   MessageSquare,
@@ -54,10 +54,11 @@ const LOADING_MESSAGES = [
   "Preparando tu feedback...",
 ]
 
-export default function WritePage() {
+function WriteForm() {
   const router = useRouter()
-  const [textType, setTextType] = useState("email_formal")
-  const [level, setLevel] = useState("B1")
+  const searchParams = useSearchParams()
+  const [textType, setTextType] = useState(searchParams.get("type") || "email_formal")
+  const [level, setLevel] = useState(searchParams.get("level") || "B1")
   const [prompt, setPrompt] = useState("")
   const [content, setContent] = useState("")
   const [wordCount, setWordCount] = useState(0)
@@ -105,6 +106,14 @@ export default function WritePage() {
     }
     return () => clearInterval(interval)
   }, [isSubmitting])
+
+  // Update state if query params change (e.g. navigation from guides)
+  useEffect(() => {
+    const typeParam = searchParams.get("type")
+    const levelParam = searchParams.get("level")
+    if (typeParam) setTextType(typeParam)
+    if (levelParam) setLevel(levelParam)
+  }, [searchParams])
 
   const handleSubmit = async () => {
     if (wordCount < 10) {
@@ -260,5 +269,13 @@ export default function WritePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function WritePage() {
+  return (
+    <Suspense fallback={<div>Caricamento...</div>}>
+      <WriteForm />
+    </Suspense>
   )
 }
