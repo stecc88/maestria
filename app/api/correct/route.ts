@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 import { getCorrectionFromGemini } from "@/lib/gemini/correction"
+import { calculateXpForCorrection } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
     if (writingError) throw writingError
 
     // b. Save Correction
-    const xpEarned = 50 + Math.floor((result.overall_score || 0) / 2)
+    const xpEarned = calculateXpForCorrection(result.overall_score || 0)
 
     const { data: correction, error: correctionError } = await supabase
       .from("corrections")

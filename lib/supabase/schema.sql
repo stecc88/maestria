@@ -229,3 +229,6 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Add achievements column to students table
+ALTER TABLE students ADD COLUMN IF NOT EXISTS achievements JSONB DEFAULT '[]'::jsonb;

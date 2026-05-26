@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import { calculateXpForTask } from "@/lib/utils/xp"
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
@@ -38,7 +39,7 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
     const geminiResponse = JSON.parse(result.response.text())
 
     // 2. Save Submission
-    const xpEarned = 75 + Math.floor(geminiResponse.score / 4)
+    const xpEarned = calculateXpForTask(geminiResponse.score)
 
     const { data: submission, error: subError } = await supabase
       .from("task_submissions")
