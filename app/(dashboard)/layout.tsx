@@ -53,6 +53,20 @@ export default async function DashboardLayout({
     }
   }
 
+  // Fetch teacher specific data if role is teacher
+  let teacherData = null
+  if (profile.role === 'teacher') {
+    const { data: teacher } = await supabase
+      .from('teachers')
+      .select('teacher_code')
+      .eq('id', user.id)
+      .single()
+
+    if (teacher) {
+      teacherData = teacher
+    }
+  }
+
   // Fetch notifications
   const { data: notifications } = await supabase
     .from('notifications')
@@ -65,7 +79,7 @@ export default async function DashboardLayout({
     <div className="flex min-h-screen bg-cream/30">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-40">
-        <Sidebar user={profile} studentData={studentData} />
+        <Sidebar user={profile} studentData={studentData} teacherData={teacherData} />
       </aside>
 
       {/* Main Content Area */}
@@ -73,6 +87,7 @@ export default async function DashboardLayout({
         <Header
           user={profile}
           studentData={studentData}
+          teacherData={teacherData}
           notifications={notifications || []}
         />
         <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">

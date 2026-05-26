@@ -16,10 +16,11 @@ interface HeaderProps {
     role: string
   }
   studentData?: any
+  teacherData?: any
   notifications?: any[]
 }
 
-export function Header({ user, studentData, notifications }: HeaderProps) {
+export function Header({ user, studentData, teacherData, notifications }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white/80 backdrop-blur-md px-4 md:px-8">
       {/* Mobile Toggle & Logo */}
@@ -33,7 +34,7 @@ export function Header({ user, studentData, notifications }: HeaderProps) {
             }
           />
           <SheetContent side="left" className="p-0 w-[280px]">
-            <Sidebar user={user} studentData={studentData} isMobile />
+            <Sidebar user={user} studentData={studentData} teacherData={teacherData} isMobile />
           </SheetContent>
         </Sheet>
         <Link href="/" className="flex items-center gap-2">

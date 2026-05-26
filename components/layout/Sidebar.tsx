@@ -40,9 +40,12 @@ interface SidebarProps {
   }
   isMobile?: boolean
   onClose?: () => void
+  teacherData?: {
+    teacher_code: string
+  }
 }
 
-const navItems = [
+const studentNavItems = [
   { label: "Mi progreso", href: "/student", icon: LayoutDashboard },
   { label: "Enviar texto", href: "/student/write", icon: PenLine },
   { label: "Mis correcciones", href: "/student/corrections", icon: FileText },
@@ -52,7 +55,15 @@ const navItems = [
   { label: "Mi perfil", href: "/student/profile", icon: Settings },
 ]
 
-export function Sidebar({ user, studentData, isMobile, onClose }: SidebarProps) {
+const teacherNavItems = [
+  { label: "Mi panel", href: "/teacher", icon: LayoutDashboard },
+  { label: "Mis alumnos", href: "/teacher/students", icon: Trophy },
+  { label: "Tareas generadas", href: "/teacher/tasks", icon: ClipboardList },
+  { label: "Notificaciones", href: "/teacher/notifications", icon: LayoutDashboard },
+  { label: "Mi perfil", href: "/teacher/profile", icon: Settings },
+]
+
+export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: SidebarProps) {
   const pathname = usePathname()
 
   const xpPercentage = studentData ? (studentData.xp_points / studentData.target_xp) * 100 : 0
@@ -88,32 +99,45 @@ export function Sidebar({ user, studentData, isMobile, onClose }: SidebarProps) 
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-gray-900 truncate">{user.full_name}</p>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-2 py-0">
-                {studentData?.current_level || 'A1'}
-              </Badge>
+              {user.role === 'student' ? (
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-2 py-0">
+                  {studentData?.current_level || 'A1'}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="border-primary text-primary text-[10px] uppercase font-bold px-2 py-0">
+                  Profesor
+                </Badge>
+              )}
             </div>
           </div>
 
-          {/* XP Progress */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs font-medium">
-              <span className="text-gray-500">XP: {studentData?.xp_points || 0} / {studentData?.target_xp || 1000}</span>
-              <span className="text-primary">{studentData?.next_level_name || 'Praticante'}</span>
+          {/* Role-specific summary info */}
+          {user.role === 'student' ? (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-medium">
+                <span className="text-gray-500">XP: {studentData?.xp_points || 0} / {studentData?.target_xp || 1000}</span>
+                <span className="text-primary">{studentData?.next_level_name || 'Praticante'}</span>
+              </div>
+              <div className="relative h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${xpPercentage}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-primary-dark"
+                />
+              </div>
             </div>
-            <div className="relative h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPercentage}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-primary-dark"
-              />
+          ) : (
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Código docente</p>
+              <p className="text-lg font-display font-bold text-primary">{teacherData?.teacher_code || '---'}</p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Navigation */}
         <nav className="space-y-1">
-          {navItems.map((item) => {
+          {(user.role === 'teacher' ? teacherNavItems : studentNavItems).map((item) => {
             const isActive = pathname === item.href
             return (
               <Link
