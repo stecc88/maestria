@@ -34,7 +34,6 @@ export default function LoginPage() {
         toast.error(result.error)
       } else {
         toast.success("¡Bienvenido de nuevo!")
-        router.push("/")
         router.refresh()
       }
     } catch (error) {
