@@ -17,7 +17,7 @@ export default async function RankingPage() {
   // 1. Fetch Global Ranking
   const { data: students } = await supabase
     .from("students")
-    .select("id, xp_points, streak_days, target_level, profiles(full_name, avatar_url)")
+    .select("id, xp_points, streak_days, target_level, teacher_id, achievements, profiles(full_name, avatar_url)")
     .order("xp_points", { ascending: false })
 
   if (!students) return <div>Cargando ranking...</div>
@@ -31,11 +31,11 @@ export default async function RankingPage() {
   const myTeacherId = me?.teacher_id
   const { data: classStudents } = await supabase
     .from("students")
-    .select("id, xp_points, profiles(full_name, avatar_url), teachers(profiles(full_name))")
+    .select("id, xp_points, profiles(full_name, avatar_url), teachers:teacher_id(profiles(full_name))")
     .eq("teacher_id", myTeacherId || "")
     .order("xp_points", { ascending: false })
 
-  const teacherName = classStudents?.[0]?.teachers?.profiles?.full_name || "tu profesor"
+  const teacherName = (classStudents?.[0]?.teachers as any)?.profiles?.full_name || "tu profesor"
 
   return (
     <div className="min-h-screen bg-[#0F0F0F] -m-4 md:-m-8 p-4 md:p-8 text-white space-y-12 pb-20">

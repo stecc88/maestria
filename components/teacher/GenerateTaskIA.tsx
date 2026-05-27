@@ -178,7 +178,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label className="font-bold text-gray-700">1. Basar en este texto:</Label>
-            <Select onValueChange={setSelectedWritingId}>
+            <Select onValueChange={(value: string | null) => setSelectedWritingId(value || "")}>
               <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Seleccionar un texto reciente..." />
               </SelectTrigger>
@@ -194,7 +194,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
 
           <div className="space-y-2">
             <Label className="font-bold text-gray-700">2. Error a trabajar:</Label>
-            <Select value={errorType} onValueChange={setErrorType}>
+            <Select value={errorType} onValueChange={(value: string | null) => setErrorType(value || "gramatica")}>
               <SelectTrigger className="bg-white">
                 <SelectValue />
               </SelectTrigger>

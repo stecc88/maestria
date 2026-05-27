@@ -61,12 +61,20 @@ const teacherNavItems = [
   { label: "Tareas generadas", href: "/teacher/tasks", icon: ClipboardList },
   { label: "Notificaciones", href: "/teacher/notifications", icon: LayoutDashboard },
   { label: "Mi perfil", href: "/teacher/profile", icon: Settings },
-]
+] as const
+
+type NavItem = {
+  label: string
+  href: string
+  icon: typeof LayoutDashboard
+  badge?: boolean
+}
 
 export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: SidebarProps) {
   const pathname = usePathname()
 
   const xpPercentage = studentData ? (studentData.xp_points / studentData.target_xp) * 100 : 0
+  const navItems = (user.role === 'teacher' ? teacherNavItems : studentNavItems) as readonly NavItem[]
 
   const NavContent = (
     <div className="flex flex-col h-full bg-white border-r border-gray-200">
@@ -137,7 +145,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
 
         {/* Navigation */}
         <nav className="space-y-1">
-          {(user.role === 'teacher' ? teacherNavItems : studentNavItems).map((item) => {
+          {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
               <Link
