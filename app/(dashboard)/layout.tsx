@@ -79,15 +79,15 @@ export default async function DashboardLayout({
     <div className="flex min-h-screen bg-cream/30">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-40">
-        <Sidebar user={profile} studentData={studentData} teacherData={teacherData} />
+        <Sidebar user={profile} studentData={studentData ?? undefined} teacherData={teacherData ?? undefined} />
       </aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:pl-72">
         <Header
           user={profile}
-          studentData={studentData}
-          teacherData={teacherData}
+          studentData={studentData ?? undefined}
+          teacherData={teacherData ?? undefined}
           notifications={notifications || []}
         />
         <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
