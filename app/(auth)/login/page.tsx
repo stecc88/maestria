@@ -34,6 +34,20 @@ export default function LoginPage() {
         toast.error(result.error)
       } else {
         toast.success("¡Bienvenido de nuevo!")
+
+        // Handle explicit redirection based on profile status and role
+        if (result.profile) {
+          if (result.profile.status === 'pending') {
+            router.push('/pending-approval')
+          } else if (result.profile.status === 'rejected') {
+            router.push('/rejected')
+          } else {
+            router.push(`/${result.profile.role}`)
+          }
+        } else {
+          router.push("/")
+        }
+
         router.refresh()
       }
     } catch (error) {

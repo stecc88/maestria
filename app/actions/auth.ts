@@ -23,9 +23,17 @@ export async function signIn(formData: any) {
     return { error: error.message }
   }
 
-  // Role based redirection happens in middleware,
-  // but we can return success here
-  return { success: true }
+  // Fetch profile to get role and status
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, status')
+    .eq('id', data.user.id)
+    .single()
+
+  return {
+    success: true,
+    profile: profile || null
+  }
 }
 
 export async function signUp(formData: any) {
