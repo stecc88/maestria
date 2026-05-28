@@ -36,22 +36,24 @@ export default function LoginPage() {
         toast.success("¡Bienvenido de nuevo!")
 
         // Handle explicit redirection based on profile status and role
-        if (result.profile) {
-          let targetUrl = `/${result.profile.role}`
-
-          if (result.profile.status === 'pending') {
-            targetUrl = '/pending-approval'
-          } else if (result.profile.status === 'rejected') {
-            targetUrl = '/rejected'
-          }
-
-          router.refresh()
-          setTimeout(() => {
-            router.push(targetUrl)
-          }, 500)
-        } else {
+        const profile = result.profile
+        if (!profile) {
           router.push("/")
+          return
         }
+
+        let targetUrl = `/${profile.role}`
+
+        if (profile.status === 'pending') {
+          targetUrl = '/pending-approval'
+        } else if (profile.status === 'rejected') {
+          targetUrl = '/rejected'
+        }
+
+        router.refresh()
+        setTimeout(() => {
+          router.push(targetUrl)
+        }, 500)
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado")
