@@ -15,7 +15,9 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Users,
+  CheckCircle2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -63,6 +65,12 @@ const teacherNavItems = [
   { label: "Mi perfil", href: "/teacher/profile", icon: Settings },
 ] as const
 
+const adminNavItems = [
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Aprobaciones", href: "/admin/approvals", icon: CheckCircle2 },
+  { label: "Usuarios", href: "/admin/users", icon: Users },
+] as const
+
 type NavItem = {
   label: string
   href: string
@@ -74,7 +82,10 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
   const pathname = usePathname()
 
   const xpPercentage = studentData ? (studentData.xp_points / studentData.target_xp) * 100 : 0
-  const navItems = (user.role === 'teacher' ? teacherNavItems : studentNavItems) as readonly NavItem[]
+
+  let navItems: readonly NavItem[] = studentNavItems
+  if (user.role === 'teacher') navItems = teacherNavItems
+  else if (user.role === 'admin') navItems = adminNavItems
 
   const NavContent = (
     <div className="flex flex-col h-full bg-white border-r border-gray-200">
@@ -111,9 +122,13 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
                 <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-2 py-0">
                   {studentData?.current_level || 'A1'}
                 </Badge>
-              ) : (
+              ) : user.role === 'teacher' ? (
                 <Badge variant="outline" className="border-primary text-primary text-[10px] uppercase font-bold px-2 py-0">
                   Profesor
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="border-secondary text-secondary text-[10px] uppercase font-bold px-2 py-0">
+                  Admin
                 </Badge>
               )}
             </div>
