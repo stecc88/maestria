@@ -34,7 +34,22 @@ export default function LoginPage() {
         toast.error(result.error)
       } else {
         toast.success("¡Bienvenido de nuevo!")
-        router.refresh()
+
+        // Handle explicit redirection based on profile status and role
+        if (result.profile) {
+          let targetUrl = `/${result.profile.role}`
+
+          if (result.profile.status === 'pending') {
+            targetUrl = '/pending-approval'
+          } else if (result.profile.status === 'rejected') {
+            targetUrl = '/rejected'
+          }
+
+          // Use window.location for a hard redirect to ensure session sync
+          window.location.href = targetUrl
+        } else {
+          window.location.href = "/"
+        }
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado")
@@ -95,17 +110,9 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium font-body" htmlFor="password">
-                  Contraseña
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-primary hover:underline font-body"
-                >
-                  ¿Olvidaste tu contraseña?
-                </Link>
-              </div>
+              <label className="text-sm font-medium font-body" htmlFor="password">
+                Contraseña
+              </label>
               <PasswordInput
                 id="password"
                 disabled={isLoading}
