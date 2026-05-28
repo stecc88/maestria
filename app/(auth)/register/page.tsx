@@ -94,10 +94,23 @@ export default function RegisterPage() {
     try {
       const result = await signUp(data)
       if (result?.error) {
-        toast.error(result.error)
+        if (result.error.includes("already registered") || result.error.includes("ya está registrado")) {
+          form.setError("email", { message: "Este email ya está registrado. Intentá iniciar sesión." })
+        } else {
+          toast.error(result.error)
+        }
       } else {
-        toast.success("¡Cuenta creada! Revisa tu email para confirmar.")
-        router.push("/login")
+        // Success messages based on role and context
+        if (data.role === 'teacher') {
+          toast.success("¡Cuenta creada! Un administrador la revisará pronto. Te avisaremos por email.", { duration: 6000 })
+        } else if (data.teacher_code) {
+          toast.success("¡Cuenta creada! Revisá tu email para confirmar tu cuenta.", { duration: 6000 })
+        } else {
+          toast.success("¡Cuenta creada! Un administrador asignará tu cuenta a un profesor.", { duration: 6000 })
+        }
+
+        // Redirection with hard reload
+        window.location.href = "/pending-approval"
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado")

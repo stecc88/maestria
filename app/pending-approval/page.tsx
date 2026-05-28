@@ -5,8 +5,23 @@ import { Clock, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { signOut } from "@/app/actions/auth"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase/client"
+import * as React from "react"
 
 export default function PendingApprovalPage() {
+  const [isEmailConfirmed, setIsEmailConfirmed] = React.useState(true)
+  const supabase = createClient()
+
+  React.useEffect(() => {
+    async function checkUser() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && !user.email_confirmed_at) {
+        setIsEmailConfirmed(false)
+      }
+    }
+    checkUser()
+  }, [supabase])
+
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center p-4">
       <motion.div
@@ -28,10 +43,17 @@ export default function PendingApprovalPage() {
           Tu cuenta está siendo revisada 🕐
         </h1>
 
-        <p className="font-body text-muted-foreground mb-8">
-          Un administrador está revisando tu perfil. Este proceso suele tardar menos de 24 horas.
-          Te enviaremos un correo electrónico una vez que tu cuenta sea aprobada.
-        </p>
+        <div className="font-body text-muted-foreground mb-8 space-y-4">
+          {!isEmailConfirmed && (
+            <div className="p-4 bg-secondary/10 border border-secondary/20 rounded-2xl text-secondary-dark font-bold text-sm">
+              📧 Revisá tu casilla de email y hacé click en el link de confirmación que te enviamos.
+            </div>
+          )}
+          <p>
+            Un administrador está revisando tu perfil. Este proceso suele tardar menos de 24 horas.
+            Te enviaremos un correo electrónico una vez que tu cuenta sea aprobada.
+          </p>
+        </div>
 
         <div className="space-y-4">
           <Button
