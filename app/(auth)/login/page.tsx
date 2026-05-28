@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/auth/PasswordInput"
 import { loginSchema, type LoginValues } from "@/lib/validations/auth"
-import { signIn } from "@/app/actions/auth"
+import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -28,32 +28,42 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginValues) {
     setIsLoading(true)
-    try {
-      const result = await signIn(data)
-      if (result?.error) {
-        toast.error(result.error)
-      } else {
-        toast.success("¡Bienvenido de nuevo!")
+    const supabase = createClient()
 
-        // Handle explicit redirection based on profile status and role
-        const profile = result.profile
-        if (!profile) {
-          router.push("/")
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      })
+
+      if (authError) {
+        toast.error(authError.message)
+        return
+      }
+
+      if (authData.user) {
+        // Fetch profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role, status')
+          .eq('id', authData.user.id)
+          .single()
+
+        if (profileError || !profile) {
+          toast.error("No se encontró el perfil de usuario. Contacte a soporte.")
           return
         }
 
-        let targetUrl = `/${profile.role}`
+        toast.success("¡Bienvenido de nuevo!")
 
+        // Redirection logic
         if (profile.status === 'pending') {
-          targetUrl = '/pending-approval'
+          window.location.href = '/pending-approval'
         } else if (profile.status === 'rejected') {
-          targetUrl = '/rejected'
+          window.location.href = '/rejected'
+        } else {
+          window.location.href = `/${profile.role}`
         }
-
-        router.refresh()
-        setTimeout(() => {
-          router.push(targetUrl)
-        }, 500)
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado")
