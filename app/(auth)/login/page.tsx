@@ -45,10 +45,12 @@ export default function LoginPage() {
             targetUrl = '/rejected'
           }
 
-          // Use window.location for a hard redirect to ensure session sync
-          window.location.href = targetUrl
+          router.refresh()
+          setTimeout(() => {
+            router.push(targetUrl)
+          }, 500)
         } else {
-          window.location.href = "/"
+          router.push("/")
         }
       }
     } catch (error) {
