@@ -24,15 +24,19 @@ export async function signIn(formData: any) {
   }
 
   // Fetch profile to get role and status
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('role, status')
     .eq('id', data.user.id)
     .single()
 
+  if (profileError || !profile) {
+    return { error: "No se encontró el perfil de usuario. Contacte a soporte." }
+  }
+
   return {
     success: true,
-    profile: profile || null
+    profile
   }
 }
 
