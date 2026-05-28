@@ -23,9 +23,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+          supabaseResponse = NextResponse.next({ request })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -34,23 +32,21 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
+  const { data: { user } } = await supabase.auth.getUser()
   const url = request.nextUrl.clone()
 
-  // 1. If no user and trying to access protected routes
-  if (!user && (
-    url.pathname.startsWith('/student') ||
-    url.pathname.startsWith('/teacher') ||
-    url.pathname.startsWith('/admin')
-  )) {
+  // Rutas públicas que nunca se interceptan
+  const publicPaths = ['/login', '/register', '/pending-approval', '/rejected', '/forgot-password']
+  const isPublicPath = publicPaths.some(path => url.pathname.startsWith(path))
+  const isRootPath = url.pathname === '/'
+
+  // Si no hay usuario y quiere acceder a rutas protegidas → login
+  if (!user && !isPublicPath && !isRootPath) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // 2. If user exists, check profile for role and status
-  if (user) {
+  // Si hay usuario y quiere acceder a rutas protegidas
+  if (user && !isPublicPath) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role, status')
@@ -58,27 +54,30 @@ export async function middleware(request: NextRequest) {
       .single()
 
     if (profile) {
-      // Check status
-      if (profile.status === 'pending' && url.pathname !== '/pending-approval') {
-         return NextResponse.redirect(new URL('/pending-approval', request.url))
+      // Verificar status
+      if (profile.status === 'pending' && !url.pathname.startsWith('/pending-approval')) {
+        return NextResponse.redirect(new URL('/pending-approval', request.url))
       }
-      if (profile.status === 'rejected' && url.pathname !== '/rejected') {
-         return NextResponse.redirect(new URL('/rejected', request.url))
-      }
-
-      // Check role access and redirection
-      if (url.pathname === '/login' || url.pathname === '/register' || url.pathname === '/') {
-        return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
+      if (profile.status === 'rejected' && !url.pathname.startsWith('/rejected')) {
+        return NextResponse.redirect(new URL('/rejected', request.url))
       }
 
-      if (url.pathname.startsWith('/student') && profile.role !== 'student') {
+      // Si está en / redirigir al dashboard según rol
+      if (isRootPath && profile.status === 'approved') {
         return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
       }
-      if (url.pathname.startsWith('/teacher') && profile.role !== 'teacher') {
-        return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
-      }
-      if (url.pathname.startsWith('/admin') && profile.role !== 'admin') {
-        return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
+
+      // Verificar que accede a su propia sección
+      if (profile.status === 'approved') {
+        if (url.pathname.startsWith('/student') && profile.role !== 'student') {
+          return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
+        }
+        if (url.pathname.startsWith('/teacher') && profile.role !== 'teacher') {
+          return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
+        }
+        if (url.pathname.startsWith('/admin') && profile.role !== 'admin') {
+          return NextResponse.redirect(new URL(`/${profile.role}`, request.url))
+        }
       }
     }
   }
