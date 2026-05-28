@@ -49,6 +49,7 @@ export async function signUp(formData: any) {
   }
 
   const { email, password, full_name, role, ...extra } = validatedFields.data
+  console.log("1. Iniciando registro", { email, role })
 
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
@@ -67,6 +68,7 @@ export async function signUp(formData: any) {
 
   const userId = authData.user?.id
   if (!userId) return { error: "Error al crear el usuario" }
+  console.log("2. Usuario creado en Auth", { userId })
 
   // 1. Create Profile
   const { error: profileError } = await supabase.from('profiles').insert({
@@ -78,6 +80,7 @@ export async function signUp(formData: any) {
   })
 
   if (profileError) return { error: profileError.message }
+  console.log("3. Perfil creado")
 
   // 2. Role specific data
   if (role === 'student') {
@@ -107,6 +110,7 @@ export async function signUp(formData: any) {
       institution: extra.institution,
     })
   }
+  console.log("4. Datos de rol creados")
 
   // 3. Try to notify first available admin
   const { data: admin } = await supabase
@@ -125,6 +129,7 @@ export async function signUp(formData: any) {
     })
   }
 
+  console.log("5. Registro completo")
   return { success: true }
 }
 

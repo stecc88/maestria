@@ -113,6 +113,7 @@ export default function RegisterPage() {
         window.location.href = "/pending-approval"
       }
     } catch (error) {
+      console.log("Error en registro:", error)
       toast.error("Ocurrió un error inesperado")
     } finally {
       setIsLoading(false)
