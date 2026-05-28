@@ -110,18 +110,9 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium font-body" htmlFor="password">
-                  Contraseña
-                </label>
-                <Link
-                  href="/forgot-password"
-                  prefetch={false}
-                  className="text-xs text-primary hover:underline font-body"
-                >
-                  ¿Olvidaste tu contraseña?
-                </Link>
-              </div>
+              <label className="text-sm font-medium font-body" htmlFor="password">
+                Contraseña
+              </label>
               <PasswordInput
                 id="password"
                 disabled={isLoading}
