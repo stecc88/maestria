@@ -37,18 +37,19 @@ export default function LoginPage() {
 
         // Handle explicit redirection based on profile status and role
         if (result.profile) {
-          if (result.profile.status === 'pending') {
-            router.push('/pending-approval')
-          } else if (result.profile.status === 'rejected') {
-            router.push('/rejected')
-          } else {
-            router.push(`/${result.profile.role}`)
-          }
-        } else {
-          router.push("/")
-        }
+          let targetUrl = `/${result.profile.role}`
 
-        router.refresh()
+          if (result.profile.status === 'pending') {
+            targetUrl = '/pending-approval'
+          } else if (result.profile.status === 'rejected') {
+            targetUrl = '/rejected'
+          }
+
+          // Use window.location for a hard redirect to ensure session sync
+          window.location.href = targetUrl
+        } else {
+          window.location.href = "/"
+        }
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado")
@@ -115,6 +116,7 @@ export default function LoginPage() {
                 </label>
                 <Link
                   href="/forgot-password"
+                  prefetch={false}
                   className="text-xs text-primary hover:underline font-body"
                 >
                   ¿Olvidaste tu contraseña?
