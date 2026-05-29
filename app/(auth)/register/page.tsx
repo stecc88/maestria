@@ -92,29 +92,33 @@ export default function RegisterPage() {
   async function onSubmit(data: RegisterValues) {
     setIsLoading(true)
     try {
+      console.log("Enviando datos:", data)
       const result = await signUp(data)
-      if (result?.error) {
+      console.log("Resultado:", JSON.stringify(result))
+
+      if (!result) {
+        toast.error("No se recibió respuesta del servidor")
+        return
+      }
+
+      if (result.error) {
         if (result.error.includes("already registered") || result.error.includes("ya está registrado")) {
           form.setError("email", { message: "Este email ya está registrado. Intentá iniciar sesión." })
         } else {
-          toast.error(result.error)
+          toast.error("Error: " + result.error)
         }
-      } else {
-        // Success messages based on role and context
-        if (data.role === 'teacher') {
-          toast.success("¡Cuenta creada! Un administrador la revisará pronto. Te avisaremos por email.", { duration: 6000 })
-        } else if (data.teacher_code) {
-          toast.success("¡Cuenta creada! Revisá tu email para confirmar tu cuenta.", { duration: 6000 })
-        } else {
-          toast.success("¡Cuenta creada! Un administrador asignará tu cuenta a un profesor.", { duration: 6000 })
-        }
-
-        // Redirection with hard reload
-        window.location.href = "/pending-approval"
+        return
       }
-    } catch (error) {
-      console.log("Error en registro:", error)
-      toast.error("Ocurrió un error inesperado")
+
+      if (result.success) {
+        toast.success("¡Cuenta creada exitosamente!")
+        window.location.href = '/pending-approval'
+      } else {
+        toast.error("Respuesta inesperada del servidor")
+      }
+    } catch (error: any) {
+      console.log("Error capturado:", error)
+      toast.error("Error inesperado: " + error.message)
     } finally {
       setIsLoading(false)
     }
