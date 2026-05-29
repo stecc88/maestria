@@ -123,6 +123,11 @@ export default function RegisterPage() {
   const nextStep = () => setStep(prev => prev + 1)
   const prevStep = () => setStep(prev => prev - 1)
 
+  const onError = (errors: any) => {
+    console.log("Errores de validación:", errors)
+    toast.error("Hay errores en el formulario: " + JSON.stringify(errors))
+  }
+
   return (
     <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-8 md:p-12">
@@ -134,7 +139,7 @@ export default function RegisterPage() {
             <AuthProgress currentStep={step} totalSteps={3} />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
