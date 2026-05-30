@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { loginSchema, registerSchema } from "@/lib/validations/auth"
 import { redirect } from "next/navigation"
 
@@ -43,6 +44,7 @@ export async function signIn(formData: any) {
 export async function signUp(formData: any) {
   console.log("signUp llamado con:", { email: formData.email, role: formData.role })
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
   const validatedFields = registerSchema.safeParse(formData)
 
   if (!validatedFields.success) {
@@ -73,7 +75,7 @@ export async function signUp(formData: any) {
   console.log("2. Usuario creado en Auth", { userId })
 
   // 1. Create Profile
-  const { error: profileError } = await supabase.from('profiles').insert({
+  const { error: profileError } = await adminSupabase.from('profiles').insert({
     id: userId,
     full_name,
     email,
@@ -88,7 +90,7 @@ export async function signUp(formData: any) {
   if (role === 'student') {
     let teacher_id = null
     if (extra.teacher_code) {
-      const { data: teacher } = await supabase
+      const { data: teacher } = await adminSupabase
         .from('teachers')
         .select('id')
         .eq('teacher_code', extra.teacher_code)
@@ -96,7 +98,7 @@ export async function signUp(formData: any) {
       if (teacher) teacher_id = teacher.id
     }
 
-    await supabase.from('students').insert({
+    await adminSupabase.from('students').insert({
       id: userId,
       teacher_id,
       teacher_code_used: extra.teacher_code,
@@ -105,7 +107,7 @@ export async function signUp(formData: any) {
   } else if (role === 'teacher') {
     const teacherCode = `${full_name.substring(0, 3).toUpperCase()}${new Date().getFullYear()}${Math.floor(100 + Math.random() * 900)}`
 
-    await supabase.from('teachers').insert({
+    await adminSupabase.from('teachers').insert({
       id: userId,
       teacher_code: teacherCode,
       bio: extra.bio,
