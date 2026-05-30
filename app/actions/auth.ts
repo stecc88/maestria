@@ -66,8 +66,8 @@ export async function signUp(formData: any) {
   })
 
   if (authError) {
-    console.log("Error de Supabase Auth:", authError.code, authError.message, authError.status)
-    return { error: authError.message }
+    console.log("Auth error completo:", JSON.stringify(authError))
+    return { error: authError.message + " (código: " + authError.status + ")" }
   }
 
   const userId = authData.user?.id
