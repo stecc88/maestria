@@ -128,8 +128,11 @@ export default function RegisterPage() {
   const prevStep = () => setStep(prev => prev - 1)
 
   const onError = (errors: any) => {
-    console.log("Errores de validación:", errors)
-    toast.error("Hay errores en el formulario: " + JSON.stringify(errors))
+    console.log("Errores de validación:", JSON.stringify(errors))
+    const errorMessages = Object.entries(errors)
+      .map(([field, error]: any) => `${field}: ${error.message}`)
+      .join(', ')
+    toast.error("Campos inválidos: " + errorMessages)
   }
 
   return (
