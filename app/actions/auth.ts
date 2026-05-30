@@ -64,6 +64,7 @@ export async function signUp(formData: any) {
   })
 
   if (authError) {
+    console.log("Error de Supabase Auth:", authError.code, authError.message, authError.status)
     return { error: authError.message }
   }
 
