@@ -41,6 +41,7 @@ export async function signIn(formData: any) {
 }
 
 export async function signUp(formData: any) {
+  console.log("signUp llamado con:", { email: formData.email, role: formData.role })
   const supabase = createClient()
   const validatedFields = registerSchema.safeParse(formData)
 
