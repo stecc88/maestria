@@ -42,7 +42,6 @@ export async function signIn(formData: any) {
 }
 
 export async function signUp(formData: any) {
-  console.log("signUp llamado con:", { email: formData.email, role: formData.role })
   const supabase = createClient()
   const adminSupabase = createAdminClient()
   const validatedFields = registerSchema.safeParse(formData)
@@ -117,7 +116,7 @@ export async function signUp(formData: any) {
   console.log("4. Datos de rol creados")
 
   // 3. Try to notify first available admin
-  const { data: admin } = await supabase
+  const { data: admin } = await adminSupabase
     .from('profiles')
     .select('id')
     .eq('role', 'admin')
