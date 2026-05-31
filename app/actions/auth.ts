@@ -53,6 +53,17 @@ export async function signUp(formData: any) {
   const { email, password, full_name, role, ...extra } = validatedFields.data
   console.log("1. Iniciando registro", { email, role })
 
+  // Check if user already exists in profiles
+  const { data: existingProfile } = await adminSupabase
+    .from('profiles')
+    .select('id')
+    .eq('email', email)
+    .single()
+
+  if (existingProfile) {
+    return { error: "Este email ya está registrado. Intentá iniciar sesión." }
+  }
+
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
@@ -64,13 +75,19 @@ export async function signUp(formData: any) {
     }
   })
 
+  console.log("Debug signUp - authData:", JSON.stringify(authData))
+
   if (authError) {
     console.log("Auth error completo:", JSON.stringify(authError))
     return { error: authError.message + " (código: " + authError.status + ")" }
   }
 
-  const userId = authData.user?.id
-  if (!userId) return { error: "Error al crear el usuario" }
+  // If user is null but no error, it usually means the user exists in Auth but not confirmed
+  if (!authData.user) {
+    return { error: "El usuario ya existe o requiere confirmación por email. Revisá tu casilla." }
+  }
+
+  const userId = authData.user.id
   console.log("2. Usuario creado en Auth", { userId })
 
   // 1. Create Profile
@@ -124,7 +141,7 @@ export async function signUp(formData: any) {
     .single()
 
   if (admin) {
-    await supabase.from('notifications').insert({
+    await adminSupabase.from('notifications').insert({
       user_id: admin.id,
       type: 'new_registration',
       title: 'Nuevo registro',
