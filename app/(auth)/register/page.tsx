@@ -111,13 +111,21 @@ export default function RegisterPage() {
       }
 
       if (result.success) {
-        toast.success("¡Cuenta creada exitosamente!")
+        // Success messages based on role and context
+        if (data.role === 'teacher') {
+          toast.success("¡Cuenta creada! Un administrador la revisará pronto. Te avisaremos por email.", { duration: 6000 })
+        } else if (data.teacher_code) {
+          toast.success("¡Cuenta creada! Revisá tu email para confirmar tu cuenta.", { duration: 6000 })
+        } else {
+          toast.success("¡Cuenta creada! Un administrador asignará tu cuenta a un profesor.", { duration: 6000 })
+        }
+
         window.location.href = '/pending-approval'
       } else {
         toast.error("Respuesta inesperada del servidor")
       }
     } catch (error: any) {
-      console.log("Error capturado:", error)
+      console.log("Error en registro:", error)
       toast.error("Error inesperado: " + error.message)
     } finally {
       setIsLoading(false)

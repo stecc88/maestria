@@ -42,7 +42,6 @@ export async function signIn(formData: any) {
 }
 
 export async function signUp(formData: any) {
-  console.log("signUp llamado con:", { email: formData.email, role: formData.role })
   const supabase = createClient()
   const adminSupabase = createAdminClient()
   const validatedFields = registerSchema.safeParse(formData)
@@ -66,8 +65,8 @@ export async function signUp(formData: any) {
   })
 
   if (authError) {
-    console.log("Error de Supabase Auth:", authError.code, authError.message, authError.status)
-    return { error: authError.message }
+    console.log("Auth error completo:", JSON.stringify(authError))
+    return { error: authError.message + " (código: " + authError.status + ")" }
   }
 
   const userId = authData.user?.id
@@ -117,7 +116,7 @@ export async function signUp(formData: any) {
   console.log("4. Datos de rol creados")
 
   // 3. Try to notify first available admin
-  const { data: admin } = await supabase
+  const { data: admin } = await adminSupabase
     .from('profiles')
     .select('id')
     .eq('role', 'admin')
