@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
@@ -7,6 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
 export async function POST(request: Request) {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -41,7 +43,7 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
     // 2. Save Submission
     const xpEarned = calculateXpForTask(geminiResponse.score)
 
-    const { data: submission, error: subError } = await supabase
+    const { data: submission, error: subError } = await adminSupabase
       .from("task_submissions")
       .insert({
         task_id: taskId,
@@ -57,7 +59,7 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
     if (subError) throw subError
 
     // 3. Update Task
-    await supabase
+    await adminSupabase
       .from("tasks")
       .update({
         status: 'completed',
@@ -66,19 +68,19 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
       .eq("id", taskId)
 
     // 4. Update Student XP
-    const { data: student } = await supabase
+    const { data: student } = await adminSupabase
       .from("students")
       .select("xp_points")
       .eq("id", user.id)
       .single()
 
-    await supabase
+    await adminSupabase
       .from("students")
       .update({ xp_points: (student?.xp_points || 0) + xpEarned })
       .eq("id", user.id)
 
     // 5. Notify Teacher
-    const { data: task } = await supabase
+    const { data: task } = await adminSupabase
       .from("tasks")
       .select("title, teacher_id, student_id, students(profiles(full_name))")
       .eq("id", taskId)
@@ -86,7 +88,7 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
 
     if (task) {
       const studentName = (task.students as any).profiles.full_name
-      await supabase.from("notifications").insert({
+      await adminSupabase.from("notifications").insert({
         user_id: task.teacher_id,
         type: 'task_completed',
         title: '✅ Tarea completada',
