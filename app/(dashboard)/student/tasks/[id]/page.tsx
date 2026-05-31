@@ -60,7 +60,7 @@ export default function TaskDetailPage() {
     }
 
     fetchTask()
-  }, [params.id, router])
+  }, [params.id, router, supabase])
 
   const handleSubmit = async (content: string) => {
     setIsSubmitting(true)

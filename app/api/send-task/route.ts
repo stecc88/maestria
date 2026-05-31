@@ -1,8 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user: teacherUser } } = await supabase.auth.getUser()
   if (!teacherUser) {
@@ -13,7 +15,7 @@ export async function POST(request: Request) {
     const { studentId, task, writingId } = await request.json()
 
     // 1. Save Task
-    const { data: newTask, error: taskError } = await supabase
+    const { data: newTask, error: taskError } = await adminSupabase
       .from("tasks")
       .insert({
         student_id: studentId,
@@ -32,7 +34,7 @@ export async function POST(request: Request) {
     if (taskError) throw taskError
 
     // 2. Notify Student
-    await supabase.from("notifications").insert({
+    await adminSupabase.from("notifications").insert({
       user_id: studentId,
       type: 'new_task',
       title: '📝 Nueva tarea de tu profesor',

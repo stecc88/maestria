@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 import { getCorrectionFromGemini } from "@/lib/gemini/correction"
 import { calculateXpForCorrection } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   // 1. Check Auth
   const { data: { user } } = await supabase.auth.getUser()
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
     // b. Save Correction
     const xpEarned = calculateXpForCorrection(result.overall_score || 0)
 
-    const { data: correction, error: correctionError } = await supabase
+    const { data: correction, error: correctionError } = await adminSupabase
       .from("corrections")
       .insert({
         writing_id: writing.id,
@@ -73,7 +75,7 @@ export async function POST(request: Request) {
     if (correctionError) throw correctionError
 
     // c. Update Student XP and current_level
-    const { data: student } = await supabase
+    const { data: student } = await adminSupabase
       .from("students")
       .select("xp_points")
       .eq("id", user.id)
@@ -81,7 +83,7 @@ export async function POST(request: Request) {
 
     const newXp = (student?.xp_points || 0) + xpEarned
 
-    const { error: studentError } = await supabase
+    const { error: studentError } = await adminSupabase
       .from("students")
       .update({
         xp_points: newXp,
@@ -93,7 +95,7 @@ export async function POST(request: Request) {
     if (studentError) throw studentError
 
     // d. Save to Progress History
-    await supabase.from("progress_history").insert({
+    await adminSupabase.from("progress_history").insert({
       student_id: user.id,
       writing_score: result.overall_score,
       detected_level: result.detected_level,
