@@ -1,7 +1,102 @@
-export default function AdminApprovalsPage() {
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Clock, Mail, User, Key, ChevronLeft, UserCheck } from "lucide-react"
+import Link from "next/link"
+import { createClient } from "@/lib/supabase/server"
+import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
+import { es } from "date-fns/locale"
+import ApprovalActions from "../components/ApprovalActions"
+
+export default async function AdminApprovalsPage() {
+  const supabase = createClient()
+
+  // Fetch ALL pending users list
+  const { data: pendingUsers } = await supabase
+    .from("profiles")
+    .select(`
+      *,
+      teachers (
+        teacher_code
+      )
+    `)
+    .eq("status", "pending")
+    .order("created_at", { ascending: false })
+
   return (
-    <div>
-      <h1 className="text-3xl font-display text-primary">Approvazioni</h1>
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <Link href="/admin">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-3xl font-display font-bold text-gray-900">Solicitudes de Aprobación</h1>
+          <p className="text-gray-500">Revisa y gestiona los nuevos registros en la plataforma.</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {pendingUsers && pendingUsers.length > 0 ? (
+          pendingUsers.map((user) => (
+            <Card key={user.id} className="border-none shadow-sm bg-white hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <User className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-lg">{user.full_name}</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 mt-2">
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Mail className="h-4 w-4" />
+                          {user.email}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Clock className="h-4 w-4" />
+                          Registrado el {format(new Date(user.created_at), "d 'de' MMMM, yyyy HH:mm", { locale: es })}
+                        </div>
+                        {user.role === 'teacher' && user.teachers && (
+                          <div className="flex items-center gap-2 text-sm font-medium text-primary col-span-2">
+                            <Key className="h-4 w-4" />
+                            Código de Profesor: {user.teachers.teacher_code}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <Badge variant="outline" className={`capitalize px-3 py-1 text-sm ${
+                      user.role === 'teacher' ? 'border-purple-200 bg-purple-50 text-purple-700' : 'border-blue-200 bg-blue-50 text-blue-700'
+                    }`}>
+                      {user.role === 'teacher' ? 'Profesor' : 'Alumno'}
+                    </Badge>
+                    <ApprovalActions userId={user.id} userName={user.full_name} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card className="border-dashed border-2 bg-transparent py-20">
+            <CardContent className="text-center">
+              <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <UserCheck className="h-10 w-10 text-gray-300" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Todo al día</h3>
+              <p className="text-gray-500 max-w-sm mx-auto">
+                No hay solicitudes pendientes de revisión en este momento. Los nuevos usuarios aparecerán aquí.
+              </p>
+              <Link href="/admin" className="mt-8 block">
+                <Button variant="outline">Volver al Dashboard</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }
