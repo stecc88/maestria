@@ -101,7 +101,12 @@ export default async function AdminUsersPage() {
                       </div>
                       {user.role === 'student' && user.students && (
                         <div className="text-xs font-medium text-primary mt-1">
-                          Profesor: {user.students.teachers?.profiles?.full_name || 'Sin asignar'}
+                          Profesor: {(() => {
+                            const student = Array.isArray(user.students) ? user.students[0] : user.students;
+                            const teacher = Array.isArray(student?.teachers) ? student.teachers[0] : student?.teachers;
+                            const profile = Array.isArray(teacher?.profiles) ? teacher.profiles[0] : teacher?.profiles;
+                            return (profile as any)?.full_name || 'Sin asignar';
+                          })()}
                         </div>
                       )}
                     </div>
@@ -117,7 +122,10 @@ export default async function AdminUsersPage() {
                     </Badge>
                     <UserActions
                         user={user}
-                        teachers={teachers?.map(t => ({ id: t.id, name: t.profiles.full_name })) || []}
+                        teachers={teachers?.map(t => {
+                          const profile = Array.isArray(t.profiles) ? t.profiles[0] : t.profiles;
+                          return { id: t.id, name: (profile as any)?.full_name || "Profesor" };
+                        }) || []}
                     />
                   </div>
                 </div>
