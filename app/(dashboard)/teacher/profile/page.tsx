@@ -1,16 +1,18 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { User, ShieldCheck } from "lucide-react"
 import TeacherProfileForm from "../components/TeacherProfileForm"
 
 export default async function TeacherProfilePage() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
   // Fetch Teacher and Profile Data
-  const { data: teacher } = await supabase
+  const { data: teacher } = await adminSupabase
     .from("teachers")
     .select("*, profiles(*)")
     .eq("id", user.id)
@@ -19,12 +21,12 @@ export default async function TeacherProfilePage() {
   if (!teacher) redirect("/teacher")
 
   // Fetch Stats
-  const { count: studentCount } = await supabase
+  const { count: studentCount } = await adminSupabase
     .from("students")
     .select("*", { count: "exact", head: true })
     .eq("teacher_id", user.id)
 
-  const { count: taskCount } = await supabase
+  const { count: taskCount } = await adminSupabase
     .from("tasks")
     .select("*", { count: "exact", head: true })
     .eq("teacher_id", user.id)
