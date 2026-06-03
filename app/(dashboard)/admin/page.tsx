@@ -2,14 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Users, CheckCircle2, ShieldCheck, UserCheck, Clock, Mail, User, Key } from "lucide-react"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import ApprovalActions from "./components/ApprovalActions"
 
 export default async function AdminDashboard() {
-  const supabase = createClient()
+  const supabase = createAdminClient()
 
   // Fetch stats
   const { count: totalUsers } = await supabase

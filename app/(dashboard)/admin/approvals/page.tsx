@@ -2,14 +2,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Clock, Mail, User, Key, ChevronLeft, UserCheck } from "lucide-react"
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import ApprovalActions from "../components/ApprovalActions"
 
 export default async function AdminApprovalsPage() {
-  const supabase = createClient()
+  const supabase = createAdminClient()
 
   // Fetch ALL pending users list
   const { data: pendingUsers } = await supabase
