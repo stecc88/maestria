@@ -23,6 +23,7 @@ export async function POST(request: Request) {
 
     // 2. Get Correction from Gemini
     const result = await getCorrectionFromGemini(content, level, textType, prompt)
+    console.log("Gemini result received:", JSON.stringify(result, null, 2))
 
     // 3. Save to DB (Writing + Correction + Student Update + History)
     // We use a manual transaction-like approach since Supabase JS doesn't support
@@ -48,9 +49,6 @@ export async function POST(request: Request) {
     }
 
     // b. Save Correction
-    const xpEarned = calculateXpForCorrection(result.overall_score || 0)
-
-    // Sanitize values for database constraints
     const allowedLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
     const detectedLevel = allowedLevels.includes(result.detected_level) ? result.detected_level : level
 
@@ -60,12 +58,15 @@ export async function POST(request: Request) {
       return Math.min(Math.max(num, 0), max)
     }
 
+    const sanitizedOverallScore = sanitizeScore(result.overall_score, 100)
+    const xpEarned = calculateXpForCorrection(sanitizedOverallScore)
+
     const { data: correction, error: correctionError } = await adminSupabase
       .from("corrections")
       .insert({
         writing_id: writing.id,
         detected_level: detectedLevel,
-        overall_score: sanitizeScore(result.overall_score, 100),
+        overall_score: sanitizedOverallScore,
         exam_compliant: !!result.exam_compliant,
         score_coherence: sanitizeScore(result.score_coherence, 25),
         score_vocabulary: sanitizeScore(result.score_vocabulary, 25),
@@ -113,8 +114,8 @@ export async function POST(request: Request) {
     // d. Save to Progress History
     await adminSupabase.from("progress_history").insert({
       student_id: user.id,
-      writing_score: result.overall_score,
-      detected_level: result.detected_level,
+      writing_score: sanitizedOverallScore,
+      detected_level: detectedLevel,
       xp_earned: xpEarned
     })
 

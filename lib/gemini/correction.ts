@@ -79,7 +79,9 @@ Respond ONLY with a valid JSON object with this exact structure (no markdown, no
 
     // Attempt to parse JSON
     try {
-      return JSON.parse(text)
+      // Sometimes Gemini includes markdown code blocks
+      const cleanText = text.replace(/```json\n?|```/g, "").trim()
+      return JSON.parse(cleanText)
     } catch (e) {
       console.error("Failed to parse Gemini response as JSON:", text)
       throw new Error("La IA devolvió un formato inválido. Reintentá por favor.")
