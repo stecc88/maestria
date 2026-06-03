@@ -31,7 +31,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
   const [showRoleConfirm, setShowRoleConfirm] = useState(false);
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [newRole, setNewRole] = useState<string>("");
-  const [selectedTeacher, setSelectedTeacher] = useState<string>(user.students?.teacher_id || "");
+  const [selectedTeacher, setSelectedTeacher] = useState<string | null>(null);
   const router = useRouter();
 
   const handleDelete = async () => {
@@ -83,6 +83,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
   };
 
   const handleReassign = async () => {
+    if (!selectedTeacher) return;
     setLoading(true);
     try {
       const response = await fetch("/api/admin/reassign-student", {
@@ -207,7 +208,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
             </p>
 
             <div className="space-y-4">
-                <Select onValueChange={setSelectedTeacher} value={selectedTeacher}>
+                <Select onValueChange={(value) => setSelectedTeacher(value)} value={selectedTeacher || undefined}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Selecciona un profesor" />
                     </SelectTrigger>
