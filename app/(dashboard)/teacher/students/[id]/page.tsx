@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { notFound, redirect } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -23,9 +24,10 @@ import { GenerateTaskIA } from "@/components/teacher/GenerateTaskIA"
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   // 1. Fetch Student Data
-  const { data: student } = await supabase
+  const { data: student } = await adminSupabase
     .from("students")
     .select("*, profiles(*)")
     .eq("id", params.id)
@@ -34,7 +36,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   if (!student) notFound()
 
   // 2. Fetch Writing & Correction History
-  const { data: writings } = await supabase
+  const { data: writings } = await adminSupabase
     .from("writings")
     .select("*, corrections(*)")
     .eq("student_id", params.id)
