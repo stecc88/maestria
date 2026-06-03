@@ -29,9 +29,9 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
           <span>Tu evolución en el tiempo</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px] flex flex-col justify-center">
+      <CardContent className="h-[300px] w-full flex flex-col justify-center p-0 pt-6">
         {hasData ? (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
             <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
               <XAxis

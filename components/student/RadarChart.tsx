@@ -26,9 +26,9 @@ export function RadarChart({ data }: RadarChartProps) {
           <span>Tus fortalezas y áreas a mejorar</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px] flex flex-col justify-center">
+      <CardContent className="h-[300px] w-full flex flex-col justify-center p-0">
         {hasData ? (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
             <RechartsRadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
               <PolarGrid stroke="#f1f5f9" />
               <PolarAngleAxis
