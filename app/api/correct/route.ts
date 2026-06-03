@@ -1,14 +1,26 @@
-import { GoogleGenAI } from "@google/genai"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
+import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
 
 export async function POST(request: Request) {
   try {
-    const { content, writing_type, target_level, consigna } = await request.json()
+    const body = await request.json()
+    const {
+      content,
+      writing_type,
+      textType,
+      target_level,
+      level,
+      consigna,
+      prompt: clientPrompt
+    } = body
 
-    if (!content || content.trim().length < 10) {
+    const finalContent = content
+    const finalWritingType = writing_type || textType || "libre"
+    const finalTargetLevel = target_level || level || "B1"
+    const finalConsigna = consigna || clientPrompt || "No especificada"
+
+    if (!finalContent || finalContent.trim().length < 10) {
       return Response.json({ error: "El texto es demasiado corto" }, { status: 400 })
     }
 
@@ -16,9 +28,9 @@ export async function POST(request: Request) {
 
 Evaluá el siguiente texto escrito por un estudiante.
 
-NIVEL OBJETIVO: ${target_level}
-TIPO DE TEXTO: ${writing_type}
-CONSIGNA: ${consigna || "No especificada"}
+NIVEL OBJETIVO: ${finalTargetLevel}
+TIPO DE TEXTO: ${finalWritingType}
+CONSIGNA: ${finalConsigna}
 
 TEXTO DEL ALUMNO:
 ${content}
@@ -55,14 +67,18 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
   "meets_level_requirements": {"A1": true, "A2": true, "B1": true, "B2": false, "C1": false, "C2": false}
 }`
 
+    const ai = getGeminiClient()
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt,
     })
 
     const rawText = response.text || ""
-    const cleanText = rawText.replace(/```json|```/g, "").trim()
-    const correction = JSON.parse(cleanText)
+    const correction = safeParseJson(rawText)
+
+    if (!correction) {
+      return Response.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+    }
 
     // Obtener el usuario autenticado
     const supabase = createClient()
@@ -72,16 +88,16 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
     const adminSupabase = createAdminClient()
 
     // Guardar el escrito
-    const wordCount = content.trim().split(/\s+/).length
+    const wordCount = finalContent.trim().split(/\s+/).length
     const { data: writing, error: writingError } = await adminSupabase
       .from("writings")
       .insert({
         student_id: user.id,
-        content,
-        writing_type,
-        target_level,
+        content: finalContent,
+        writing_type: finalWritingType,
+        target_level: finalTargetLevel,
         word_count: wordCount,
-        title: `${writing_type} - ${new Date().toLocaleDateString("es-AR")}`
+        title: `${finalWritingType} - ${new Date().toLocaleDateString("es-AR")}`
       })
       .select()
       .single()

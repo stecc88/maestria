@@ -1,10 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
-import { GoogleGenAI } from "@google/genai"
+import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
 import { calculateXpForTask } from "@/lib/utils/xp"
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -32,14 +30,18 @@ Proporciona:
 
 Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
+    const ai = getGeminiClient()
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt,
     })
 
     const rawText = response.text || ""
-    const cleanText = rawText.replace(/```json|```/g, "").trim()
-    const geminiResponse = JSON.parse(cleanText)
+    const geminiResponse = safeParseJson(rawText)
+
+    if (!geminiResponse) {
+      return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+    }
 
     // 2. Save Submission
     const xpEarned = calculateXpForTask(geminiResponse.score)
