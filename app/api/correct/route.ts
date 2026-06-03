@@ -1,127 +1,165 @@
-import { createClient } from "@/lib/supabase/server"
+import { GoogleGenAI } from "@google/genai"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { NextResponse } from "next/server"
-import { getCorrectionFromGemini } from "@/lib/gemini/correction"
-import { calculateXpForCorrection } from "@/lib/utils/xp"
+import { createClient } from "@/lib/supabase/server"
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
 
 export async function POST(request: Request) {
-  const supabase = createClient()
-  const adminSupabase = createAdminClient()
-
-  // 1. Check Auth
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-  }
-
   try {
-    const { textType, level, prompt, content } = await request.json()
+    const { content, writing_type, target_level, consigna } = await request.json()
 
-    if (!content || content.length < 10) {
-      return NextResponse.json({ error: "Texto demasiado corto" }, { status: 400 })
+    if (!content || content.trim().length < 10) {
+      return Response.json({ error: "El texto es demasiado corto" }, { status: 400 })
     }
 
-    // 2. Get Correction from Gemini
-    const result = await getCorrectionFromGemini(content, level, textType, prompt)
+    const prompt = `Eres un examinador experto de italiano como lengua extranjera con 20 años de experiencia, equivalente a los estándares de certificación internacional más exigentes.
 
-    // 3. Save to DB (Writing + Correction + Student Update + History)
-    // We use a manual transaction-like approach since Supabase JS doesn't support
-    // multi-table transactions natively without RPC.
+Evaluá el siguiente texto escrito por un estudiante.
 
-    // a. Save Writing (Using admin client for consistency in writes)
+NIVEL OBJETIVO: ${target_level}
+TIPO DE TEXTO: ${writing_type}
+CONSIGNA: ${consigna || "No especificada"}
+
+TEXTO DEL ALUMNO:
+${content}
+
+Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exactamente con esta estructura:
+{
+  "detected_level": "B1",
+  "overall_score": 72,
+  "exam_compliant": true,
+  "score_coherence": 18,
+  "score_vocabulary": 17,
+  "score_grammar": 16,
+  "score_task_completion": 21,
+  "examiner_comment": "Comentario profesional de 150-200 palabras en español",
+  "pros": ["Fortaleza 1 con ejemplo del texto", "Fortaleza 2", "Fortaleza 3"],
+  "cons": ["Debilidad 1 con ejemplo", "Debilidad 2", "Debilidad 3"],
+  "suggestions": [
+    {"category": "Gramática", "tip": "Sugerencia específica", "example": "Ejemplo"},
+    {"category": "Vocabulario", "tip": "Sugerencia", "example": "Ejemplo"},
+    {"category": "Estructura", "tip": "Sugerencia", "example": "Ejemplo"}
+  ],
+  "corrected_text": "Versión corregida completa del texto",
+  "inline_corrections": [
+    {"original": "frase con error", "corrected": "frase corregida", "explanation": "explicación", "error_type": "gramatica"}
+  ],
+  "error_categories": {
+    "gramatica": "descripción del error gramatical principal",
+    "vocabulario": "descripción del error de vocabulario principal",
+    "ortografia": "descripción del error ortográfico principal",
+    "registro": "problemas de registro si existe",
+    "estructura": "problemas de estructura si existe"
+  },
+  "next_steps": ["Paso 1 concreto", "Paso 2 concreto", "Paso 3 concreto"],
+  "meets_level_requirements": {"A1": true, "A2": true, "B1": true, "B2": false, "C1": false, "C2": false}
+}`
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+    })
+
+    const rawText = response.text || ""
+    const cleanText = rawText.replace(/```json|```/g, "").trim()
+    const correction = JSON.parse(cleanText)
+
+    // Obtener el usuario autenticado
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return Response.json({ error: "No autorizado" }, { status: 401 })
+
+    const adminSupabase = createAdminClient()
+
+    // Guardar el escrito
+    const wordCount = content.trim().split(/\s+/).length
     const { data: writing, error: writingError } = await adminSupabase
       .from("writings")
       .insert({
         student_id: user.id,
-        title: prompt ? (prompt.substring(0, 50) + "...") : (textType.replace('_', ' ').toUpperCase()),
         content,
-        writing_type: textType,
-        target_level: level,
-        word_count: content.trim().split(/\s+/).length
+        writing_type,
+        target_level,
+        word_count: wordCount,
+        title: `${writing_type} - ${new Date().toLocaleDateString("es-AR")}`
       })
       .select()
       .single()
 
     if (writingError) {
-      console.error("Writing save error:", writingError)
-      throw writingError
+      console.error("Error guardando writing:", writingError)
+      return Response.json({ error: "Error guardando el escrito" }, { status: 500 })
     }
 
-    // b. Save Correction
-    const xpEarned = calculateXpForCorrection(result.overall_score || 0)
+    // Calcular XP
+    const xpEarned = 50 + Math.floor(correction.overall_score / 2)
 
-    // Sanitize values for database constraints
-    const allowedLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-    const detectedLevel = allowedLevels.includes(result.detected_level) ? result.detected_level : level
-
-    const sanitizeScore = (score: any, max: number) => {
-      const num = parseInt(score)
-      if (isNaN(num)) return 0
-      return Math.min(Math.max(num, 0), max)
-    }
-
-    const { data: correction, error: correctionError } = await adminSupabase
+    // Guardar la corrección
+    const { data: savedCorrection, error: correctionError } = await adminSupabase
       .from("corrections")
       .insert({
         writing_id: writing.id,
-        detected_level: detectedLevel,
-        overall_score: sanitizeScore(result.overall_score, 100),
-        exam_compliant: !!result.exam_compliant,
-        score_coherence: sanitizeScore(result.score_coherence, 25),
-        score_vocabulary: sanitizeScore(result.score_vocabulary, 25),
-        score_grammar: sanitizeScore(result.score_grammar, 25),
-        score_task_completion: sanitizeScore(result.score_task_completion, 25),
-        pros: result.pros || [],
-        cons: result.cons || [],
-        suggestions: result.suggestions || [],
-        corrected_text: result.corrected_text || content,
-        examiner_comment: result.examiner_comment || "Sin comentarios",
-        inline_corrections: result.inline_corrections || [],
-        error_categories: result.error_categories || {},
-        next_steps: result.next_steps || [],
-        meets_level_requirements: result.meets_level_requirements || {},
+        detected_level: correction.detected_level,
+        overall_score: correction.overall_score,
+        exam_compliant: correction.exam_compliant,
+        score_coherence: correction.score_coherence,
+        score_vocabulary: correction.score_vocabulary,
+        score_grammar: correction.score_grammar,
+        score_task_completion: correction.score_task_completion,
+        pros: correction.pros,
+        cons: correction.cons,
+        suggestions: correction.suggestions,
+        corrected_text: correction.corrected_text,
+        examiner_comment: correction.examiner_comment,
+        inline_corrections: correction.inline_corrections,
+        error_categories: correction.error_categories,
+        next_steps: correction.next_steps,
+        meets_level_requirements: correction.meets_level_requirements,
         xp_earned: xpEarned
       })
       .select()
       .single()
 
     if (correctionError) {
-      console.error("Correction save error:", correctionError)
-      throw correctionError
+      console.error("Error guardando correction:", correctionError)
+      return Response.json({ error: "Error guardando la corrección" }, { status: 500 })
     }
 
-    // c. Update Student XP and current_level
-    const { data: student } = await adminSupabase
-      .from("students")
-      .select("xp_points")
-      .eq("id", user.id)
-      .single()
-
-    const newXp = (student?.xp_points || 0) + xpEarned
-
-    const { error: studentError } = await adminSupabase
+    // Actualizar XP del alumno
+    await adminSupabase
       .from("students")
       .update({
-        xp_points: newXp,
-        current_level: result.detected_level,
+        current_level: correction.detected_level,
         last_activity: new Date().toISOString()
       })
       .eq("id", user.id)
 
-    if (studentError) throw studentError
+    // Sumar XP con raw SQL
+    const { error: rpcError } = await adminSupabase.rpc("increment_xp", {
+      student_id: user.id,
+      xp_amount: xpEarned
+    })
 
-    // d. Save to Progress History
+    if (rpcError) {
+      console.error("Error calling increment_xp RPC:", rpcError)
+    }
+
+    // Guardar en progress_history
     await adminSupabase.from("progress_history").insert({
       student_id: user.id,
-      writing_score: result.overall_score,
-      detected_level: result.detected_level,
+      writing_score: correction.overall_score,
+      detected_level: correction.detected_level,
       xp_earned: xpEarned
     })
 
-    return NextResponse.json({ id: correction.id })
+    return Response.json({
+      success: true,
+      correctionId: savedCorrection.id,
+      xpEarned
+    })
 
   } catch (error: any) {
-    console.error("API /api/correct error:", error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error("Error en /api/correct:", error)
+    return Response.json({ error: error.message || "Error interno" }, { status: 500 })
   }
 }
