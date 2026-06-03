@@ -28,8 +28,8 @@ export async function POST(request: Request) {
     // We use a manual transaction-like approach since Supabase JS doesn't support
     // multi-table transactions natively without RPC.
 
-    // a. Save Writing
-    const { data: writing, error: writingError } = await supabase
+    // a. Save Writing (Using admin client for consistency in writes)
+    const { data: writing, error: writingError } = await adminSupabase
       .from("writings")
       .insert({
         student_id: user.id,
@@ -42,37 +42,53 @@ export async function POST(request: Request) {
       .select()
       .single()
 
-    if (writingError) throw writingError
+    if (writingError) {
+      console.error("Writing save error:", writingError)
+      throw writingError
+    }
 
     // b. Save Correction
     const xpEarned = calculateXpForCorrection(result.overall_score || 0)
+
+    // Sanitize values for database constraints
+    const allowedLevels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+    const detectedLevel = allowedLevels.includes(result.detected_level) ? result.detected_level : level
+
+    const sanitizeScore = (score: any, max: number) => {
+      const num = parseInt(score)
+      if (isNaN(num)) return 0
+      return Math.min(Math.max(num, 0), max)
+    }
 
     const { data: correction, error: correctionError } = await adminSupabase
       .from("corrections")
       .insert({
         writing_id: writing.id,
-        detected_level: result.detected_level,
-        overall_score: result.overall_score,
-        exam_compliant: result.exam_compliant,
-        score_coherence: result.score_coherence,
-        score_vocabulary: result.score_vocabulary,
-        score_grammar: result.score_grammar,
-        score_task_completion: result.score_task_completion,
-        pros: result.pros,
-        cons: result.cons,
-        suggestions: result.suggestions,
-        corrected_text: result.corrected_text,
-        examiner_comment: result.examiner_comment,
-        inline_corrections: result.inline_corrections,
-        error_categories: result.error_categories,
-        next_steps: result.next_steps,
-        meets_level_requirements: result.meets_level_requirements,
+        detected_level: detectedLevel,
+        overall_score: sanitizeScore(result.overall_score, 100),
+        exam_compliant: !!result.exam_compliant,
+        score_coherence: sanitizeScore(result.score_coherence, 25),
+        score_vocabulary: sanitizeScore(result.score_vocabulary, 25),
+        score_grammar: sanitizeScore(result.score_grammar, 25),
+        score_task_completion: sanitizeScore(result.score_task_completion, 25),
+        pros: result.pros || [],
+        cons: result.cons || [],
+        suggestions: result.suggestions || [],
+        corrected_text: result.corrected_text || content,
+        examiner_comment: result.examiner_comment || "Sin comentarios",
+        inline_corrections: result.inline_corrections || [],
+        error_categories: result.error_categories || {},
+        next_steps: result.next_steps || [],
+        meets_level_requirements: result.meets_level_requirements || {},
         xp_earned: xpEarned
       })
       .select()
       .single()
 
-    if (correctionError) throw correctionError
+    if (correctionError) {
+      console.error("Correction save error:", correctionError)
+      throw correctionError
+    }
 
     // c. Update Student XP and current_level
     const { data: student } = await adminSupabase

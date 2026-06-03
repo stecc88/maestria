@@ -28,13 +28,13 @@ STUDENT TEXT:
 
 Respond ONLY with a valid JSON object with this exact structure (no markdown, no extra text, just the JSON):
 {
-  "detected_level": "B1",
-  "overall_score": 72,
+  "detected_level": "B1", // Must be one of: A1, A2, B1, B2, C1, C2
+  "overall_score": 72, // Must be between 0 and 100
   "exam_compliant": true,
-  "score_coherence": 18,
-  "score_vocabulary": 17,
-  "score_grammar": 16,
-  "score_task_completion": 21,
+  "score_coherence": 18, // Must be between 0 and 25
+  "score_vocabulary": 17, // Must be between 0 and 25
+  "score_grammar": 16, // Must be between 0 and 25
+  "score_task_completion": 21, // Must be between 0 and 25
   "examiner_comment": "Professional and constructive comment in Spanish (150-200 words), as if from an official examiner.",
   "pros": [
     "Strength 1 with specific example from text in quotes",
