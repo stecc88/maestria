@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenAI } from "@google/genai"
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -23,11 +23,6 @@ export async function POST(request: Request) {
       studentLevel
     } = await request.json()
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
-      generationConfig: { responseMimeType: "application/json" }
-    })
-
     const prompt = `Eres un experto en didáctica del italiano para extranjeros con amplia experiencia.
 El alumno tiene un nivel detectado de: ${studentLevel}.
 Cometió este error frecuentemente: ${errorType} — específicamente: ${errorDetail}.
@@ -46,8 +41,14 @@ Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
   "exercise_content": "Objeto o string con el contenido del ejercicio según el tipo (ej: texto con [___] para completar, o lista de oraciones)"
 }`
 
-    const result = await model.generateContent(prompt)
-    const geminiResponse = JSON.parse(result.response.text())
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+    })
+
+    const rawText = response.text || ""
+    const cleanText = rawText.replace(/```json|```/g, "").trim()
+    const geminiResponse = JSON.parse(cleanText)
 
     return NextResponse.json(geminiResponse)
 

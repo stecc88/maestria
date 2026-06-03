@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenAI } from "@google/genai"
 import { calculateXpForTask } from "@/lib/utils/xp"
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -19,11 +19,6 @@ export async function POST(request: Request) {
     const { taskId, content, error_categories, exercise_instructions } = await request.json()
 
     // 1. Evaluate with Gemini
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
-      generationConfig: { responseMimeType: "application/json" }
-    })
-
     const prompt = `Eres un profesor de italiano experto.
 El alumno tenía los siguientes errores en su escrito original: ${JSON.stringify(error_categories)}.
 Se le asignó este ejercicio para practicar: "${exercise_instructions}"
@@ -35,10 +30,16 @@ Proporciona:
 - Un comentario motivador y pedagógico de 2-3 oraciones en español.
 - Un booleano indicando si superó el error principal (error_overcome).
 
-Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "error_overcome": boolean }`
+Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
-    const result = await model.generateContent(prompt)
-    const geminiResponse = JSON.parse(result.response.text())
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+    })
+
+    const rawText = response.text || ""
+    const cleanText = rawText.replace(/```json|```/g, "").trim()
+    const geminiResponse = JSON.parse(cleanText)
 
     // 2. Save Submission
     const xpEarned = calculateXpForTask(geminiResponse.score)
@@ -68,16 +69,14 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
       .eq("id", taskId)
 
     // 4. Update Student XP
-    const { data: student } = await adminSupabase
-      .from("students")
-      .select("xp_points")
-      .eq("id", user.id)
-      .single()
+    const { error: rpcError } = await adminSupabase.rpc("increment_xp", {
+      student_id: user.id,
+      xp_amount: xpEarned
+    })
 
-    await adminSupabase
-      .from("students")
-      .update({ xp_points: (student?.xp_points || 0) + xpEarned })
-      .eq("id", user.id)
+    if (rpcError) {
+      console.error("Error calling increment_xp RPC in check-task:", rpcError)
+    }
 
     // 5. Notify Teacher
     const { data: task } = await adminSupabase
@@ -87,7 +86,10 @@ Responde ÚNICAMENTE con este JSON: { "score": number, "feedback": string, "erro
       .single()
 
     if (task) {
-      const studentName = (task.students as any).profiles.full_name
+      const studentName = Array.isArray(task.students)
+        ? (task.students[0] as any).profiles.full_name
+        : (task.students as any).profiles.full_name
+
       await adminSupabase.from("notifications").insert({
         user_id: task.teacher_id,
         type: 'task_completed',
