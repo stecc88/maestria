@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Header } from "@/components/layout/Header"
@@ -56,7 +57,8 @@ export default async function DashboardLayout({
   // Fetch teacher specific data if role is teacher
   let teacherData = null
   if (profile.role === 'teacher') {
-    const { data: teacher } = await supabase
+    const adminSupabase = createAdminClient()
+    const { data: teacher } = await adminSupabase
       .from('teachers')
       .select('teacher_code')
       .eq('id', user.id)

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { TeacherStats } from "@/components/teacher/TeacherStats"
 import { ActivityBarChart } from "@/components/teacher/ActivityBarChart"
@@ -19,12 +20,13 @@ import { cn } from "@/lib/utils"
 
 export default async function TeacherDashboard() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
   // 1. Fetch Teacher Data
-  const { data: teacher } = await supabase
+  const { data: teacher } = await adminSupabase
     .from("teachers")
     .select("*, profiles(*)")
     .eq("id", user.id)
@@ -33,7 +35,7 @@ export default async function TeacherDashboard() {
   if (!teacher) return <div>Cargando panel docente...</div>
 
   // 2. Fetch Students Stats
-  const { data: students } = await supabase
+  const { data: students } = await adminSupabase
     .from("students")
     .select("*, profiles(*)")
     .eq("teacher_id", user.id)
