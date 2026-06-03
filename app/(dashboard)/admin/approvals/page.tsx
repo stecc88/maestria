@@ -61,7 +61,7 @@ export default async function AdminApprovalsPage() {
                         {user.role === 'teacher' && user.teachers && (
                           <div className="flex items-center gap-2 text-sm font-medium text-primary col-span-2">
                             <Key className="h-4 w-4" />
-                            Código de Profesor: {user.teachers.teacher_code}
+                            Código de Profesor: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
                           </div>
                         )}
                       </div>

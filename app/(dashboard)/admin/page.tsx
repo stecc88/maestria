@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
                             {user.role === 'teacher' && user.teachers && (
                               <div className="flex items-center gap-2 text-sm font-medium text-primary">
                                 <Key className="h-3 w-3" />
-                                Código: {user.teachers.teacher_code}
+                                Código: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
                               </div>
                             )}
                           </div>
