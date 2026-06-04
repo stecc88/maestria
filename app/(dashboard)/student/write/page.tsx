@@ -134,9 +134,13 @@ function WriteForm() {
       })
 
       const data = await response.json()
-      if (data.id) {
+      console.log("Respuesta de /api/correct:", JSON.stringify(data))
+
+      const correctionId = data.correctionId || data.id
+
+      if (correctionId) {
         localStorage.removeItem("maestria_draft")
-        router.push(`/student/corrections/${data.id}`)
+        router.push(`/student/corrections/${correctionId}`)
       } else {
         throw new Error(data.error || "Error al corregir")
       }
