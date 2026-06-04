@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
-import { GoogleGenAI } from "@google/genai"
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" })
+import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -41,14 +39,18 @@ Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
   "exercise_content": "Objeto o string con el contenido del ejercicio según el tipo (ej: texto con [___] para completar, o lista de oraciones)"
 }`
 
+    const ai = getGeminiClient()
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt,
     })
 
     const rawText = response.text || ""
-    const cleanText = rawText.replace(/```json|```/g, "").trim()
-    const geminiResponse = JSON.parse(cleanText)
+    const geminiResponse = safeParseJson(rawText)
+
+    if (!geminiResponse) {
+      return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+    }
 
     return NextResponse.json(geminiResponse)
 
