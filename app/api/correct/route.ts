@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
+import { safeParseJson } from "@/lib/gemini/client"
 
 export async function POST(request: Request) {
   try {
@@ -67,10 +67,19 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
   "meets_level_requirements": {"A1": true, "A2": true, "B1": true, "B2": false, "C1": false, "C2": false}
 }`
 
-    const ai = getGeminiClient()
-    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-lite" })
-    const result = await model.generateContent(prompt)
-    const rawText = result.response.text()
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    )
+
+    const geminiData = await geminiResponse.json()
+    const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
     const correction = safeParseJson(rawText)
 
     if (!correction) {

@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
-import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
+import { safeParseJson } from "@/lib/gemini/client"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -39,17 +39,26 @@ Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
   "exercise_content": "Objeto o string con el contenido del ejercicio según el tipo (ej: texto con [___] para completar, o lista de oraciones)"
 }`
 
-    const ai = getGeminiClient()
-    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-lite" })
-    const result = await model.generateContent(prompt)
-    const rawText = result.response.text()
-    const geminiResponse = safeParseJson(rawText)
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    )
 
-    if (!geminiResponse) {
+    const geminiData = await geminiResponse.json()
+    const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
+    const geminiResult = safeParseJson(rawText)
+
+    if (!geminiResult) {
       return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
     }
 
-    return NextResponse.json(geminiResponse)
+    return NextResponse.json(geminiResult)
 
   } catch (error: any) {
     console.error("Error generating task:", error)

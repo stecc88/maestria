@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
-import { getGeminiClient, safeParseJson } from "@/lib/gemini/client"
+import { safeParseJson } from "@/lib/gemini/client"
 import { calculateXpForTask } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
@@ -30,18 +30,27 @@ Proporciona:
 
 Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
-    const ai = getGeminiClient()
-    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-lite" })
-    const result = await model.generateContent(prompt)
-    const rawText = result.response.text()
-    const geminiResponse = safeParseJson(rawText)
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    )
 
-    if (!geminiResponse) {
+    const geminiData = await geminiResponse.json()
+    const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
+    const geminiResult = safeParseJson(rawText)
+
+    if (!geminiResult) {
       return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
     }
 
     // 2. Save Submission
-    const xpEarned = calculateXpForTask(geminiResponse.score)
+    const xpEarned = calculateXpForTask(geminiResult.score)
 
     const { data: submission, error: subError } = await adminSupabase
       .from("task_submissions")
@@ -49,8 +58,8 @@ Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback
         task_id: taskId,
         student_id: user.id,
         content,
-        ai_feedback: geminiResponse.feedback,
-        ai_score: geminiResponse.score,
+        ai_feedback: geminiResult.feedback,
+        ai_score: geminiResult.score,
         xp_earned: xpEarned
       })
       .select()
@@ -93,13 +102,13 @@ Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback
         user_id: task.teacher_id,
         type: 'task_completed',
         title: '✅ Tarea completada',
-        message: `${studentName} completó la tarea "${task.title}" con un puntaje de ${geminiResponse.score}/100`,
+        message: `${studentName} completó la tarea "${task.title}" con un puntaje de ${geminiResult.score}/100`,
         related_id: taskId
       })
     }
 
     return NextResponse.json({
-      ...geminiResponse,
+      ...geminiResult,
       xp_earned: xpEarned
     })
 
