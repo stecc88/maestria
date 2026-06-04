@@ -31,7 +31,7 @@ Proporciona:
 Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
     const ai = getGeminiClient()
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-lite" })
     const result = await model.generateContent(prompt)
     const rawText = result.response.text()
     const geminiResponse = safeParseJson(rawText)
