@@ -1,9 +1,7 @@
-import { GoogleGenAI } from "@google/genai"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 export const getGeminiClient = () => {
-  return new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY || ""
-  })
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 }
 
 export const safeParseJson = (text: string) => {
