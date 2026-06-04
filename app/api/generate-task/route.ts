@@ -40,7 +40,7 @@ Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
 }`
 
     const ai = getGeminiClient()
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-lite" })
     const result = await model.generateContent(prompt)
     const rawText = result.response.text()
     const geminiResponse = safeParseJson(rawText)
