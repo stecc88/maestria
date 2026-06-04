@@ -147,12 +147,12 @@ function WriteForm() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900">Nuova Scrittura</h1>
-          <p className="text-gray-500 mt-1">Practicá tu italiano con feedback en tiempo real por IA.</p>
+          <p className="text-gray-500 mt-1">Practic&aacute; tu italiano con feedback en tiempo real por IA.</p>
         </div>
         <div className="flex items-center gap-4 text-sm text-gray-400 font-medium">
           {lastSaved && (
             <span className="flex items-center gap-1 text-primary">
-              Borrador guardado ✓ {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Borrador guardado ✓ {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </span>
           )}
         </div>
@@ -162,7 +162,7 @@ function WriteForm() {
         {/* Form Column */}
         <div className="lg:col-span-2 space-y-8">
           <section>
-            <Label className="text-base font-bold mb-4 block">1. Elegí el tipo de texto</Label>
+            <Label className="text-base font-bold mb-4 block">1. Eleg&iacute; el tipo de texto</Label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEXT_TYPES.map((type) => (
                 <button
@@ -215,7 +215,7 @@ function WriteForm() {
               </Tooltip>
             </div>
             <Textarea
-              placeholder="Copiá aquí la consigna o instrucción del ejercicio (si tenés)..."
+              placeholder="Copi&aacute; aqu&iacute; la consigna o instrucci&oacute;n del ejercicio (si ten&eacute;s)..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="bg-white border-gray-200 min-h-[80px] focus:ring-primary"
