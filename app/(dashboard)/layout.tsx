@@ -19,6 +19,9 @@ export default async function DashboardLayout({
     redirect("/login")
   }
 
+  const adminSupabase = createAdminClient()
+
+  // First fetch profile to know the role
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
@@ -29,53 +32,32 @@ export default async function DashboardLayout({
     redirect("/login")
   }
 
-  // Fetch student specific data if role is student
+  // Fetch remaining data in parallel
+  const [studentResult, teacherResult, notificationsResult, pendingTasksResult] = await Promise.all([
+    profile.role === 'student'
+      ? adminSupabase.from("students").select("*, teachers(profiles(full_name))").eq("id", user.id).single()
+      : Promise.resolve({ data: null }),
+    profile.role === 'teacher'
+      ? adminSupabase.from("teachers").select("teacher_code").eq("id", user.id).single()
+      : Promise.resolve({ data: null }),
+    supabase.from("notifications").select("*").eq("user_id", user.id).eq("read", false).order("created_at", { ascending: false }).limit(5),
+    profile.role === 'student'
+      ? supabase.from('tasks').select('*', { count: 'exact', head: true }).eq('student_id', user.id).eq('status', 'pending')
+      : Promise.resolve({ count: 0 })
+  ])
+
   let studentData = null
-  if (profile.role === 'student') {
-    const { data: student } = await supabase
-      .from('students')
-      .select('*, teachers(profiles(full_name))')
-      .eq('id', user.id)
-      .single()
-
-    const { count: pendingTasks } = await supabase
-      .from('tasks')
-      .select('*', { count: 'exact', head: true })
-      .eq('student_id', user.id)
-      .eq('status', 'pending')
-
-    if (student) {
-      studentData = {
-        ...student,
-        target_xp: 1000, // This could be calculated based on level
-        next_level_name: "Praticante", // This could come from a levels utility
-        pending_tasks: pendingTasks || 0
-      }
+  if (profile.role === 'student' && studentResult.data) {
+    studentData = {
+      ...studentResult.data,
+      target_xp: 1000,
+      next_level_name: "Praticante",
+      pending_tasks: pendingTasksResult.count || 0
     }
   }
 
-  // Fetch teacher specific data if role is teacher
-  let teacherData = null
-  if (profile.role === 'teacher') {
-    const adminSupabase = createAdminClient()
-    const { data: teacher } = await adminSupabase
-      .from('teachers')
-      .select('teacher_code')
-      .eq('id', user.id)
-      .single()
-
-    if (teacher) {
-      teacherData = teacher
-    }
-  }
-
-  // Fetch notifications
-  const { data: notifications } = await supabase
-    .from('notifications')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
+  const teacherData = teacherResult.data
+  const notifications = notificationsResult.data || []
 
   return (
     <div className="flex min-h-screen bg-cream/30">
