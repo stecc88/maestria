@@ -32,37 +32,13 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
   }
 
   const askGemini = async (history: Message[], userInput: string) => {
-    const historyText = history.map(m => `${m.role === "ai" ? "Insegnante" : "Studente"}: ${m.text}`).join("\n")
-
-    const prompt = `Sei un insegnante di italiano esperto e paziente. Aiuta uno studente di livello ${level} a sviluppare le idee per scrivere un testo di tipo "${textType}".
-
-Storico della conversazione:
-${historyText}
-
-${userInput === "start" ? "Inizia la conversazione con una pregunta semplice per capire di cosa vuole scrivere lo studente." : `Ultima risposta dello studente: "${userInput}"`}
-
-Regole:
-- Fai UNA sola pregunta alla volta, semplice e adatta al livello ${level}
-- Dopo 3-4 risposte dello studente, genera uno SCHEMA con questo formato esatto:
-  📝 SCHEMA DEL TUO TESTO:
-  • Apertura: [idea concreta]
-  • Sviluppo: [idea concreta]
-  • Conclusione: [idea concreta]
-  💡 5 espressioni utili: [frase1], [frase2], [frase3], [frase4], [frase5]
-- Rispondi SOLO in italiano semplice adatto al livello ${level}`
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      }
-    )
+    const response = await fetch("/api/writing-assistant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: history, textType, level, userInput })
+    })
     const data = await response.json()
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Mi dispiace, riprova."
+    return data.text
   }
 
   const sendMessage = async () => {
