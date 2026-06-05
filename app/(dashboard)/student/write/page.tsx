@@ -23,7 +23,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils"
 import { ContextualGuide } from "@/components/student/ContextualGuide"
 import toast from "react-hot-toast"
-import { WritingAssistant } from "@/components/student/WritingAssistant"
 
 const TEXT_TYPES = [
   { id: "email_formal", label: "Email formal", icon: Mail },
@@ -116,8 +115,13 @@ function WriteForm() {
   useEffect(() => {
     const typeParam = searchParams.get("type")
     const levelParam = searchParams.get("level")
+    const schemaParam = searchParams.get("schema")
+
     if (typeParam) setTextType(typeParam)
     if (levelParam) setLevel(levelParam)
+    if (schemaParam) {
+      setContent(decodeURIComponent(schemaParam))
+    }
   }, [searchParams])
 
   const handleSubmit = async () => {
@@ -214,17 +218,6 @@ function WriteForm() {
                 </button>
               ))}
             </div>
-          </section>
-
-          <section className="animate-in fade-in zoom-in-95 duration-300">
-            <WritingAssistant
-              textType={textType}
-              level={level}
-              onSchemaReady={(schema) => {
-                setContent(prev => prev ? `${prev}\n\n${schema}` : schema)
-                toast.success("¡Esquema copiado al texto!")
-              }}
-            />
           </section>
 
           <section>
