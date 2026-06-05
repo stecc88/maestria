@@ -19,21 +19,21 @@ export function RadarChart({ data }: RadarChartProps) {
   const hasData = data && data.length > 0
 
   return (
-    <Card className="border-gray-100 md:col-span-1">
-      <CardHeader>
-        <CardTitle className="text-lg font-bold flex items-center gap-2">
-          <Target className="h-5 w-5 text-secondary" />
-          <span>Tus fortalezas y áreas a mejorar</span>
+    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+          <Target className="h-4 w-4 text-secondary" />
+          <span>Il tuo profilo</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="h-[300px] w-full flex flex-col justify-center p-0">
         {hasData ? (
           <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-            <RechartsRadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+            <RechartsRadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
               <PolarGrid stroke="#f1f5f9" />
               <PolarAngleAxis
                 dataKey="subject"
-                tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }}
+                tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }}
               />
               <PolarRadiusAxis
                 angle={30}
@@ -42,22 +42,21 @@ export function RadarChart({ data }: RadarChartProps) {
                 axisLine={false}
               />
               <Radar
-                name="Alumno"
+                name="Studente"
                 dataKey="A"
                 stroke="#CE2B37"
                 fill="#CE2B37"
-                fillOpacity={0.6}
+                fillOpacity={0.5}
               />
             </RechartsRadarChart>
           </ResponsiveContainer>
         ) : (
           <div className="text-center space-y-4">
             <div className="bg-cream rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-              <Target className="h-10 w-10 text-gray-300" />
+              <Target className="h-10 w-10 text-gray-200" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Sin datos de evaluación</p>
-              <p className="text-xs text-gray-500 mt-1">Completa tu primera evaluación para ver el análisis de competencias.</p>
+              <p className="text-sm font-medium text-gray-900">Nessun dato</p>
             </div>
           </div>
         )}

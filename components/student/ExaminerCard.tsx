@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, Quote } from "lucide-react"
 
 interface ExaminerCardProps {
   comment: string
@@ -10,36 +10,36 @@ interface ExaminerCardProps {
 
 export function ExaminerCard({ comment }: ExaminerCardProps) {
   return (
-    <Card className="bg-cream border-accent/20 relative overflow-hidden shadow-md">
-      {/* Decorative Stamp */}
-      <div className="absolute -top-4 -right-4 w-24 h-24 border-4 border-accent/10 rounded-full flex items-center justify-center rotate-12">
-        <div className="border-2 border-accent/10 w-16 h-16 rounded-full flex items-center justify-center">
-          <span className="text-[8px] font-bold text-accent/20 uppercase tracking-widest text-center">
-            Maestria<br/>Examiner
-          </span>
-        </div>
-      </div>
+    <Card className="bg-white border-none relative overflow-hidden shadow-sm rounded-3xl">
+      <div className="absolute left-0 top-0 bottom-0 w-2 bg-accent" />
 
-      <CardContent className="p-8 space-y-4">
-        <div className="flex items-center gap-3 border-b border-accent/10 pb-4">
-          <div className="p-2 bg-accent/10 rounded-lg">
-            <ShieldCheck className="h-6 w-6 text-accent" />
+      <CardContent className="p-8 md:p-10 space-y-6">
+        <div className="flex items-center justify-between border-b border-gray-50 pb-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-accent/10 rounded-2xl">
+              <ShieldCheck className="h-8 w-8 text-accent" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-2xl text-gray-900">Rapporto dell&apos;Esaminatore</h3>
+              <p className="text-[10px] text-gray-400 uppercase font-black tracking-[0.2em]">Official Assessment Report</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-display font-bold text-lg text-gray-900">Evaluación del examinador</h3>
-            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Official Assessment Report</p>
-          </div>
+          <Quote className="h-12 w-12 text-gray-50 shrink-0" />
         </div>
 
-        <p className="font-body text-gray-700 leading-relaxed italic text-lg first-letter:text-4xl first-letter:font-display first-letter:font-bold first-letter:mr-1 first-letter:float-left">
-          {comment}
-        </p>
+        <div className="relative">
+          <p className="font-body text-gray-700 leading-[1.8] italic text-xl px-2">
+            {comment}
+          </p>
+        </div>
 
-        <div className="pt-6 flex flex-col items-end">
-          <div className="font-display font-bold text-gray-900 italic text-xl border-b border-gray-900 px-4">
-            Maestria AI
+        <div className="pt-8 flex flex-col items-end">
+          <div className="flex flex-col items-end border-t border-gray-100 pt-6 min-w-[200px]">
+            <p className="font-display font-bold text-gray-900 italic text-2xl tracking-tight">
+              Maestria AI
+            </p>
+            <span className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">Valutazione Professionale</span>
           </div>
-          <span className="text-xs text-gray-400 mt-1">Evaluación profesional</span>
         </div>
       </CardContent>
     </Card>
