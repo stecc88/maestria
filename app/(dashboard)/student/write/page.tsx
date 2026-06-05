@@ -23,7 +23,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils"
 import { ContextualGuide } from "@/components/student/ContextualGuide"
 import toast from "react-hot-toast"
-import WritingAssistant from "./components/WritingAssistant"
+import { WritingAssistant } from "@/components/student/WritingAssistant"
 
 const TEXT_TYPES = [
   { id: "email_formal", label: "Email formal", icon: Mail },
@@ -66,7 +66,6 @@ function WriteForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [showAssistant, setShowAssistant] = useState(false)
 
   // Word count logic
   useEffect(() => {
@@ -198,18 +197,6 @@ function WriteForm() {
           <section>
             <div className="flex items-center justify-between mb-4">
               <Label className="text-base font-bold">2. Nivel del ejercicio</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowAssistant(!showAssistant)}
-                className={cn(
-                  "rounded-full gap-2 font-bold transition-all",
-                  showAssistant ? "bg-primary text-white border-primary" : "text-primary border-primary/20 hover:bg-primary/5"
-                )}
-              >
-                <Sparkles className="h-4 w-4" />
-                {"\uD83D\uDCA1 Aiutami a scrivere"}
-              </Button>
             </div>
             <div className="flex flex-wrap gap-2">
               {LEVELS.map((l) => (
@@ -229,20 +216,16 @@ function WriteForm() {
             </div>
           </section>
 
-          {showAssistant && (
-            <section className="animate-in fade-in zoom-in-95 duration-300">
-              <WritingAssistant
-                type={textType}
-                level={level}
-                onClose={() => setShowAssistant(false)}
-                onUseSchema={(schema) => {
-                  setContent(prev => prev ? `${prev}\n\n${schema}` : schema)
-                  setShowAssistant(false)
-                  toast.success("¡Esquema copiado al texto!")
-                }}
-              />
-            </section>
-          )}
+          <section className="animate-in fade-in zoom-in-95 duration-300">
+            <WritingAssistant
+              textType={textType}
+              level={level}
+              onSchemaReady={(schema) => {
+                setContent(prev => prev ? `${prev}\n\n${schema}` : schema)
+                toast.success("¡Esquema copiado al texto!")
+              }}
+            />
+          </section>
 
           <section>
             <div className="flex items-center gap-2 mb-2">

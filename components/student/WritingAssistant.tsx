@@ -1,0 +1,162 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Sparkles, Send, X } from "lucide-react"
+
+interface Message {
+  role: "ai" | "user"
+  text: string
+}
+
+interface WritingAssistantProps {
+  textType: string
+  level: string
+  onSchemaReady: (schema: string) => void
+}
+
+export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssistantProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [schema, setSchema] = useState("")
+
+  const startAssistant = async () => {
+    setIsOpen(true)
+    setIsLoading(true)
+    const firstMessage = await askGemini([], "start")
+    setMessages([{ role: "ai", text: firstMessage }])
+    setIsLoading(false)
+  }
+
+  const askGemini = async (history: Message[], userInput: string) => {
+    const historyText = history.map(m => `${m.role === "ai" ? "Insegnante" : "Studente"}: ${m.text}`).join("\n")
+
+    const prompt = `Sei un insegnante di italiano esperto e paziente. Aiuta uno studente di livello ${level} a sviluppare le idee per scrivere un testo di tipo "${textType}".
+
+Storico della conversazione:
+${historyText}
+
+${userInput === "start" ? "Inizia la conversazione con una pregunta semplice per capire di cosa vuole scrivere lo studente." : `Ultima risposta dello studente: "${userInput}"`}
+
+Regole:
+- Fai UNA sola pregunta alla volta, semplice e adatta al livello ${level}
+- Dopo 3-4 risposte dello studente, genera uno SCHEMA con questo formato esatto:
+  📝 SCHEMA DEL TUO TESTO:
+  • Apertura: [idea concreta]
+  • Sviluppo: [idea concreta]
+  • Conclusione: [idea concreta]
+  💡 5 espressioni utili: [frase1], [frase2], [frase3], [frase4], [frase5]
+- Rispondi SOLO in italiano semplice adatto al livello ${level}`
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    )
+    const data = await response.json()
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Mi dispiace, riprova."
+  }
+
+  const sendMessage = async () => {
+    if (!input.trim()) return
+    const userMessage: Message = { role: "user", text: input }
+    const newMessages = [...messages, userMessage]
+    setMessages(newMessages)
+    setInput("")
+    setIsLoading(true)
+    const aiResponse = await askGemini(newMessages, input)
+    setMessages([...newMessages, { role: "ai", text: aiResponse }])
+    if (aiResponse.includes("SCHEMA DEL TUO TESTO")) {
+      setSchema(aiResponse)
+    }
+    setIsLoading(false)
+  }
+
+  if (!isOpen) {
+    return (
+      <Button
+        variant="outline"
+        onClick={startAssistant}
+        className="w-full border-primary/30 text-primary hover:bg-primary/5 font-bold gap-2"
+      >
+        <Sparkles className="h-4 w-4" />
+        💡 Aiutami a scrivere
+      </Button>
+    )
+  }
+
+  return (
+    <div className="border-2 border-primary/20 rounded-2xl bg-white overflow-hidden">
+      <div className="bg-primary/5 px-4 py-3 flex items-center justify-between border-b border-primary/10">
+        <span className="font-bold text-primary text-sm flex items-center gap-2">
+          <Sparkles className="h-4 w-4" /> Assistente alla scrittura
+        </span>
+        <button onClick={() => setIsOpen(false)}>
+          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+        </button>
+      </div>
+
+      <div className="h-72 overflow-y-auto p-4 space-y-3">
+        {messages.map((msg, i) => (
+          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+              msg.role === "ai"
+                ? "bg-gray-50 text-gray-800 rounded-tl-none"
+                : "bg-primary text-white rounded-tr-none"
+            }`}>
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-gray-50 rounded-2xl rounded-tl-none px-4 py-3">
+              <span className="text-gray-400 text-sm animate-pulse">Sto pensando...</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {schema && (
+        <div className="px-4 pb-3">
+          <Button
+            onClick={() => onSchemaReady(schema)}
+            className="w-full bg-primary hover:bg-primary-dark text-white font-bold gap-2 text-sm"
+          >
+            ✅ Usa questo schema come base
+          </Button>
+        </div>
+      )}
+
+      <div className="border-t border-gray-100 p-3 flex gap-2">
+        <Textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Rispondi qui..."
+          className="min-h-[44px] max-h-[120px] text-sm resize-none"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault()
+              sendMessage()
+            }
+          }}
+        />
+        <Button
+          onClick={sendMessage}
+          disabled={isLoading || !input.trim()}
+          className="bg-primary hover:bg-primary-dark shrink-0"
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
+}
