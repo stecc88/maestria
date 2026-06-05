@@ -29,7 +29,7 @@ export default async function CorrectionsPage() {
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
       <div>
         <h1 className="text-3xl font-display font-bold text-gray-900">Le mie correzioni</h1>
-        <p className="text-gray-500 mt-1">Storico di tutti i tuoi testi corretti dall'IA</p>
+        <p className="text-gray-500 mt-1">Storico di tutti i tuoi testi corretti dall&apos;IA</p>
       </div>
 
       {!corrections || corrections.length === 0 ? (
