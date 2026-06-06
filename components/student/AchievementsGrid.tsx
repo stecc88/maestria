@@ -35,7 +35,7 @@ export function AchievementsGrid({ unlockedIds }: AchievementsGridProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-         <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Miei traguardi</h3>
+         <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Traguardi</h3>
          <span className="text-xs font-black text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
            {unlockedIds.length} / {ALL_ACHIEVEMENTS.length} Sbloccati
          </span>
