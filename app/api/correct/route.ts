@@ -24,7 +24,9 @@ export async function POST(request: Request) {
       return Response.json({ error: "Il testo è troppo breve" }, { status: 400 })
     }
 
-    const prompt = `Sei un esaminatore esperto di italiano come lingua straniera con 20 anni di esperienza, equivalente ai più esigenti standard di certificazione internazionale (CILS, CELI, PLIDA).
+    const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
+
+Sei un esaminatore esperto di italiano come lingua straniera con 20 anni di esperienza, equivalente ai più esigenti standard di certificazione internazionale (CILS, CELI, PLIDA).
 
 Valuta il seguente testo scritto da uno studente.
 
@@ -44,26 +46,26 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
   "score_vocabulary": 17,
   "score_grammar": 16,
   "score_task_completion": 21,
-  "examiner_comment": "Commento professionale di 150-200 parole in italiano",
-  "pros": ["Punto di forza 1 con esempio dal testo", "Punto di forza 2", "Punto di forza 3"],
-  "cons": ["Punto di debolezza 1 con esempio", "Punto di debolezza 2", "Punto di debolezza 3"],
+  "examiner_comment": "Commento professionale di 150-200 parole IN ITALIANO",
+  "pros": ["Punto di forza 1 con esempio dal testo IN ITALIANO", "Punto di forza 2 IN ITALIANO", "Punto di forza 3 IN ITALIANO"],
+  "cons": ["Punto di debolezza 1 con esempio IN ITALIANO", "Punto di debolezza 2 IN ITALIANO", "Punto di debolezza 3 IN ITALIANO"],
   "suggestions": [
-    {"category": "Grammatica", "tip": "Suggerimento specifico", "example": "Esempio"},
-    {"category": "Lessico", "tip": "Suggerimento", "example": "Esempio"},
-    {"category": "Struttura", "tip": "Suggerimento", "example": "Esempio"}
+    {"category": "Grammatica", "tip": "Suggerimento specifico IN ITALIANO", "example": "Esempio IN ITALIANO"},
+    {"category": "Lessico", "tip": "Suggerimento IN ITALIANO", "example": "Esempio IN ITALIANO"},
+    {"category": "Struttura", "tip": "Suggerimento IN ITALIANO", "example": "Esempio IN ITALIANO"}
   ],
   "corrected_text": "Versione corretta completa del testo",
   "inline_corrections": [
-    {"original": "frase con errore", "corrected": "frase corretta", "explanation": "spiegazione in italiano", "error_type": "grammatica"}
+    {"original": "frase con error", "corrected": "frase corretta", "explanation": "spiegazione IN ITALIANO", "error_type": "grammatica"}
   ],
   "error_categories": {
-    "grammatica": "descrizione dell'errore grammaticale principale",
-    "lessico": "descrizione dell'errore di lessico principale",
-    "ortografia": "descrizione dell'errore ortografico principale",
-    "registro": "problemi di registro se presenti",
-    "struttura": "problemi di struttura se presenti"
+    "grammatica": "descrizione dell'errore grammaticale principale IN ITALIANO",
+    "lessico": "descrizione dell'errore di lessico principale IN ITALIANO",
+    "ortografia": "descrizione dell'errore ortografico principale IN ITALIANO",
+    "registro": "problemi di registro se presenti IN ITALIANO",
+    "struttura": "problemi di struttura se presenti IN ITALIANO"
   },
-  "next_steps": ["Passo 1 concreto", "Passo 2 concreto", "Passo 3 concreto"],
+  "next_steps": ["Passo 1 concreto IN ITALIANO", "Passo 2 concreto IN ITALIANO", "Passo 3 concreto IN ITALIANO"],
   "meets_level_requirements": {"A1": true, "A2": true, "B1": true, "B2": false, "C1": false, "C2": false}
 }`
 

@@ -17,7 +17,9 @@ export async function POST(request: Request) {
     const { taskId, content, error_categories, exercise_instructions } = await request.json()
 
     // 1. Evaluate with Gemini
-    const prompt = `Sei un insegnante di italiano esperto.
+    const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
+
+Sei un insegnante di italiano esperto.
 Lo studente aveva i seguenti errori nello scritto originale: ${JSON.stringify(error_categories)}.
 Gli è stato assegnato questo esercizio per fare pratica: "${exercise_instructions}"
 La risposta dello studente è: "${content}"
@@ -25,10 +27,10 @@ La risposta dello studente è: "${content}"
 Valuta se lo studente ha superato l'errore o se mostra un miglioramento significativo.
 Fornisci:
 - Un punteggio da 0 a 100
-- Un commento motivatore e pedagogico di 2-3 frasi in italiano.
+- Un commento motivatore e pedagogico di 2-3 frasi IN ITALIANO.
 - Un booleano che indica se ha superato l'errore principale (error_overcome).
 
-Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
+Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string (IN ITALIANO), "error_overcome": boolean }`
 
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,

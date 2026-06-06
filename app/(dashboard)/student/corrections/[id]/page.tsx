@@ -89,7 +89,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     <div className="p-2.5 bg-primary/10 rounded-xl shrink-0 mt-1">
                       <CheckCircle2 className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="text-gray-800 leading-[1.8] text-lg font-medium">{pro}</p>
+                    <div className="max-h-[200px] overflow-y-auto">
+                      <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -103,7 +105,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     <div className="p-2.5 bg-secondary/10 rounded-xl shrink-0 mt-1">
                       <Target className="h-5 w-5 text-secondary" />
                     </div>
-                    <p className="text-gray-800 leading-[1.8] text-lg font-medium">{con}</p>
+                    <div className="max-h-[200px] overflow-y-auto">
+                      <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -118,10 +122,12 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                         {sug.category}
                       </Badge>
                     </div>
-                    <p className="font-display font-bold text-xl text-gray-900 leading-tight">{sug.tip}</p>
-                    <div className="p-5 bg-cream rounded-2xl border border-gray-100/50 text-base italic leading-relaxed">
-                      <span className="text-primary font-black uppercase text-[10px] tracking-widest mr-3 not-italic">Esempio:</span>
-                      &ldquo;{sug.example}&rdquo;
+                    <div className="max-h-[200px] overflow-y-auto space-y-4">
+                      <p className="font-display font-bold text-lg text-gray-900 leading-tight">{sug.tip}</p>
+                      <div className="p-5 bg-cream rounded-2xl border border-gray-100/50 text-sm italic leading-relaxed">
+                        <span className="text-primary font-black uppercase text-[10px] tracking-widest mr-3 not-italic">Esempio:</span>
+                        &ldquo;{sug.example}&rdquo;
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
