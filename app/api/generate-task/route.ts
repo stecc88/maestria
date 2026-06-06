@@ -21,22 +21,24 @@ export async function POST(request: Request) {
       studentLevel
     } = await request.json()
 
-    const prompt = `Sei un esperto in didattica dell'italiano per stranieri con ampia esperienza.
+    const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
+
+Sei un esperto in didattica dell'italiano per stranieri con ampia esperienza.
 Lo studente ha un livello rilevato di: ${studentLevel}.
 Ha commesso questo errore frequentemente: ${errorType} — nello specifico: ${errorDetail}.
 Note aggiuntive dell'insegnante: ${additionalNotes || 'Nessuna'}.
 
 Crea:
-1. Una spiegazione teorica chiara e pedagogica della regola grammaticale o di uso correlata (in italiano, con esempi evidenziati).
+1. Una spiegazione teorica chiara e pedagogica della regola grammaticale o di uso correlata (IN ITALIANO, con esempi evidenziati).
 2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel}.
 L'esercizio deve essere direttamente correlato a quell'errore specifico affinché lo studente possa esercitarsi.
 
 Rispondi UNICAMENTE con un oggetto JSON (senza markdown) con questa struttura:
 {
-  "title": "Titolo accattivante per il compito",
-  "theory_explanation": "Spiegazione dettagliata in formato markdown (usa il grassetto per gli esempi in italiano)",
-  "exercise_instructions": "Istruzioni passo dopo passo per lo studente",
-  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio in base al tipo (es: testo con [___] da completare, o lista di frasi)"
+  "title": "Titolo accattivante per il compito IN ITALIANO",
+  "theory_explanation": "Spiegazione dettagliata in formato markdown IN ITALIANO (usa il grassetto per gli esempi in italiano)",
+  "exercise_instructions": "Istruzioni passo dopo passo per lo studente IN ITALIANO",
+  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio in base al tipo IN ITALIANO (es: testo con [___] da completare, o lista di frasi)"
 }`
 
     const geminiResponse = await fetch(
