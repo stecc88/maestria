@@ -36,7 +36,7 @@ export default async function TeacherProfilePage() {
       <header>
         <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
           <User className="h-8 w-8 text-primary" />
-          Mio Profilo
+          Profilo
         </h1>
         <p className="text-gray-500 mt-1">Gestisci le tue informazioni personali e controlla le tue statistiche generali.</p>
       </header>

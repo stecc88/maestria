@@ -48,21 +48,21 @@ interface SidebarProps {
 }
 
 const studentNavItems = [
-  { label: "Miei progressi", href: "/student", icon: LayoutDashboard },
+  { label: "Progressi", href: "/student", icon: LayoutDashboard },
   { label: "Invia testo", href: "/student/write", icon: PenLine },
-  { label: "Mie correzioni", href: "/student/corrections", icon: FileText },
+  { label: "Correzioni", href: "/student/corrections", icon: FileText },
   { label: "Guide alla scrittura", href: "/student/guides", icon: BookOpen },
-  { label: "Miei compiti", href: "/student/tasks", icon: ClipboardList, badge: true },
+  { label: "Compiti", href: "/student/tasks", icon: ClipboardList, badge: true },
   { label: "Classifica", href: "/student/ranking", icon: Trophy },
-  { label: "Mio profilo", href: "/student/profile", icon: Settings },
+  { label: "Profilo", href: "/student/profile", icon: Settings },
 ]
 
 const teacherNavItems = [
-  { label: "Mio pannello", href: "/teacher", icon: LayoutDashboard },
-  { label: "Miei studenti", href: "/teacher/students", icon: Trophy },
+  { label: "Pannello", href: "/teacher", icon: LayoutDashboard },
+  { label: "Studenti", href: "/teacher/students", icon: Trophy },
   { label: "Compiti generati", href: "/teacher/tasks", icon: ClipboardList },
   { label: "Notifiche", href: "/teacher/notifications", icon: LayoutDashboard },
-  { label: "Mio profilo", href: "/teacher/profile", icon: Settings },
+  { label: "Profilo", href: "/teacher/profile", icon: Settings },
 ] as const
 
 const adminNavItems = [

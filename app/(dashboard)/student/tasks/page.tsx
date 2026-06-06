@@ -147,7 +147,7 @@ export default async function StudentTasksPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20 animate-in fade-in duration-700">
       <div>
-        <h1 className="text-3xl font-display font-bold text-gray-900">Mie attività 📝</h1>
+        <h1 className="text-3xl font-display font-bold text-gray-900">Attività 📝</h1>
         <p className="text-gray-500 mt-1">Esercizi personalizzati creati dal tuo insegnante per migliorare i tuoi punti deboli.</p>
       </div>
 
