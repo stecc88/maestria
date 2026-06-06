@@ -30,9 +30,9 @@ export default async function TeacherTasksPage() {
       <header>
         <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
           <ClipboardList className="h-8 w-8 text-primary" />
-          Tareas Generadas
+          Compiti Generati
         </h1>
-        <p className="text-gray-500 mt-1">Administra y revisa el progreso de las tareas que has asignado.</p>
+        <p className="text-gray-500 mt-1">Gestisci e controlla il progresso dei compiti che hai assegnato.</p>
       </header>
 
       <TeacherTasksList initialTasks={tasks || []} />

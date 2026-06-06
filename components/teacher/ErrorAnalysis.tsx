@@ -19,7 +19,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
         <CardHeader>
           <CardTitle className="text-lg font-bold flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-secondary" />
-            Errores más frecuentes
+            Errori più frequenti
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -27,7 +27,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
             <div key={category} className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="capitalize font-bold text-gray-700">{category}</span>
-                <span className="text-gray-400 font-medium">{count} veces</span>
+                <span className="text-gray-400 font-medium">{count} volte</span>
               </div>
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
@@ -37,7 +37,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
               </div>
             </div>
           ))}
-          {categories.length === 0 && <p className="text-center text-gray-400 italic py-4">Sin datos de errores suficientes.</p>}
+          {categories.length === 0 && <p className="text-center text-gray-400 italic py-4">Dati sugli errori insufficienti.</p>}
         </CardContent>
       </Card>
 
@@ -45,7 +45,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
         <CardHeader>
           <CardTitle className="text-lg font-bold flex items-center gap-2 text-secondary">
              <AlertCircle className="h-5 w-5" />
-             Ejemplos reales detectados
+             Esempi reali rilevati
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -59,7 +59,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
                 <p className="font-bold text-gray-900">{ex.corrected}</p>
              </div>
            ))}
-           {examples.length === 0 && <p className="text-center text-gray-400 italic py-4 text-sm">Aún no hay ejemplos para mostrar.</p>}
+           {examples.length === 0 && <p className="text-center text-gray-400 italic py-4 text-sm">Non ci sono ancora esempi da mostrare.</p>}
         </CardContent>
       </Card>
     </div>

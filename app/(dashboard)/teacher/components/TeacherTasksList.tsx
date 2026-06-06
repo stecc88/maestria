@@ -17,7 +17,7 @@ import {
   ClipboardList
 } from "lucide-react";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { it } from "date-fns/locale";
 
 interface TeacherTasksListProps {
   initialTasks: any[];
@@ -38,19 +38,19 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
     switch (status) {
       case 'completed':
         return <Badge className="bg-green-100 text-green-700 border-none flex gap-1 items-center px-3 py-1">
-          <CheckCircle2 className="h-3 w-3" /> Completada
+          <CheckCircle2 className="h-3 w-3" /> Completato
         </Badge>;
       case 'in_progress':
         return <Badge className="bg-blue-100 text-blue-700 border-none flex gap-1 items-center px-3 py-1">
-          <PlayCircle className="h-3 w-3" /> En progreso
+          <PlayCircle className="h-3 w-3" /> In corso
         </Badge>;
       case 'started':
         return <Badge className="bg-amber-100 text-amber-700 border-none flex gap-1 items-center px-3 py-1">
-          <Clock className="h-3 w-3" /> Iniciada
+          <Clock className="h-3 w-3" /> Avviato
         </Badge>;
       default:
         return <Badge className="bg-gray-100 text-gray-700 border-none flex gap-1 items-center px-3 py-1">
-          <Calendar className="h-3 w-3" /> Pendiente
+          <Calendar className="h-3 w-3" /> In sospeso
         </Badge>;
     }
   };
@@ -67,7 +67,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                 filter === f ? "bg-primary text-white shadow-md" : "text-gray-500 hover:text-primary hover:bg-primary/5"
               }`}
             >
-              {f === "all" ? "Todas" : f === "pending" ? "Pendientes" : f === "in_progress" ? "En Progreso" : "Completadas"}
+              {f === "all" ? "Tutti" : f === "pending" ? "In sospeso" : f === "in_progress" ? "In corso" : "Completati"}
             </button>
           ))}
         </div>
@@ -76,7 +76,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-primary transition-colors" />
           <input
             type="text"
-            placeholder="Buscar por título o alumno..."
+            placeholder="Cerca per titolo o studente..."
             className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -108,7 +108,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                         </div>
                         <div className="flex items-center gap-1.5">
                            <Calendar className="h-3.5 w-3.5" />
-                           {format(new Date(task.created_at), "d 'de' MMMM", { locale: es })}
+                           {format(new Date(task.created_at), "d MMMM", { locale: it })}
                         </div>
                       </div>
                     </div>
@@ -131,7 +131,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
           <Card className="border-dashed border-2 bg-transparent py-20">
             <CardContent className="text-center">
               <ClipboardList className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-400 font-medium">No se encontraron tareas con estos criterios.</p>
+              <p className="text-gray-400 font-medium">Nessun compito trovato con questi criteri.</p>
             </CardContent>
           </Card>
         )}

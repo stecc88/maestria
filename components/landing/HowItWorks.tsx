@@ -5,27 +5,27 @@ import { motion } from "framer-motion"
 const steps = [
   {
     number: "1️⃣",
-    text: "Registrate con el código de tu profesor (o como alumno libre)"
+    text: "Registrati con il codice del tuo insegnante (o come studente libero)"
   },
   {
     number: "2️⃣",
-    text: "Escribí tu texto en italiano"
+    text: "Scrivi il tuo testo in italiano"
   },
   {
     number: "3️⃣",
-    text: "La IA lo analiza según criterios internacionales de evaluación"
+    text: "L'IA lo analizza secondo i criteri internazionali di valutazione"
   },
   {
     number: "4️⃣",
-    text: "Recibís feedback detallado: fortalezas, errores y sugerencias"
+    text: "Ricevi un feedback dettagliato: punti di forza, errori e suggerimenti"
   },
   {
     number: "5️⃣",
-    text: "Tu profesor genera ejercicios basados en tus errores reales"
+    text: "Il tuo insegnante genera esercizi basati sui tuoi errori reali"
   },
   {
     number: "6️⃣",
-    text: "¡Mejorás, ganás puntos y subís en el ranking!"
+    text: "Migliori, guadagni punti e scali la classifica!"
   }
 ]
 
@@ -40,7 +40,7 @@ export default function HowItWorks() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-            Cómo funciona
+            Come funziona
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto rounded-full" />
         </motion.div>

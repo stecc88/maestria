@@ -21,6 +21,12 @@ interface HeaderProps {
 }
 
 export function Header({ user, studentData, teacherData, notifications }: HeaderProps) {
+  const roleLabels: Record<string, string> = {
+    admin: "Amministratore",
+    teacher: "Insegnante",
+    student: "Studente"
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white/80 backdrop-blur-md px-4 md:px-8">
       {/* Mobile Toggle & Logo */}
@@ -50,7 +56,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
       <div className="hidden md:block">
         {/* Placeholder for breadcrumbs or page title if needed */}
         <h2 className="text-sm font-medium text-gray-500">
-          Dashboard / {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+          Dashboard / {roleLabels[user.role] || user.role}
         </h2>
       </div>
 
@@ -62,7 +68,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
         <div className="flex items-center gap-3">
           <div className="text-right hidden md:block">
             <p className="text-sm font-bold text-gray-900 leading-none">{user.full_name}</p>
-            <p className="text-xs text-gray-500 mt-1 capitalize">{user.role}</p>
+            <p className="text-xs text-gray-500 mt-1">{roleLabels[user.role] || user.role}</p>
           </div>
           <Avatar className="h-9 w-9 border border-gray-200">
             <AvatarImage src={user.avatar_url} />

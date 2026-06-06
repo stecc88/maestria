@@ -18,7 +18,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 
 export default async function StudentTasksPage() {
@@ -73,7 +73,7 @@ export default async function StudentTasksPage() {
             {task.due_date && (
               <span className="text-[10px] text-gray-400 flex items-center gap-1 font-medium">
                 <Clock className="h-3 w-3" />
-                Vence: {format(new Date(task.due_date), 'd MMM', { locale: es })}
+                Scadenza: {format(new Date(task.due_date), 'd MMM', { locale: it })}
               </span>
             )}
           </div>
@@ -86,15 +86,15 @@ export default async function StudentTasksPage() {
             </h3>
             <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
               <User className="h-3 w-3" />
-              Creada por {task.teachers?.profiles?.full_name} · {format(new Date(task.created_at), 'd MMM yyyy', { locale: es })}
+              Creata da {task.teachers?.profiles?.full_name} · {format(new Date(task.created_at), 'd MMM yyyy', { locale: it })}
             </p>
           </div>
 
           {task.corrections && (
             <div className="p-3 bg-cream rounded-xl border border-primary/5 flex items-center justify-between">
-               <span className="text-[10px] font-bold text-primary/60 uppercase">Basada en tu texto</span>
+               <span className="text-[10px] font-bold text-primary/60 uppercase">Basata sul tuo testo</span>
                <Link href={`/student/corrections/${task.correction_id}`} className="text-[10px] text-primary hover:underline flex items-center gap-1 font-bold">
-                 Ver corrección <ExternalLink className="h-3 w-3" />
+                 Vedi correzione <ExternalLink className="h-3 w-3" />
                </Link>
             </div>
           )}
@@ -103,12 +103,12 @@ export default async function StudentTasksPage() {
             <div className="flex items-center gap-2">
                {task.status === 'completed' ? (
                  <Badge className="bg-primary text-white border-none gap-1 py-1">
-                   <CheckCircle2 className="h-3 w-3" /> Completada
+                   <CheckCircle2 className="h-3 w-3" /> Completata
                  </Badge>
                ) : task.status === 'pending' ? (
-                 <Badge variant="outline" className="text-gray-400 border-gray-200">Pendiente</Badge>
+                 <Badge variant="outline" className="text-gray-400 border-gray-200">In sospeso</Badge>
                ) : (
-                 <Badge className="bg-accent text-white border-none">En progreso</Badge>
+                 <Badge className="bg-accent text-white border-none">In corso</Badge>
                )}
             </div>
 
@@ -117,7 +117,7 @@ export default async function StudentTasksPage() {
                 "rounded-xl font-bold gap-2",
                 task.status === 'completed' ? "bg-gray-100 text-gray-600 hover:bg-gray-200" : "bg-primary text-white"
               )}>
-                {task.status === 'completed' ? 'Ver resultado' : task.status === 'pending' ? 'Comenzar' : 'Continuar'}
+                {task.status === 'completed' ? 'Vedi risultato' : task.status === 'pending' ? 'Inizia' : 'Continua'}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </Link>
@@ -132,13 +132,13 @@ export default async function StudentTasksPage() {
       <div className="bg-cream w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
         <ClipboardList className="h-10 w-10 text-gray-300" />
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">Sin tareas pendientes</h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">Nessun compito in sospeso</h3>
       <p className="text-gray-500 max-w-sm mx-auto">
-        Tu profesor aún no generó tareas para vos. Seguí enviando textos para que pueda ver tus errores y crear ejercicios.
+        Il tuo insegnante non ha ancora generato compiti per te. Continua a inviare testi così potrà vedere i tuoi errori e creare esercizi.
       </p>
       <Link href="/student/write" className="inline-block mt-8">
         <Button className="bg-primary hover:bg-primary-dark font-bold px-8">
-          Enviar nuevo texto ✍️
+          Invia nuovo testo ✍️
         </Button>
       </Link>
     </div>
@@ -147,26 +147,26 @@ export default async function StudentTasksPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20 animate-in fade-in duration-700">
       <div>
-        <h1 className="text-3xl font-display font-bold text-gray-900">Le mie Attività 📝</h1>
-        <p className="text-gray-500 mt-1">Ejercicios personalizados creados por tu profesor para mejorar tus puntos débiles.</p>
+        <h1 className="text-3xl font-display font-bold text-gray-900">Mie attività 📝</h1>
+        <p className="text-gray-500 mt-1">Esercizi personalizzati creati dal tuo insegnante per migliorare i tuoi punti deboli.</p>
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
         <TabsList className="bg-white border border-gray-100 p-1 h-14 rounded-2xl w-full md:w-fit justify-start gap-2 px-2">
           <TabsTrigger value="pending" className="rounded-xl data-[state=active]:bg-secondary/5 data-[state=active]:text-secondary font-bold gap-2 px-6">
-            Pendientes
+            In sospeso
             <Badge variant="destructive" className={cn("h-5 min-w-[20px] px-1", pendingTasks.length === 0 && "opacity-20")}>
               {pendingTasks.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="in_progress" className="rounded-xl data-[state=active]:bg-accent/5 data-[state=active]:text-accent font-bold gap-2 px-6">
-            En progreso
+            In corso
             <Badge className={cn("bg-accent text-white h-5 min-w-[20px] px-1", inProgressTasks.length === 0 && "opacity-20")}>
               {inProgressTasks.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="completed" className="rounded-xl data-[state=active]:bg-primary/5 data-[state=active]:text-primary font-bold gap-2 px-6">
-            Completadas
+            Completate
             <Badge className={cn("bg-primary text-white h-5 min-w-[20px] px-1", completedTasks.length === 0 && "opacity-20")}>
               {completedTasks.length}
             </Badge>
@@ -187,7 +187,7 @@ export default async function StudentTasksPage() {
               {inProgressTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-20 text-gray-400 italic">No tenés tareas iniciadas actualmente.</div>
+            <div className="text-center py-20 text-gray-400 italic">Non hai compiti avviati attualmente.</div>
           )}
         </TabsContent>
 
@@ -197,7 +197,7 @@ export default async function StudentTasksPage() {
               {completedTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-20 text-gray-400 italic">Aún no completaste ninguna tarea. ¡A darle! 💪</div>
+            <div className="text-center py-20 text-gray-400 italic">Non hai ancora completato nessun compito. Forza! 💪</div>
           )}
         </TabsContent>
       </Tabs>

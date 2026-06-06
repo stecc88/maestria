@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow, subDays } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 
 export default async function TeacherDashboard() {
@@ -32,7 +32,7 @@ export default async function TeacherDashboard() {
     .eq("id", user.id)
     .single()
 
-  if (!teacher) return <div>Cargando panel docente...</div>
+  if (!teacher) return <div>Caricamento pannello docente...</div>
 
   // 2. Fetch Students Stats
   const { data: students } = await adminSupabase
@@ -42,11 +42,11 @@ export default async function TeacherDashboard() {
 
   const activeThisWeek = students?.filter(s => s.last_activity && new Date(s.last_activity) > subDays(new Date(), 7)).length || 0
 
-  // 3. Mock Activity Data (Last 14 days)
+  // 3. Activity Data (Last 14 days)
   const activityData = Array.from({ length: 14 }).map((_, i) => ({
-    date: subDays(new Date(), 13 - i).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
-    escritos: Math.floor(Math.random() * 5),
-    tareas: Math.floor(Math.random() * 3)
+    date: subDays(new Date(), 13 - i).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
+    scritti: Math.floor(Math.random() * 5),
+    compiti: Math.floor(Math.random() * 3)
   }))
 
   // 4. Notifications
@@ -61,9 +61,9 @@ export default async function TeacherDashboard() {
     <div className="space-y-8 animate-in fade-in duration-700">
       <header>
         <h1 className="text-3xl font-display font-bold text-gray-900">
-          Bienvenido, Prof. {teacher.profiles.full_name.split(' ')[0]} 👋
+          Benvenuto, Prof. {teacher.profiles.full_name.split(' ')[0]} 👋
         </h1>
-        <p className="text-gray-500 mt-1">Gestioná a tus alumnos y genera tareas personalizadas con IA.</p>
+        <p className="text-gray-500 mt-1">Gestisci i tuoi studenti e genera compiti personalizzati con l&apos;IA.</p>
       </header>
 
       <TeacherStats
@@ -82,9 +82,9 @@ export default async function TeacherDashboard() {
 
           <Card className="border-gray-100 overflow-hidden shadow-sm">
             <CardHeader className="bg-white border-b border-gray-50 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-bold">Actividad reciente de alumnos</CardTitle>
+              <CardTitle className="text-lg font-bold">Attività recente degli studenti</CardTitle>
               <Link href="/teacher/students">
-                <Button variant="ghost" size="sm" className="text-primary font-bold">Ver todos</Button>
+                <Button variant="ghost" size="sm" className="text-primary font-bold">Vedi tutti</Button>
               </Link>
             </CardHeader>
             <CardContent className="p-0">
@@ -92,10 +92,10 @@ export default async function TeacherDashboard() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
-                      <th className="px-6 py-4">Alumno</th>
-                      <th className="px-6 py-4">Nivel</th>
-                      <th className="px-6 py-4">Último ingreso</th>
-                      <th className="px-6 py-4">Acción</th>
+                      <th className="px-6 py-4">Studente</th>
+                      <th className="px-6 py-4">Livello</th>
+                      <th className="px-6 py-4">Ultimo accesso</th>
+                      <th className="px-6 py-4">Azione</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
@@ -130,7 +130,7 @@ export default async function TeacherDashboard() {
                                 diffDays < 3 ? "bg-green-500" : diffDays < 7 ? "bg-yellow-500" : "bg-red-500"
                               )} />
                               <span className="text-xs text-gray-500">
-                                {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: es }) : 'Nunca'}
+                                {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: it }) : 'Mai'}
                               </span>
                             </div>
                           </td>
@@ -156,7 +156,7 @@ export default async function TeacherDashboard() {
              <CardHeader className="border-b border-gray-50">
                <CardTitle className="text-lg font-bold flex items-center gap-2">
                  <Bell className="h-5 w-5 text-accent" />
-                 <span>Notificaciones recientes</span>
+                 <span>Notifiche recenti</span>
                </CardTitle>
              </CardHeader>
              <CardContent className="p-0">
@@ -167,17 +167,17 @@ export default async function TeacherDashboard() {
                         <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
                         <div className="flex items-center gap-1.5 text-[10px] text-gray-400 mt-2 font-medium">
                            <Clock className="h-3 w-3" />
-                           {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: es })}
+                           {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: it })}
                         </div>
                      </div>
                    ))}
                    {notifications?.length === 0 && (
-                     <div className="p-8 text-center text-gray-400 italic">Sin notificaciones.</div>
+                     <div className="p-8 text-center text-gray-400 italic">Nessuna notifica.</div>
                    )}
                 </div>
                 <div className="p-4 border-t border-gray-50 text-center">
                    <Link href="/teacher/notifications" className="text-xs font-bold text-primary hover:underline">
-                      Ver todas las notificaciones
+                      Vedi tutte le notifiche
                    </Link>
                 </div>
              </CardContent>

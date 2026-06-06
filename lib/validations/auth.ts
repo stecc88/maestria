@@ -2,23 +2,23 @@ import * as z from "zod"
 
 export const loginSchema = z.object({
   email: z.string().email({
-    message: "Email no válido",
+    message: "Email non valido",
   }),
   password: z.string().min(1, {
-    message: "La contraseña es obligatoria",
+    message: "La password è obbligatoria",
   }),
 })
 
 export const registerSchema = z.object({
   role: z.enum(["student", "teacher"]),
   full_name: z.string().min(2, {
-    message: "El nombre completo debe tener al menos 2 caracteres",
+    message: "Il nome completo deve avere almeno 2 caratteri",
   }),
   email: z.string().email({
-    message: "Email no válido",
+    message: "Email non valido",
   }),
   password: z.string().min(8, {
-    message: "La contraseña debe tener al menos 8 caracteres",
+    message: "La password deve avere almeno 8 caratteri",
   }),
   confirm_password: z.string(),
   // Student specific
@@ -27,13 +27,13 @@ export const registerSchema = z.object({
   // Teacher specific
   institution: z.string().optional(),
   bio: z.string().max(200, {
-    message: "La biografía no puede superar los 200 caracteres",
+    message: "La biografia non può superare i 200 caratteri",
   }).optional(),
   accept_terms: z.boolean().refine((val) => val === true, {
-    message: "Debes aceptar los términos y condiciones",
+    message: "Devi accettare i termini e le condizioni",
   }),
 }).refine((data) => data.password === data.confirm_password, {
-  message: "Las contraseñas no coinciden",
+  message: "Le password non corrispondono",
   path: ["confirm_password"],
 })
 

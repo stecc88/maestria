@@ -7,10 +7,10 @@ import { CheckCircle2, Users } from "lucide-react"
 
 export default function Teachers() {
   const features = [
-    "Código único para que tus alumnos se inscriban contigo",
-    "Panel de control con la evolución individual de cada alumno",
-    "Generación de tareas personalizadas con IA en segundos",
-    "Notificaciones cuando un alumno completa una tarea"
+    "Codice unico per l'iscrizione dei tuoi studenti con te",
+    "Pannello di controllo con l'evoluzione individuale di ogni studente",
+    "Generazione di compiti personalizzati con IA in pochi secondi",
+    "Notifiche quando uno studente completa un compito"
   ]
 
   return (
@@ -23,10 +23,10 @@ export default function Teachers() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Para profesores de italiano
+              Per insegnanti di italiano
             </h2>
             <p className="text-xl text-white/80 font-body mb-10 leading-relaxed">
-              Administrá tu clase, monitoreá la evolución de cada alumno y generá tareas con IA en un click.
+              Gestisci la tua classe, monitora l&apos;evoluzione di ogni studente e genera compiti con l&apos;IA in un clic.
             </p>
 
             <div className="space-y-4 mb-10">
@@ -40,7 +40,7 @@ export default function Teachers() {
 
             <Link href="/register">
               <Button className="bg-white text-primary-dark hover:bg-cream text-lg px-8 py-6 h-auto font-body font-bold transition-all shadow-xl btn-shiny">
-                <span className="relative z-10 text-primary-dark">Registrarme como profesor &rarr;</span>
+                <span className="relative z-10 text-primary-dark">Registrati come insegnante &rarr;</span>
               </Button>
             </Link>
           </motion.div>
@@ -56,8 +56,8 @@ export default function Teachers() {
                  <div className="w-20 h-20 bg-accent rounded-full mx-auto mb-6 flex items-center justify-center">
                    <Users className="w-10 h-10 text-white" />
                  </div>
-                 <p className="font-display text-2xl font-bold">Panel de Control</p>
-                 <p className="font-body text-white/60">Monitoreo en tiempo real</p>
+                 <p className="font-display text-2xl font-bold">Pannello di Controllo</p>
+                 <p className="font-body text-white/60">Monitoraggio in tempo reale</p>
                </div>
             </div>
             {/* Decorative Elements */}

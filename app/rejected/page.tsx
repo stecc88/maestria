@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function RejectedPage() {
   // In a real scenario, you'd fetch the reason from the profile
-  const reason = "No se pudo verificar la institución educativa proporcionada."
+  const reason = "Impossibile verificare l'istituzione educativa fornita."
 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center p-4">
@@ -24,11 +24,11 @@ export default function RejectedPage() {
         </div>
 
         <h1 className="text-3xl font-display font-bold text-foreground mb-4">
-          Acceso denegado
+          Accesso negato
         </h1>
 
         <div className="p-4 bg-secondary/5 rounded-xl border border-secondary/10 mb-8">
-          <p className="text-sm font-body text-secondary-dark font-bold mb-1">Motivo del rechazo:</p>
+          <p className="text-sm font-body text-secondary-dark font-bold mb-1">Motivo del rifiuto:</p>
           <p className="text-sm font-body text-muted-foreground italic">
             &quot;{reason}&quot;
           </p>
@@ -37,7 +37,7 @@ export default function RejectedPage() {
         <div className="space-y-4">
           <Button className="w-full h-11 bg-primary">
             <MessageSquare className="w-4 h-4 mr-2" />
-            Contactar soporte
+            Contatta il supporto
           </Button>
 
           <Button
@@ -46,11 +46,11 @@ export default function RejectedPage() {
             onClick={() => signOut()}
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Cerrar sesión
+            Disconnetti
           </Button>
 
           <Link href="/" className="block text-sm text-primary hover:underline font-body">
-            Volver al inicio
+            Torna alla home
           </Link>
         </div>
       </motion.div>

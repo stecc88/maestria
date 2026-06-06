@@ -18,6 +18,17 @@ interface GuideCardProps {
 }
 
 export function GuideCard({ guide, isFavorite, onToggleFavorite, featured }: GuideCardProps) {
+  const typeLabels: Record<string, string> = {
+    email_formal: "Email formale",
+    email_informal: "Email informale",
+    narrativo: "Narrativo",
+    descriptivo: "Descrittivo",
+    argumentativo: "Argomentativo",
+    reclamo: "Reclamo",
+    articulo: "Articolo",
+    libre: "Libero"
+  }
+
   return (
     <Sheet>
       <Card className={cn(
@@ -66,11 +77,11 @@ export function GuideCard({ guide, isFavorite, onToggleFavorite, featured }: Gui
 
           <div className="mt-6 flex items-center justify-between">
             <Badge variant="outline" className="text-[10px] uppercase tracking-widest bg-gray-50 border-gray-100 text-gray-400">
-              {guide.type.replace('_', ' ')}
+              {typeLabels[guide.type] || guide.type.replace('_', ' ')}
             </Badge>
             <SheetTrigger render={
               <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/5 gap-2 font-bold p-0">
-                Ver guía <ArrowRight className="h-4 w-4" />
+                Vedi guida <ArrowRight className="h-4 w-4" />
               </Button>
             } />
           </div>

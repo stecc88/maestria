@@ -17,25 +17,25 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-8">
             <Link href="#features" className="text-sm font-body font-medium hover:text-primary transition-colors">
-              Funcionalidades
+              Funzionalità
             </Link>
             <Link href="#teachers" className="text-sm font-body font-medium hover:text-primary transition-colors">
-              Para profesores
+              Per insegnanti
             </Link>
             <Link href="#levels" className="text-sm font-body font-medium hover:text-primary transition-colors">
-              Niveles
+              Livelli
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
             <Link href="/login">
               <Button variant="outline" className="border-primary text-primary hover:bg-primary/5 hidden sm:inline-flex">
-                Iniciar sesión
+                Accedi
               </Button>
             </Link>
             <Link href="/register">
               <Button className="bg-primary hover:bg-primary-dark text-white shadow-lg hover:shadow-primary/20 transition-all btn-shiny">
-                <span className="relative z-10">Comenzar gratis</span>
+                <span className="relative z-10">Inizia gratis</span>
               </Button>
             </Link>
           </div>

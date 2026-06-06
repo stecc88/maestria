@@ -10,7 +10,7 @@ export async function signIn(formData: any) {
   const validatedFields = loginSchema.safeParse(formData)
 
   if (!validatedFields.success) {
-    return { error: "Datos inválidos" }
+    return { error: "Dati non validi" }
   }
 
   const { email, password } = validatedFields.data
@@ -32,7 +32,7 @@ export async function signIn(formData: any) {
     .single()
 
   if (profileError || !profile) {
-    return { error: "No se encontró el perfil de usuario. Contacte a soporte." }
+    return { error: "Profilo utente non trovato. Contatta il supporto." }
   }
 
   return {
@@ -47,11 +47,11 @@ export async function signUp(formData: any) {
   const validatedFields = registerSchema.safeParse(formData)
 
   if (!validatedFields.success) {
-    return { error: "Datos inválidos" }
+    return { error: "Dati non validi" }
   }
 
   const { email, password, full_name, role, ...extra } = validatedFields.data
-  console.log("1. Iniciando registro", { email, role })
+  console.log("1. Iniziando registrazione", { email, role })
 
   // Check if user already exists in profiles
   const { data: existingProfile } = await adminSupabase
@@ -61,7 +61,7 @@ export async function signUp(formData: any) {
     .single()
 
   if (existingProfile) {
-    return { error: "Este email ya está registrado. Intentá iniciar sesión." }
+    return { error: "Questa email è già registrata. Prova ad accedere." }
   }
 
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -79,16 +79,16 @@ export async function signUp(formData: any) {
 
   if (authError) {
     console.log("Auth error completo:", JSON.stringify(authError))
-    return { error: authError.message + " (código: " + authError.status + ")" }
+    return { error: authError.message + " (codice: " + authError.status + ")" }
   }
 
   // If user is null but no error, it usually means the user exists in Auth but not confirmed
   if (!authData.user) {
-    return { error: "El usuario ya existe o requiere confirmación por email. Revisá tu casilla." }
+    return { error: "L'utente esiste già o richiede la conferma via email. Controlla la tua casella postale." }
   }
 
   const userId = authData.user.id
-  console.log("2. Usuario creado en Auth", { userId })
+  console.log("2. Utente creato in Auth", { userId })
 
   // 1. Create Profile
   const { error: profileError } = await adminSupabase.from('profiles').insert({
@@ -100,7 +100,7 @@ export async function signUp(formData: any) {
   })
 
   if (profileError) return { error: profileError.message }
-  console.log("3. Perfil creado")
+  console.log("3. Profilo creato")
 
   // 2. Role specific data
   if (role === 'student') {
@@ -130,7 +130,7 @@ export async function signUp(formData: any) {
       institution: extra.institution,
     })
   }
-  console.log("4. Datos de rol creados")
+  console.log("4. Dati del ruolo creati")
 
   // 3. Try to notify first available admin
   const { data: admin } = await adminSupabase
@@ -144,12 +144,12 @@ export async function signUp(formData: any) {
     await adminSupabase.from('notifications').insert({
       user_id: admin.id,
       type: 'new_registration',
-      title: 'Nuevo registro',
-      message: `Nuevo ${role} registrado: ${full_name}`,
+      title: 'Nuova registrazione',
+      message: `Nuovo ${role} registrato: ${full_name}`,
     })
   }
 
-  console.log("5. Registro completo")
+  console.log("5. Registrazione completa")
   return { success: true }
 }
 

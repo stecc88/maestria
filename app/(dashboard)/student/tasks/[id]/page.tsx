@@ -42,7 +42,7 @@ export default function TaskDetailPage() {
         .single()
 
       if (error || !data) {
-        toast.error("No se pudo cargar la tarea")
+        toast.error("Impossibile caricare il compito")
         router.push("/student/tasks")
         return
       }
@@ -82,7 +82,7 @@ export default function TaskDetailPage() {
         // Scroll to top to see results
         window.scrollTo({ top: 0, behavior: 'smooth' })
       } else {
-        throw new Error(data.error || "Error al corregir el ejercicio")
+        throw new Error(data.error || "Errore nella correzione dell'esercizio")
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -109,7 +109,7 @@ export default function TaskDetailPage() {
       <header className="space-y-4">
         <Link href="/student/tasks">
           <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
-            <ChevronLeft className="h-4 w-4" /> Volver a mis tareas
+            <ChevronLeft className="h-4 w-4" /> Torna ai miei compiti
           </Button>
         </Link>
 
@@ -124,7 +124,7 @@ export default function TaskDetailPage() {
               <div className="h-1 w-1 rounded-full bg-gray-300" />
               <span className="flex items-center gap-1.5 text-sm text-secondary font-bold">
                 <AlertCircle className="h-4 w-4" />
-                Enfoque: {Object.values(task.corrections?.error_categories || {}).join(', ') || 'General'}
+                Focus: {Object.values(task.corrections?.error_categories || {}).join(', ') || 'Generale'}
               </span>
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function TaskDetailPage() {
           {task.correction_id && (
             <Link href={`/student/corrections/${task.correction_id}`}>
                <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 gap-2 rounded-xl font-bold">
-                 Ver texto original <ExternalLink className="h-4 w-4" />
+                 Vedi testo originale <ExternalLink className="h-4 w-4" />
                </Button>
             </Link>
           )}

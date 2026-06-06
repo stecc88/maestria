@@ -13,7 +13,7 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { formatDistanceToNow } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 
 interface StudentCardProps {
   student: any
@@ -56,14 +56,14 @@ export function StudentCard({ student }: StudentCardProps) {
 
         <div className="grid grid-cols-2 gap-4 mb-6">
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tareas</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiti</p>
               <div className="flex items-center gap-2 mt-1">
                  <ClipboardList className="h-3 w-3 text-primary" />
                  <span className="text-sm font-black text-gray-700">0/0</span>
               </div>
            </div>
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Puntajes</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Punteggi</p>
               <div className="h-5 w-full mt-1">
                  <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={sparkData}>
@@ -77,11 +77,11 @@ export function StudentCard({ student }: StudentCardProps) {
         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
            <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-medium">
               <Clock className="h-3 w-3" />
-              Actividad: {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: es }) : 'Nunca'}
+              Attività: {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: it }) : 'Mai'}
            </div>
            <Link href={`/teacher/students/${student.id}`}>
               <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/5 font-bold gap-1 p-0 h-auto">
-                 Ver perfil <ChevronRight className="h-4 w-4" />
+                 Vedi profilo <ChevronRight className="h-4 w-4" />
               </Button>
            </Link>
         </div>

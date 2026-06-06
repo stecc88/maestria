@@ -16,26 +16,26 @@ export async function POST(request: Request) {
     } = body
 
     const finalContent = content
-    const finalWritingType = writing_type || textType || "libre"
+    const finalWritingType = writing_type || textType || "libero"
     const finalTargetLevel = target_level || level || "B1"
-    const finalConsigna = consigna || clientPrompt || "No especificada"
+    const finalConsigna = consigna || clientPrompt || "Non specificata"
 
     if (!finalContent || finalContent.trim().length < 10) {
-      return Response.json({ error: "El texto es demasiado corto" }, { status: 400 })
+      return Response.json({ error: "Il testo è troppo breve" }, { status: 400 })
     }
 
-    const prompt = `Eres un examinador experto de italiano como lengua extranjera con 20 años de experiencia, equivalente a los estándares de certificación internacional más exigentes.
+    const prompt = `Sei un esaminatore esperto di italiano come lingua straniera con 20 anni di esperienza, equivalente ai più esigenti standard di certificazione internazionale (CILS, CELI, PLIDA).
 
-Evaluá el siguiente texto escrito por un estudiante.
+Valuta il seguente testo scritto da uno studente.
 
-NIVEL OBJETIVO: ${finalTargetLevel}
-TIPO DE TEXTO: ${finalWritingType}
-CONSIGNA: ${finalConsigna}
+LIVELLO OBIETTIVO: ${finalTargetLevel}
+TIPO DI TESTO: ${finalWritingType}
+CONSEGNA: ${finalConsigna}
 
-TEXTO DEL ALUMNO:
+TESTO DELLO STUDENTE:
 ${content}
 
-Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exactamente con esta estructura:
+Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esattamente con questa struttura:
 {
   "detected_level": "B1",
   "overall_score": 72,
@@ -44,26 +44,26 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
   "score_vocabulary": 17,
   "score_grammar": 16,
   "score_task_completion": 21,
-  "examiner_comment": "Comentario profesional de 150-200 palabras en español",
-  "pros": ["Fortaleza 1 con ejemplo del texto", "Fortaleza 2", "Fortaleza 3"],
-  "cons": ["Debilidad 1 con ejemplo", "Debilidad 2", "Debilidad 3"],
+  "examiner_comment": "Commento professionale di 150-200 parole in italiano",
+  "pros": ["Punto di forza 1 con esempio dal testo", "Punto di forza 2", "Punto di forza 3"],
+  "cons": ["Punto di debolezza 1 con esempio", "Punto di debolezza 2", "Punto di debolezza 3"],
   "suggestions": [
-    {"category": "Gramática", "tip": "Sugerencia específica", "example": "Ejemplo"},
-    {"category": "Vocabulario", "tip": "Sugerencia", "example": "Ejemplo"},
-    {"category": "Estructura", "tip": "Sugerencia", "example": "Ejemplo"}
+    {"category": "Grammatica", "tip": "Suggerimento specifico", "example": "Esempio"},
+    {"category": "Lessico", "tip": "Suggerimento", "example": "Esempio"},
+    {"category": "Struttura", "tip": "Suggerimento", "example": "Esempio"}
   ],
-  "corrected_text": "Versión corregida completa del texto",
+  "corrected_text": "Versione corretta completa del testo",
   "inline_corrections": [
-    {"original": "frase con error", "corrected": "frase corregida", "explanation": "explicación", "error_type": "gramatica"}
+    {"original": "frase con errore", "corrected": "frase corretta", "explanation": "spiegazione in italiano", "error_type": "grammatica"}
   ],
   "error_categories": {
-    "gramatica": "descripción del error gramatical principal",
-    "vocabulario": "descripción del error de vocabulario principal",
-    "ortografia": "descripción del error ortográfico principal",
-    "registro": "problemas de registro si existe",
-    "estructura": "problemas de estructura si existe"
+    "grammatica": "descrizione dell'errore grammaticale principale",
+    "lessico": "descrizione dell'errore di lessico principale",
+    "ortografia": "descrizione dell'errore ortografico principale",
+    "registro": "problemi di registro se presenti",
+    "struttura": "problemi di struttura se presenti"
   },
-  "next_steps": ["Paso 1 concreto", "Paso 2 concreto", "Paso 3 concreto"],
+  "next_steps": ["Passo 1 concreto", "Passo 2 concreto", "Passo 3 concreto"],
   "meets_level_requirements": {"A1": true, "A2": true, "B1": true, "B2": false, "C1": false, "C2": false}
 }`
 
@@ -83,13 +83,13 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
     const correction = safeParseJson(rawText)
 
     if (!correction) {
-      return Response.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+      return Response.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })
     }
 
     // Obtener el usuario autenticado
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return Response.json({ error: "No autorizado" }, { status: 401 })
+    if (!user) return Response.json({ error: "Non autorizzato" }, { status: 401 })
 
     const adminSupabase = createAdminClient()
 
@@ -103,14 +103,14 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
         writing_type: finalWritingType,
         target_level: finalTargetLevel,
         word_count: wordCount,
-        title: `${finalWritingType} - ${new Date().toLocaleDateString("es-AR")}`
+        title: `${finalWritingType} - ${new Date().toLocaleDateString("it-IT")}`
       })
       .select()
       .single()
 
     if (writingError) {
       console.error("Error guardando writing:", writingError)
-      return Response.json({ error: "Error guardando el escrito" }, { status: 500 })
+      return Response.json({ error: "Errore durante il salvataggio dello scritto" }, { status: 500 })
     }
 
     // Calcular XP
@@ -144,7 +144,7 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
 
     if (correctionError) {
       console.error("Error guardando correction:", correctionError)
-      return Response.json({ error: "Error guardando la corrección" }, { status: 500 })
+      return Response.json({ error: "Errore durante il salvataggio della correzione" }, { status: 500 })
     }
 
     // Actualizar XP del alumno
@@ -182,6 +182,6 @@ Respondé ÚNICAMENTE con JSON válido sin markdown, sin texto adicional, exacta
 
   } catch (error: any) {
     console.error("Error en /api/correct:", error)
-    return Response.json({ error: error.message || "Error interno" }, { status: 500 })
+    return Response.json({ error: error.message || "Errore interno" }, { status: 500 })
   }
 }

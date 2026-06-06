@@ -10,25 +10,25 @@ export async function POST(request: Request) {
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
   }
 
   try {
     const { taskId, content, error_categories, exercise_instructions } = await request.json()
 
     // 1. Evaluate with Gemini
-    const prompt = `Eres un profesor de italiano experto.
-El alumno tenía los siguientes errores en su escrito original: ${JSON.stringify(error_categories)}.
-Se le asignó este ejercicio para practicar: "${exercise_instructions}"
-La respuesta del alumno es: "${content}"
+    const prompt = `Sei un insegnante di italiano esperto.
+Lo studente aveva i seguenti errori nello scritto originale: ${JSON.stringify(error_categories)}.
+Gli è stato assegnato questo esercizio per fare pratica: "${exercise_instructions}"
+La risposta dello studente è: "${content}"
 
-Evalúa si el alumno ha superado el error o si muestra una mejora significativa.
-Proporciona:
-- Un puntaje de 0 a 100
-- Un comentario motivador y pedagógico de 2-3 oraciones en español.
-- Un booleano indicando si superó el error principal (error_overcome).
+Valuta se lo studente ha superato l'errore o se mostra un miglioramento significativo.
+Fornisci:
+- Un punteggio da 0 a 100
+- Un commento motivatore e pedagogico di 2-3 frasi in italiano.
+- Un booleano che indica se ha superato l'errore principale (error_overcome).
 
-Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
+Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -46,7 +46,7 @@ Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback
     const geminiResult = safeParseJson(rawText)
 
     if (!geminiResult) {
-      return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+      return NextResponse.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })
     }
 
     // 2. Save Submission
@@ -101,8 +101,8 @@ Responde ÚNICAMENTE con JSON válido sin markdown: { "score": number, "feedback
       await adminSupabase.from("notifications").insert({
         user_id: task.teacher_id,
         type: 'task_completed',
-        title: '✅ Tarea completada',
-        message: `${studentName} completó la tarea "${task.title}" con un puntaje de ${geminiResult.score}/100`,
+        title: '✅ Compito completato',
+        message: `${studentName} ha completato il compito "${task.title}" con un punteggio di ${geminiResult.score}/100`,
         related_id: taskId
       })
     }

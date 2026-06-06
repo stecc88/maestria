@@ -22,9 +22,9 @@ export default async function TeacherNotificationsPage() {
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
             <Bell className="h-8 w-8 text-primary" />
-            Notificaciones
+            Notifiche
           </h1>
-          <p className="text-gray-500 mt-1">Mantente al tanto de la actividad de tus alumnos.</p>
+          <p className="text-gray-500 mt-1">Rimani aggiornato sull&apos;attività dei tuoi studenti.</p>
         </div>
       </header>
 

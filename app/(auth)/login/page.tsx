@@ -50,11 +50,11 @@ export default function LoginPage() {
           .single()
 
         if (profileError || !profile) {
-          toast.error("No se encontró el perfil de usuario. Contacte a soporte.")
+          toast.error("Profilo utente non trovato. Contatta il supporto.")
           return
         }
 
-        toast.success("¡Bienvenido de nuevo!")
+        toast.success("Bentornato!")
 
         // Redirection logic
         if (profile.status === 'pending') {
@@ -66,7 +66,7 @@ export default function LoginPage() {
         }
       }
     } catch (error) {
-      toast.error("Ocurrió un error inesperado")
+      toast.error("Si è verificato un errore imprevisto")
     } finally {
       setIsLoading(false)
     }
@@ -89,7 +89,7 @@ export default function LoginPage() {
             &quot;La lingua è lo specchio della mente.&quot;
           </h2>
           <p className="font-body text-white/80">
-            Inicia sesión para continuar tu viaje hacia la maestría del italiano.
+            Accedi per continuare il tuo viaggio verso la padronanza dell&apos;italiano.
           </p>
         </div>
 
@@ -102,18 +102,18 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-cream">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center lg:text-left">
-            <h1 className="text-3xl font-display font-bold">Iniciar sesión</h1>
-            <p className="text-muted-foreground font-body">Bienvenido a Maestria</p>
+            <h1 className="text-3xl font-display font-bold">Accedi</h1>
+            <p className="text-muted-foreground font-body">Benvenuto su Maestria</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium font-body" htmlFor="email">
-                Correo electrónico
+                Indirizzo email
               </label>
               <Input
                 id="email"
-                placeholder="tu@email.com"
+                placeholder="tuo@email.com"
                 type="email"
                 disabled={isLoading}
                 {...register("email")}
@@ -125,7 +125,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium font-body" htmlFor="password">
-                Contraseña
+                Password
               </label>
               <PasswordInput
                 id="password"
@@ -143,7 +143,7 @@ export default function LoginPage() {
               type="submit"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Iniciar sesión
+              Accedi
             </Button>
           </form>
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-cream px-2 text-muted-foreground font-body">o</span>
+              <span className="bg-cream px-2 text-muted-foreground font-body">oppure</span>
             </div>
           </div>
 
@@ -180,13 +180,13 @@ export default function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-            Continuar con Google
+            Continua con Google
           </Button>
 
           <p className="text-center text-sm font-body text-muted-foreground">
-            ¿No tenés cuenta?{" "}
+            Non hai un account?{" "}
             <Link href="/register" className="text-primary font-bold hover:underline">
-              Registrate gratis &rarr;
+              Registrati gratis &rarr;
             </Link>
           </p>
         </div>

@@ -24,7 +24,7 @@ export function ActivityBarChart({ data }: ActivityBarChartProps) {
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           <Activity className="h-5 w-5 text-primary" />
-          <span>Actividad de alumnos — últimos 14 días</span>
+          <span>Attività studenti — ultimi 14 giorni</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="h-[400px]">
@@ -47,8 +47,8 @@ export function ActivityBarChart({ data }: ActivityBarChartProps) {
               contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
             />
             <Legend iconType="circle" />
-            <Bar dataKey="escritos" stackId="a" fill="#009246" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="tareas" stackId="a" fill="#F5A623" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="scritti" name="Scritti" stackId="a" fill="#009246" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="compiti" name="Compiti" stackId="a" fill="#F5A623" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

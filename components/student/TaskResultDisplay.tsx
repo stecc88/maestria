@@ -55,7 +55,7 @@ export function TaskResultDisplay({ result }: TaskResultDisplayProps) {
                 result.error_overcome ? "border-primary bg-primary/5" : "border-accent bg-accent/5"
               )}>
                 <span className="text-6xl font-display font-bold text-gray-900">{count}</span>
-                <span className="text-sm font-bold text-gray-400 uppercase">Puntos</span>
+                <span className="text-sm font-bold text-gray-400 uppercase">Punti</span>
               </div>
 
               {result.error_overcome && (
@@ -77,7 +77,7 @@ export function TaskResultDisplay({ result }: TaskResultDisplayProps) {
               className="space-y-4"
             >
               <h2 className="text-4xl font-display font-bold text-gray-900">
-                {result.error_overcome ? "¡Superaste el error! 🎉" : "¡Seguís mejorando! 💪"}
+                {result.error_overcome ? "Hai superato l'errore! 🎉" : "Continua a migliorare! 💪"}
               </h2>
               <div className="flex items-center justify-center gap-2">
                 <Badge variant="secondary" className="bg-accent text-white border-none py-1 px-4 gap-2 text-lg">
@@ -102,7 +102,7 @@ export function TaskResultDisplay({ result }: TaskResultDisplayProps) {
                       {result.error_overcome ? <CheckCircle2 className="h-8 w-8" /> : <Flame className="h-8 w-8" />}
                     </div>
                     <div>
-                       <h4 className="font-bold text-gray-900 mb-2">Feedback del Profe:</h4>
+                       <h4 className="font-bold text-gray-900 mb-2">Feedback dell&apos;Insegnante:</h4>
                        <p className="text-gray-600 leading-relaxed italic text-lg">
                          &quot;{result.feedback}&quot;
                        </p>
@@ -120,12 +120,12 @@ export function TaskResultDisplay({ result }: TaskResultDisplayProps) {
             >
               <Link href="/student/write" className="w-full sm:w-auto">
                 <Button className="w-full bg-primary hover:bg-primary-dark font-bold py-6 px-10 rounded-2xl gap-2 shadow-lg shadow-primary/20">
-                  Enviar otro texto ✍️
+                  Invia un altro testo ✍️
                 </Button>
               </Link>
               <Link href="/student/tasks" className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full border-gray-200 hover:bg-gray-50 font-bold py-6 px-10 rounded-2xl gap-2">
-                  Ver mis tareas 📝
+                  Vedi i miei compiti 📝
                 </Button>
               </Link>
             </motion.div>

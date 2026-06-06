@@ -5,7 +5,7 @@ import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import ApprovalActions from "./components/ApprovalActions"
 
 export default async function AdminDashboard() {
@@ -40,9 +40,9 @@ export default async function AdminDashboard() {
     .limit(5)
 
   const stats = [
-    { label: "Usuarios Totales", value: totalUsers?.toString() || "0", icon: Users, color: "text-blue-600" },
-    { label: "Pendientes", value: pendingUsersCount?.toString() || "0", icon: UserCheck, color: "text-orange-600" },
-    { label: "Aprobados", value: approvedUsersCount?.toString() || "0", icon: CheckCircle2, color: "text-primary" },
+    { label: "Utenti Totali", value: totalUsers?.toString() || "0", icon: Users, color: "text-blue-600" },
+    { label: "In sospeso", value: pendingUsersCount?.toString() || "0", icon: UserCheck, color: "text-orange-600" },
+    { label: "Approvati", value: approvedUsersCount?.toString() || "0", icon: CheckCircle2, color: "text-primary" },
   ]
 
   return (
@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900">Dashboard Amministratore</h1>
-          <p className="text-gray-500">Benvenuto al pannello di controllo di Maestria.</p>
+          <p className="text-gray-500">Benvenuto nel pannello di controllo di Maestria.</p>
         </div>
         <div className="p-3 bg-primary/10 rounded-full">
            <ShieldCheck className="h-8 w-8 text-primary" />
@@ -82,11 +82,11 @@ export default async function AdminDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
               <Clock className="h-5 w-5 text-orange-600" />
-              Aprobaciones Pendientes
+              Approvazioni in sospeso
             </h2>
             <Link href="/admin/approvals">
               <Button variant="ghost" className="text-primary hover:text-primary-dark">
-                Ver todas
+                Vedi tutte
               </Button>
             </Link>
           </div>
@@ -110,12 +110,12 @@ export default async function AdminDashboard() {
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                               <Clock className="h-3 w-3" />
-                              Registrado el {format(new Date(user.created_at), "d 'de' MMMM", { locale: es })}
+                              Registrato il {format(new Date(user.created_at), "d MMMM", { locale: it })}
                             </div>
                             {user.role === 'teacher' && user.teachers && (
                               <div className="flex items-center gap-2 text-sm font-medium text-primary">
                                 <Key className="h-3 w-3" />
-                                Código: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
+                                Codice: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
                               </div>
                             )}
                           </div>
@@ -126,7 +126,7 @@ export default async function AdminDashboard() {
                         <Badge variant="outline" className={`capitalize ${
                           user.role === 'teacher' ? 'border-purple-200 bg-purple-50 text-purple-700' : 'border-blue-200 bg-blue-50 text-blue-700'
                         }`}>
-                          {user.role === 'teacher' ? 'Profesor' : 'Alumno'}
+                          {user.role === 'teacher' ? 'Insegnante' : 'Studente'}
                         </Badge>
                         <ApprovalActions userId={user.id} userName={user.full_name} />
                       </div>
@@ -138,7 +138,7 @@ export default async function AdminDashboard() {
               <Card className="border-dashed border-2 bg-transparent">
                 <CardContent className="p-12 text-center">
                   <UserCheck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 font-medium">No hay aprobaciones pendientes</p>
+                  <p className="text-gray-500 font-medium">Non ci sono approvazioni in sospeso</p>
                 </CardContent>
               </Card>
             )}
@@ -152,15 +152,15 @@ export default async function AdminDashboard() {
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
-              <CardTitle className="text-xl">Gestión de Usuarios</CardTitle>
+              <CardTitle className="text-xl">Gestione Utenti</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-gray-600 text-sm">
-                Administra todos los usuarios registrados, cambia roles o gestiona permisos.
+                Gestisci tutti gli utenti registrati, cambia i ruoli o gestisci i permessi.
               </p>
               <Link href="/admin/users" className="block w-full">
                 <Button className="w-full bg-blue-600 hover:bg-blue-700 font-bold py-6 rounded-xl text-white">
-                  Gestionar usuarios
+                  Gestisci utenti
                 </Button>
               </Link>
             </CardContent>
@@ -168,9 +168,9 @@ export default async function AdminDashboard() {
 
           <Card className="border-none shadow-sm bg-primary/5">
             <CardContent className="p-6">
-              <h3 className="font-bold text-primary mb-2">Consejo de Admin</h3>
+              <h3 className="font-bold text-primary mb-2">Consiglio Admin</h3>
               <p className="text-sm text-primary/80">
-                Recuerda que los profesores necesitan ser aprobados para poder generar códigos de clase para sus alumnos.
+                Ricorda che gli insegnanti devono essere approvati per poter generare codici classe per i propri studenti.
               </p>
             </CardContent>
           </Card>

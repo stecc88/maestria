@@ -16,19 +16,19 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-display font-bold mb-4 text-foreground">Enlaces</h4>
+            <h4 className="font-display font-bold mb-4 text-foreground">Link</h4>
             <ul className="space-y-2 font-body text-sm text-muted-foreground">
-              <li><Link href="/" className="hover:text-primary transition-colors">Inicio</Link></li>
-              <li><Link href="#features" className="hover:text-primary transition-colors">Funcionalidades</Link></li>
-              <li><Link href="#teachers" className="hover:text-primary transition-colors">Para profesores</Link></li>
-              <li><Link href="/register" className="hover:text-primary transition-colors">Registrarse</Link></li>
+              <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
+              <li><Link href="#features" className="hover:text-primary transition-colors">Funzionalità</Link></li>
+              <li><Link href="#teachers" className="hover:text-primary transition-colors">Per insegnanti</Link></li>
+              <li><Link href="/register" className="hover:text-primary transition-colors">Registrati</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-display font-bold mb-4 text-foreground">Legal</h4>
+            <h4 className="font-display font-bold mb-4 text-foreground">Legale</h4>
             <p className="font-body text-sm text-muted-foreground">
-              © 2025 Maestria · Plataforma de aprendizaje de italiano con IA
+              © 2025 Maestria · Piattaforma di apprendimento dell&apos;italiano con IA
             </p>
           </div>
         </div>

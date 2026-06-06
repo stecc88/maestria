@@ -5,7 +5,7 @@ import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import UserActions from "./components/UserActions"
 
 export default async function AdminUsersPage() {
@@ -38,6 +38,18 @@ export default async function AdminUsersPage() {
     `)
     .eq("profiles.status", "approved")
 
+  const roleLabels: Record<string, string> = {
+    admin: "Amministratore",
+    teacher: "Insegnante",
+    student: "Studente"
+  }
+
+  const statusLabels: Record<string, string> = {
+    pending: "In sospeso",
+    approved: "Approvato",
+    rejected: "Rifiutato"
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">
@@ -47,8 +59,8 @@ export default async function AdminUsersPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Gestión de Usuarios</h1>
-          <p className="text-gray-500">Administra todos los usuarios registrados en Maestria.</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">Gestione Utenti</h1>
+          <p className="text-gray-500">Gestisci tutti gli utenti registrati su Maestria.</p>
         </div>
       </div>
 
@@ -57,13 +69,13 @@ export default async function AdminUsersPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
                 type="text"
-                placeholder="Buscar por nombre o email..."
+                placeholder="Cerca per nome o email..."
                 className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
             />
         </div>
         <div className="flex items-center gap-2">
             <Badge variant="outline" className="bg-white px-3 py-1">
-                Total: {users?.length || 0}
+                Totale: {users?.length || 0}
             </Badge>
         </div>
       </div>
@@ -85,7 +97,7 @@ export default async function AdminUsersPage() {
                             <ShieldCheck className="h-4 w-4 text-primary" />
                         ) : (
                             <Badge variant="outline" className="text-[10px] uppercase px-1.5 py-0 border-orange-200 bg-orange-50 text-orange-600">
-                                {user.status}
+                                {statusLabels[user.status] || user.status}
                             </Badge>
                         )}
                       </div>
@@ -96,16 +108,16 @@ export default async function AdminUsersPage() {
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Clock className="h-3.5 w-3.5" />
-                          Unido el {format(new Date(user.created_at), "d 'de' MMMM, yyyy", { locale: es })}
+                          Iscritto il {format(new Date(user.created_at), "d MMMM yyyy", { locale: it })}
                         </div>
                       </div>
                       {user.role === 'student' && user.students && (
                         <div className="text-xs font-medium text-primary mt-1">
-                          Profesor: {(() => {
+                          Insegnante: {(() => {
                             const student = Array.isArray(user.students) ? user.students[0] : user.students;
                             const teacher = Array.isArray(student?.teachers) ? student.teachers[0] : student?.teachers;
                             const profile = Array.isArray(teacher?.profiles) ? teacher.profiles[0] : teacher?.profiles;
-                            return (profile as any)?.full_name || 'Sin asignar';
+                            return (profile as any)?.full_name || 'Non assegnato';
                           })()}
                         </div>
                       )}
@@ -118,13 +130,13 @@ export default async function AdminUsersPage() {
                       user.role === 'teacher' ? 'bg-purple-600 text-white' :
                       'bg-blue-600 text-white'
                     }`}>
-                      {user.role}
+                      {roleLabels[user.role] || user.role}
                     </Badge>
                     <UserActions
                         user={user}
                         teachers={teachers?.map(t => {
                           const profile = Array.isArray(t.profiles) ? t.profiles[0] : t.profiles;
-                          return { id: t.id, name: (profile as any)?.full_name || "Profesor" };
+                          return { id: t.id, name: (profile as any)?.full_name || "Insegnante" };
                         }) || []}
                     />
                   </div>
@@ -135,7 +147,7 @@ export default async function AdminUsersPage() {
         ) : (
           <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
             <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 font-medium">No se encontraron usuarios</p>
+            <p className="text-gray-500 font-medium">Nessun utente trovato</p>
           </div>
         )}
       </div>

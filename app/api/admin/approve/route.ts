@@ -57,8 +57,8 @@ export async function POST(request: Request) {
     await adminSupabase.from("notifications").insert({
       user_id: userId,
       type: "system",
-      title: "Cuenta Aprobada",
-      message: "¡Tu cuenta ha sido aprobada! Ya puedes acceder a todas las funciones de Maestria.",
+      title: "Account Approvato",
+      message: "Il tuo account è stato approvato! Ora puoi accedere a tutte le funzioni di Maestria.",
     });
 
     return NextResponse.json({ success: true });

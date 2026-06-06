@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
   }
 
   try {
@@ -21,22 +21,22 @@ export async function POST(request: Request) {
       studentLevel
     } = await request.json()
 
-    const prompt = `Eres un experto en didáctica del italiano para extranjeros con amplia experiencia.
-El alumno tiene un nivel detectado de: ${studentLevel}.
-Cometió este error frecuentemente: ${errorType} — específicamente: ${errorDetail}.
-Notas adicionales del profesor: ${additionalNotes || 'Ninguna'}.
+    const prompt = `Sei un esperto in didattica dell'italiano per stranieri con ampia esperienza.
+Lo studente ha un livello rilevato di: ${studentLevel}.
+Ha commesso questo errore frequentemente: ${errorType} — nello specifico: ${errorDetail}.
+Note aggiuntive dell'insegnante: ${additionalNotes || 'Nessuna'}.
 
 Crea:
-1. Una explicación teórica clara y pedagógica de la regla gramatical o de uso relacionada (en español, con ejemplos en italiano resaltados).
-2. Un ejercicio de tipo "${exerciseType}" apropiado para el nivel ${studentLevel}.
-El ejercicio debe estar directamente relacionado con ese error específico para que el alumno pueda practicarlo.
+1. Una spiegazione teorica chiara e pedagogica della regola grammaticale o di uso correlata (in italiano, con esempi evidenziati).
+2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel}.
+L'esercizio deve essere direttamente correlato a quell'errore specifico affinché lo studente possa esercitarsi.
 
-Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
+Rispondi UNICAMENTE con un oggetto JSON (senza markdown) con questa struttura:
 {
-  "title": "Título atractivo para la tarea",
-  "theory_explanation": "Explicación detallada en formato markdown (usa negritas para ejemplos en italiano)",
-  "exercise_instructions": "Instrucciones paso a paso para el alumno",
-  "exercise_content": "Objeto o string con el contenido del ejercicio según el tipo (ej: texto con [___] para completar, o lista de oraciones)"
+  "title": "Titolo accattivante per il compito",
+  "theory_explanation": "Spiegazione dettagliata in formato markdown (usa il grassetto per gli esempi in italiano)",
+  "exercise_instructions": "Istruzioni passo dopo passo per lo studente",
+  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio in base al tipo (es: testo con [___] da completare, o lista di frasi)"
 }`
 
     const geminiResponse = await fetch(
@@ -55,7 +55,7 @@ Responde ÚNICAMENTE con un objeto JSON (sin markdown) con esta estructura:
     const geminiResult = safeParseJson(rawText)
 
     if (!geminiResult) {
-      return NextResponse.json({ error: "La IA devolvió un formato inválido" }, { status: 500 })
+      return NextResponse.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })
     }
 
     return NextResponse.json(geminiResult)

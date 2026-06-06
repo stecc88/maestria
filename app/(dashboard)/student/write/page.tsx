@@ -25,33 +25,33 @@ import { ContextualGuide } from "@/components/student/ContextualGuide"
 import toast from "react-hot-toast"
 
 const TEXT_TYPES = [
-  { id: "email_formal", label: "Email formal", icon: Mail },
-  { id: "email_informal", label: "Email informal", icon: MessageSquare },
+  { id: "email_formal", label: "Email formale", icon: Mail },
+  { id: "email_informal", label: "Email informale", icon: MessageSquare },
   { id: "narrativo", label: "Narrativo", icon: BookText },
-  { id: "descriptivo", label: "Descriptivo", icon: ImageIcon },
-  { id: "argumentativo", label: "Argumentativo", icon: Lightbulb },
+  { id: "descriptivo", label: "Descrittivo", icon: ImageIcon },
+  { id: "argumentativo", label: "Argomentativo", icon: Lightbulb },
   { id: "reclamo", label: "Reclamo", icon: AlertCircle },
-  { id: "articulo", label: "Artículo de opinión", icon: PenTool },
-  { id: "libre", label: "Libre", icon: FileEdit },
+  { id: "articulo", label: "Articolo di opinione", icon: PenTool },
+  { id: "libre", label: "Libero", icon: FileEdit },
 ]
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
 const WORD_RANGES: Record<string, string> = {
-  A1: "30-50 palabras",
-  A2: "50-80 palabras",
-  B1: "80-120 palabras",
-  B2: "120-180 palabras",
-  C1: "180-250 palabras",
-  C2: "250+ palabras",
+  A1: "30-50 parole",
+  A2: "50-80 parole",
+  B1: "80-120 parole",
+  B2: "120-180 parole",
+  C1: "180-250 parole",
+  C2: "250+ parole",
 }
 
 const LOADING_MESSAGES = [
-  "Analizando tu escritura...",
-  "Evaluando coherencia y cohesión...",
-  "Revisando gramática y vocabulario...",
-  "Detectando tu nivel...",
-  "Preparando tu feedback...",
+  "Analizzando la tua scrittura...",
+  "Valutando coerenza e coesione...",
+  "Revisionando grammatica e vocabolario...",
+  "Rilevando il tuo livello...",
+  "Preparando il tuo feedback...",
 ]
 
 function WriteForm() {
@@ -126,7 +126,7 @@ function WriteForm() {
 
   const handleSubmit = async () => {
     if (wordCount < 10) {
-      toast.error("El texto es muy corto para ser evaluado (mínimo 10 palabras)")
+      toast.error("Il testo è troppo breve per essere valutato (minimo 10 parole)")
       return
     }
 
@@ -139,7 +139,7 @@ function WriteForm() {
       })
 
       const data = await response.json()
-      console.log("Respuesta de /api/correct:", JSON.stringify(data))
+      console.log("Risposta di /api/correct:", JSON.stringify(data))
 
       const correctionId = data.correctionId || data.id
 
@@ -147,7 +147,7 @@ function WriteForm() {
         localStorage.removeItem("maestria_draft")
         router.push(`/student/corrections/${correctionId}`)
       } else {
-        throw new Error(data.error || "Error al corregir")
+        throw new Error(data.error || "Errore durante la correzione")
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -161,14 +161,13 @@ function WriteForm() {
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900">Nuova Scrittura</h1>
           <p className="text-gray-500 mt-1">
-            {"Practic\u00e1 tu italiano con feedback en tiempo real por IA."}
+            Pratica il tuo italiano con feedback in tempo reale dall&apos;IA.
           </p>
         </div>
         <div className="flex items-center gap-4 text-sm text-gray-400 font-medium">
           {lastSaved && (
             <span className="flex items-center gap-1 text-primary">
-              {"Borrador guardado \u2713 "}
-              {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              Bozza salvata ✓ {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </span>
           )}
         </div>
@@ -178,7 +177,7 @@ function WriteForm() {
         {/* Form Column */}
         <div className="lg:col-span-2 space-y-8">
           <section>
-            <Label className="text-base font-bold mb-4 block">{"1. Eleg\u00ed el tipo de texto"}</Label>
+            <Label className="text-base font-bold mb-4 block">1. Scegli il tipo di testo</Label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {TEXT_TYPES.map((type) => (
                 <button
@@ -200,7 +199,7 @@ function WriteForm() {
 
           <section>
             <div className="flex items-center justify-between mb-4">
-              <Label className="text-base font-bold">2. Nivel del ejercicio</Label>
+              <Label className="text-base font-bold">2. Livello dell&apos;esercizio</Label>
             </div>
             <div className="flex flex-wrap gap-2">
               {LEVELS.map((l) => (
@@ -222,18 +221,18 @@ function WriteForm() {
 
           <section>
             <div className="flex items-center gap-2 mb-2">
-              <Label className="text-base font-bold">3. Consigna / Instrucciones</Label>
+              <Label className="text-base font-bold">3. Traccia / Istruzioni</Label>
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="h-4 w-4 text-gray-400 cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  Ayuda a la IA a evaluar si cumpliste con lo pedido
+                  Aiuta l&apos;IA a valutare se hai rispettato la richiesta
                 </TooltipContent>
               </Tooltip>
             </div>
             <Textarea
-              placeholder={"Copi\u00e1 aqu\u00ed la consigna o instrucci\u00f3n del ejercicio (si ten\u00e9s)..."}
+              placeholder="Copia qui la traccia o l'istruzione dell'esercizio (se presente)..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="bg-white border-gray-200 min-h-[80px] focus:ring-primary"
@@ -242,16 +241,16 @@ function WriteForm() {
 
           <section>
             <div className="flex items-center justify-between mb-2">
-              <Label className="text-base font-bold">4. Tu texto en italiano</Label>
+              <Label className="text-base font-bold">4. Il tuo testo in italiano</Label>
               <div className="flex flex-col items-end">
                 <span className={cn(
                   "text-xs font-bold",
                   wordCount > 0 ? "text-primary" : "text-gray-400"
                 )}>
-                  {wordCount} {"palabras"}
+                  {wordCount} parole
                 </span>
                 <span className="text-[10px] text-gray-400">
-                  {"Rango recomendado: "} {WORD_RANGES[level]}
+                  Range consigliato: {WORD_RANGES[level]}
                 </span>
               </div>
             </div>
@@ -275,7 +274,7 @@ function WriteForm() {
               </div>
             ) : (
               <span className="flex items-center gap-2">
-                {"Enviar para correcci\u00f3n"} <Sparkles className="h-6 w-6 group-hover:animate-spin" />
+                Invia per la correzione <Sparkles className="h-6 w-6 group-hover:animate-spin" />
               </span>
             )}
           </Button>

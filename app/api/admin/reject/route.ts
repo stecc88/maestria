@@ -50,8 +50,8 @@ export async function POST(request: Request) {
     await adminSupabase.from("notifications").insert({
       user_id: userId,
       type: "system",
-      title: "Cuenta no aprobada",
-      message: `Tu solicitud de registro no ha sido aprobada. Motivo: ${reason}`,
+      title: "Account non approvato",
+      message: `La tua richiesta di registrazione non è stata approvata. Motivo: ${reason}`,
     });
 
     return NextResponse.json({ success: true });

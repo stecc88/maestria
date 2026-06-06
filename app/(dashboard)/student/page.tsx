@@ -24,7 +24,7 @@ export default async function StudentDashboard() {
     .eq("id", user.id)
     .single()
 
-  if (!student) return <div>Cargando datos del alumno...</div>
+  if (!student) return <div>Caricamento dati studente...</div>
 
   // 2. Fetch Stats
   const { count: writingsCount } = await supabase
@@ -56,7 +56,6 @@ export default async function StudentDashboard() {
     .order("date", { ascending: true })
 
   // 4. Fetch Radar Data (Avg of last 5 corrections for current student)
-  // Fix: Added filter by user.id using join
   const { data: radarCorrections } = await supabase
     .from("corrections")
     .select("score_coherence, score_vocabulary, score_grammar, score_task_completion, writings!inner(student_id)")
@@ -66,10 +65,10 @@ export default async function StudentDashboard() {
 
   const radarData = radarCorrections && radarCorrections.length > 0
     ? [
-        { subject: 'Coherencia', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_coherence || 0), 0) / radarCorrections.length), fullMark: 25 },
-        { subject: 'Léxico', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_vocabulary || 0), 0) / radarCorrections.length), fullMark: 25 },
-        { subject: 'Gramática', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_grammar || 0), 0) / radarCorrections.length), fullMark: 25 },
-        { subject: 'Tarea', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_task_completion || 0), 0) / radarCorrections.length), fullMark: 25 },
+        { subject: 'Coerenza', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_coherence || 0), 0) / radarCorrections.length), fullMark: 25 },
+        { subject: 'Lessico', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_vocabulary || 0), 0) / radarCorrections.length), fullMark: 25 },
+        { subject: 'Grammatica', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_grammar || 0), 0) / radarCorrections.length), fullMark: 25 },
+        { subject: 'Compito', A: Math.round(radarCorrections.reduce((a, b) => a + (b.score_task_completion || 0), 0) / radarCorrections.length), fullMark: 25 },
       ]
     : []
 

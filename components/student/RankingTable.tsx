@@ -20,11 +20,11 @@ export function RankingTable({ students, userId }: RankingTableProps) {
           <thead>
             <tr className="border-b border-white/5 text-[10px] font-black text-gray-500 uppercase tracking-widest bg-white/2">
               <th className="px-6 py-4">#</th>
-              <th className="px-6 py-4">Estudiante</th>
-              <th className="px-6 py-4">Nivel</th>
+              <th className="px-6 py-4">Studente</th>
+              <th className="px-6 py-4">Livello</th>
               <th className="px-6 py-4">XP</th>
-              <th className="px-6 py-4">Racha</th>
-              <th className="px-6 py-4">Tendencia</th>
+              <th className="px-6 py-4">Striscia</th>
+              <th className="px-6 py-4">Tendenza</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -66,9 +66,9 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                           "font-bold text-sm group-hover:translate-x-1 transition-transform",
                           isMe ? "text-primary-foreground" : "text-white"
                         )}>
-                          {student.profiles.full_name} {isMe && "(Tú)"}
+                          {student.profiles.full_name} {isMe && "(Tu)"}
                         </p>
-                        <p className="text-[10px] text-gray-500 uppercase font-black">Status: Activo</p>
+                        <p className="text-[10px] text-gray-500 uppercase font-black">Status: Attivo</p>
                       </div>
                     </div>
                   </td>

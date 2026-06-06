@@ -24,23 +24,23 @@ export default async function TeacherStudentsPage() {
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
              <Users className="h-8 w-8 text-primary" />
-             Mis Alumnos
+             Miei Studenti
           </h1>
-          <p className="text-gray-500 mt-1">Lista completa de estudiantes bajo tu supervisión.</p>
+          <p className="text-gray-500 mt-1">Lista completa degli studenti sotto la tua supervisione.</p>
         </div>
         <div className="flex items-center gap-3">
            <div className="relative w-full md:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input placeholder="Buscar por nombre..." className="pl-10 bg-white border-gray-200 rounded-xl" />
+              <Input placeholder="Cerca per nome..." className="pl-10 bg-white border-gray-200 rounded-xl" />
            </div>
            <Button variant="outline" className="rounded-xl gap-2 border-gray-200 font-bold">
-              <Filter className="h-4 w-4" /> Filtros
+              <Filter className="h-4 w-4" /> Filtri
            </Button>
         </div>
       </header>
 
       <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Mostrando {students?.length || 0} alumnos</p>
+         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Mostrando {students?.length || 0} studenti</p>
          <div className="flex items-center bg-white border border-gray-100 p-1 rounded-xl">
             <Button size="icon" variant="ghost" className="h-8 w-8 bg-gray-50 text-primary"><LayoutGrid className="h-4 w-4" /></Button>
             <Button size="icon" variant="ghost" className="h-8 w-8 text-gray-400"><List className="h-4 w-4" /></Button>
@@ -54,7 +54,7 @@ export default async function TeacherStudentsPage() {
          {students?.length === 0 && (
            <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-100">
               <Users className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-500 font-medium">Aún no tienes alumnos registrados con tu código.</p>
+              <p className="text-gray-500 font-medium">Non hai ancora studenti registrati con il tuo codice.</p>
            </div>
          )}
       </div>
