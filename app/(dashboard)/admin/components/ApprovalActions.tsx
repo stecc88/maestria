@@ -33,10 +33,10 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Error al aprobar usuario");
+        throw new Error(error.error || "Errore durante l'approvazione dell'utente");
       }
 
-      toast.success(`${userName} ha sido aprobado correctamente`);
+      toast.success(`${userName} è stato approvato correttamente`);
       router.refresh();
     } catch (error: any) {
       toast.error(error.message);
@@ -47,7 +47,7 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
 
   const handleReject = async () => {
     if (!rejectionReason.trim()) {
-      toast.error("Por favor, ingresa un motivo para el rechazo");
+      toast.error("Per favore, inserisci un motivo per il rifiuto");
       return;
     }
 
@@ -61,10 +61,10 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Error al rechazar usuario");
+        throw new Error(error.error || "Errore durante il rifiuto dell'utente");
       }
 
-      toast.success(`${userName} ha sido rechazado`);
+      toast.success(`${userName} è stato rifiutato`);
       setShowRejectModal(false);
       router.refresh();
     } catch (error: any) {
@@ -84,7 +84,7 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
           className="bg-primary hover:bg-primary-dark text-white gap-2"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-          Aprobar
+          Approva
         </Button>
         <Button
           size="sm"
@@ -94,7 +94,7 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
           className="text-red-600 border-red-200 hover:bg-red-50 gap-2"
         >
           <X className="h-4 w-4" />
-          Rechazar
+          Rifiuta
         </Button>
       </div>
 
@@ -104,16 +104,16 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center gap-3 mb-4 text-red-600">
               <AlertCircle className="h-6 w-6" />
-              <h3 className="text-xl font-bold">Rechazar Solicitud</h3>
+              <h3 className="text-xl font-bold">Rifiuta Richiesta</h3>
             </div>
 
             <p className="text-gray-600 mb-4">
-              Indica el motivo del rechazo para <strong>{userName}</strong>. Este mensaje se le enviará por notificación.
+              Indica il motivo del rifiuto per <strong>{userName}</strong>. Questo messaggio gli sarà inviato tramite notifica.
             </p>
 
             <textarea
               className="w-full h-32 p-3 border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-              placeholder="Ej: El código de profesor no es válido o la información está incompleta."
+              placeholder="Es: Il codice insegnante non è valido o le informazioni sono incomplete."
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               disabled={loading}
@@ -125,7 +125,7 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
                 onClick={() => setShowRejectModal(false)}
                 disabled={loading}
               >
-                Cancelar
+                Annulla
               </Button>
               <Button
                 onClick={handleReject}
@@ -133,7 +133,7 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
                 className="bg-red-600 hover:bg-red-700 text-white"
               >
                 {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Confirmar Rechazo
+                Conferma Rifiuto
               </Button>
             </div>
           </div>

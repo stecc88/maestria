@@ -20,7 +20,7 @@ export default async function RankingPage() {
     .select("id, xp_points, streak_days, target_level, teacher_id, achievements, profiles(full_name, avatar_url)")
     .order("xp_points", { ascending: false })
 
-  if (!students) return <div>Cargando ranking...</div>
+  if (!students) return <div>Caricamento classifica...</div>
 
   // 2. My Data
   const me = students.find(s => s.id === user.id)
@@ -35,7 +35,7 @@ export default async function RankingPage() {
     .eq("teacher_id", myTeacherId || "")
     .order("xp_points", { ascending: false })
 
-  const teacherName = (classStudents?.[0]?.teachers as any)?.profiles?.full_name || "tu profesor"
+  const teacherName = (classStudents?.[0]?.teachers as any)?.profiles?.full_name || "il tuo insegnante"
 
   return (
     <div className="min-h-screen bg-[#0F0F0F] -m-4 md:-m-8 p-4 md:p-8 text-white space-y-12 pb-20">
@@ -43,7 +43,7 @@ export default async function RankingPage() {
         <h1 className="text-4xl md:text-6xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
           Hall of Fame
         </h1>
-        <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Compite con estudiantes de todo el mundo 🇮🇹</p>
+        <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Competi con studenti da tutto il mondo 🇮🇹</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -60,8 +60,8 @@ export default async function RankingPage() {
 
           <section className="space-y-6">
              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Ranking Global</h3>
-                <span className="text-[10px] font-black text-gray-600 uppercase">Actualizado hace un momento</span>
+                <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Classifica Globale</h3>
+                <span className="text-[10px] font-black text-gray-600 uppercase">Aggiornato un momento fa</span>
              </div>
              <RankingTable students={students.slice(0, 20)} userId={user.id} />
           </section>

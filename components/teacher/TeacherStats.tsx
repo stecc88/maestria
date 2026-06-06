@@ -20,22 +20,22 @@ interface TeacherStatsProps {
 export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
   const copyCode = () => {
     navigator.clipboard.writeText(teacherCode)
-    toast.success("¡Código copiado!")
+    toast.success("Codice copiato!")
   }
 
   const items = [
-    { label: "Alumnos activos", value: stats.activeStudents, icon: Users, color: "bg-blue-500" },
-    { label: "Escritos (semana)", value: stats.writingsThisWeek, icon: FileText, color: "bg-primary" },
-    { label: "Tareas completadas", value: stats.tasksCompletedMonth, icon: CheckCircle2, color: "bg-secondary" },
-    { label: "Puntaje promedio", value: `${stats.avgScore}/100`, icon: TrendingUp, color: "bg-accent" },
+    { label: "Studenti attivi", value: stats.activeStudents, icon: Users, color: "bg-blue-500" },
+    { label: "Scritti (settimana)", value: stats.writingsThisWeek, icon: FileText, color: "bg-primary" },
+    { label: "Compiti completati", value: stats.tasksCompletedMonth, icon: CheckCircle2, color: "bg-secondary" },
+    { label: "Punteggio medio", value: `${stats.avgScore}/100`, icon: TrendingUp, color: "bg-accent" },
   ]
 
   return (
     <div className="space-y-8">
       <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Tu código de alumno</h2>
-          <p className="text-sm text-gray-500">Compartí este código para que tus alumnos se inscriban con vos.</p>
+          <h2 className="text-xl font-bold text-gray-900">Il tuo codice studente</h2>
+          <p className="text-sm text-gray-500">Condividi questo codice affinché i tuoi studenti possano iscriversi con te.</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="bg-cream px-6 py-3 rounded-2xl border-2 border-dashed border-primary/30 text-2xl font-display font-black text-primary tracking-widest">

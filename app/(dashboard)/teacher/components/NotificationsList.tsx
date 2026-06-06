@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, CheckCircle2, MessageSquare, AlertCircle, Bell } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { it } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -77,14 +77,14 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
             onClick={() => setFilter("all")}
             className="rounded-full px-6"
           >
-            Todas
+            Tutte
           </Button>
           <Button
             variant={filter === "unread" ? "default" : "outline"}
             onClick={() => setFilter("unread")}
             className="rounded-full px-6 flex gap-2"
           >
-            No leídas
+            Non lette
             {notifications.filter(n => !n.read).length > 0 && (
               <Badge className="bg-white text-primary hover:bg-white">{notifications.filter(n => !n.read).length}</Badge>
             )}
@@ -93,7 +93,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
 
         {notifications.some(n => !n.read) && (
           <Button variant="ghost" onClick={markAllAsRead} className="text-primary hover:text-primary-dark font-bold">
-            Marcar todas como leídas
+            Segna tutte come lette
           </Button>
         )}
       </div>
@@ -123,7 +123,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
                     </p>
                     <div className="flex items-center gap-2 text-xs text-gray-400 pt-2">
                       <Clock className="h-3 w-3" />
-                      {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: es })}
+                      {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: it })}
                     </div>
                   </div>
                 </div>
@@ -134,7 +134,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
           <Card className="border-dashed border-2 bg-transparent py-20">
             <CardContent className="text-center">
               <Bell className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-400 font-medium">No hay notificaciones para mostrar.</p>
+              <p className="text-gray-400 font-medium">Non ci sono notifiche da mostrare.</p>
             </CardContent>
           </Card>
         )}

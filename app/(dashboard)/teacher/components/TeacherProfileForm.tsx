@@ -35,9 +35,9 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
       .eq("id", teacher.id);
 
     if (error) {
-      toast.error("Error al actualizar el perfil");
+      toast.error("Errore durante l'aggiornamento del profilo");
     } else {
-      toast.success("Perfil actualizado correctamente");
+      toast.success("Profilo aggiornato correttamente");
       router.refresh();
     }
     setLoading(false);
@@ -46,9 +46,15 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
   const copyToClipboard = () => {
     navigator.clipboard.writeText(teacher.teacher_code);
     setCopied(true);
-    toast.success("Código copiado al portapapeles");
+    toast.success("Codice copiato negli appunti");
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const roleLabels: Record<string, string> = {
+    teacher: "Insegnante",
+    admin: "Amministratore",
+    student: "Studente"
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -60,10 +66,10 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
                <UserCircle className="h-16 w-16 text-primary/20" />
             </div>
             <h3 className="font-bold text-gray-900 text-lg">{teacher.profiles.full_name}</h3>
-            <p className="text-sm text-gray-500 capitalize">{teacher.profiles.role}</p>
+            <p className="text-sm text-gray-500">{roleLabels[teacher.profiles.role] || teacher.profiles.role}</p>
             <div className="flex items-center justify-center gap-1 mt-2 text-primary font-bold text-xs uppercase tracking-wider">
                <ShieldCheck className="h-3 w-3" />
-               Verificado
+               Verificato
             </div>
           </CardContent>
         </Card>
@@ -73,14 +79,14 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
               <CardContent className="p-4 flex flex-col items-center">
                  <Users className="h-5 w-5 text-blue-500 mb-2" />
                  <span className="text-2xl font-bold">{stats.studentCount}</span>
-                 <span className="text-[10px] text-gray-400 font-bold uppercase">Alumnos</span>
+                 <span className="text-[10px] text-gray-400 font-bold uppercase">Studenti</span>
               </CardContent>
            </Card>
            <Card className="border-none shadow-sm bg-white">
               <CardContent className="p-4 flex flex-col items-center">
                  <FileText className="h-5 w-5 text-green-500 mb-2" />
                  <span className="text-2xl font-bold">{stats.taskCount}</span>
-                 <span className="text-[10px] text-gray-400 font-bold uppercase">Tareas</span>
+                 <span className="text-[10px] text-gray-400 font-bold uppercase">Compiti</span>
               </CardContent>
            </Card>
         </div>
@@ -90,21 +96,21 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
       <div className="md:col-span-2 space-y-8">
         <Card className="border-none shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Datos Personales</CardTitle>
+            <CardTitle className="text-xl">Dati Personali</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleUpdateProfile} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
+                <Label htmlFor="email">Indirizzo Email</Label>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 text-gray-500">
                    <Mail className="h-4 w-4" />
                    <span className="text-sm font-medium">{teacher.profiles.email}</span>
                 </div>
-                <p className="text-[10px] text-gray-400">El correo electrónico no puede ser modificado por seguridad.</p>
+                <p className="text-[10px] text-gray-400">L&apos;indirizzo email non può essere modificato per motivi di sicurezza.</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="name">Nombre Completo</Label>
+                <Label htmlFor="name">Nome Completo</Label>
                 <div className="relative">
                    <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                    <Input
@@ -117,7 +123,7 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
               </div>
 
               <Button type="submit" disabled={loading} className="w-full md:w-auto px-12 py-6 rounded-xl font-bold">
-                {loading ? "Guardando..." : "Guardar Cambios"}
+                {loading ? "Salvataggio..." : "Salva Modifiche"}
               </Button>
             </form>
           </CardContent>
@@ -128,9 +134,9 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
              <Key className="h-32 w-32" />
           </div>
           <CardContent className="p-8 relative z-10">
-            <h3 className="text-xl font-bold mb-2">Código Docente Único</h3>
+            <h3 className="text-xl font-bold mb-2">Codice Docente Unico</h3>
             <p className="text-primary-foreground/80 text-sm mb-6 max-w-md">
-              Comparte este código con tus alumnos para que puedan unirse a tus clases automáticamente al registrarse.
+              Condividi questo codice con i tuoi studenti affinché possano unirsi alle tue classi automaticamente al momento della registrazione.
             </p>
 
             <div className="flex items-center gap-4">

@@ -21,10 +21,10 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
         <CardTitle className="text-lg font-bold flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-accent" />
-            <span>Ranking</span>
+            <span>Classifica</span>
           </div>
           <Link href="/student/ranking" className="text-xs text-primary font-medium hover:underline">
-            Ver todo →
+            Vedi tutto →
           </Link>
         </CardTitle>
       </CardHeader>
@@ -33,12 +33,12 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
         <div className="flex items-center justify-between p-3 bg-cream rounded-xl border border-primary/5">
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500 font-medium">Puesto</span>
+              <span className="text-xs text-gray-500 font-medium">Posto</span>
               <span className="text-xl font-bold text-primary">#{userRank.rank || '-'}</span>
             </div>
             <div className="h-8 w-[1px] bg-gray-200" />
             <div>
-              <p className="text-sm font-bold">Tu posición</p>
+              <p className="text-sm font-bold">La tua posizione</p>
               <div className="flex items-center gap-1">
                 {userRank.diff > 0 ? (
                   <div className="flex items-center text-xs text-primary font-bold">
@@ -53,7 +53,7 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
                     <Minus className="h-3 w-3" /> 0
                   </div>
                 )}
-                <span className="text-[10px] text-gray-400 uppercase tracking-tighter">vs semana pasada</span>
+                <span className="text-[10px] text-gray-400 uppercase tracking-tighter">vs scorsa settimana</span>
               </div>
             </div>
           </div>

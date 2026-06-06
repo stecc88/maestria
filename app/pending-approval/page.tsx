@@ -40,18 +40,18 @@ export default function PendingApprovalPage() {
         </div>
 
         <h1 className="text-3xl font-display font-bold text-foreground mb-4">
-          Tu cuenta está siendo revisada 🕐
+          Il tuo account è in fase di revisione 🕐
         </h1>
 
         <div className="font-body text-muted-foreground mb-8 space-y-4">
           {!isEmailConfirmed && (
             <div className="p-4 bg-secondary/10 border border-secondary/20 rounded-2xl text-secondary-dark font-bold text-sm">
-              📧 Revisá tu casilla de email y hacé click en el link de confirmación que te enviamos.
+              📧 Controlla la tua casella email e clicca sul link di conferma che ti abbiamo inviato.
             </div>
           )}
           <p>
-            Un administrador está revisando tu perfil. Este proceso suele tardar menos de 24 horas.
-            Te enviaremos un correo electrónico una vez que tu cuenta sea aprobada.
+            Un amministratore sta revisionando il tuo profilo. Questo processo richiede solitamente meno di 24 ore.
+            Ti invieremo un&apos;email una volta che il tuo account sarà stato approvato.
           </p>
         </div>
 
@@ -62,11 +62,11 @@ export default function PendingApprovalPage() {
             onClick={() => signOut()}
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Cerrar sesión
+            Disconnetti
           </Button>
 
           <Link href="/" className="block text-sm text-primary hover:underline font-body">
-            Volver al inicio
+            Torna alla home
           </Link>
         </div>
       </motion.div>

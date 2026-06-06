@@ -15,16 +15,16 @@ interface Achievement {
 }
 
 const ALL_ACHIEVEMENTS = [
-  { id: 'first_step', title: 'Primer paso', icon: '🎯', description: 'Enviaste tu primer texto' },
-  { id: 'on_fire', title: 'En llamas', icon: '🔥', description: '7 días de racha' },
-  { id: 'studious', title: 'Estudioso/a', icon: '📚', description: '10 textos enviados' },
-  { id: 'perseverant', title: 'Perseverante', icon: '💪', description: '25 textos enviados' },
-  { id: 'excellence', title: 'Excelencia', icon: '⭐', description: 'Obtuviste 90+ en un texto' },
-  { id: 'ascending', title: 'En ascenso', icon: '🚀', description: 'Subiste 2 niveles en un mes' },
-  { id: 'podium', title: 'Top 3', icon: '👑', description: 'Llegaste al podio' },
-  { id: 'champion', title: 'Campeón/a', icon: '🏆', description: 'Llegaste al #1' },
-  { id: 'applied', title: 'Aplicado/a', icon: '✅', description: 'Completaste 10 tareas' },
-  { id: 'master', title: 'Maestro/a', icon: '🎓', description: 'Alcanzaste tu nivel objetivo' },
+  { id: 'first_step', title: 'Primo passo', icon: '🎯', description: 'Hai inviato il tuo primo testo' },
+  { id: 'on_fire', title: 'In fiamme', icon: '🔥', description: '7 giorni di striscia' },
+  { id: 'studious', title: 'Studioso/a', icon: '📚', description: '10 testi inviati' },
+  { id: 'perseverant', title: 'Perseverante', icon: '💪', description: '25 testi inviati' },
+  { id: 'excellence', title: 'Eccellenza', icon: '⭐', description: 'Hai ottenuto 90+ in un testo' },
+  { id: 'ascending', title: 'In ascesa', icon: '🚀', description: 'Sei salito di 2 livelli in un mese' },
+  { id: 'podium', title: 'Top 3', icon: '👑', description: 'Sei arrivato sul podio' },
+  { id: 'champion', title: 'Campione/essa', icon: '🏆', description: 'Sei arrivato al primo posto' },
+  { id: 'applied', title: 'Applicato/a', icon: '✅', description: 'Hai completato 10 compiti' },
+  { id: 'master', title: 'Maestro/a', icon: '🎓', description: 'Hai raggiunto il tuo livello obiettivo' },
 ]
 
 interface AchievementsGridProps {
@@ -35,9 +35,9 @@ export function AchievementsGrid({ unlockedIds }: AchievementsGridProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-         <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Mis logros</h3>
+         <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Miei traguardi</h3>
          <span className="text-xs font-black text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-           {unlockedIds.length} / {ALL_ACHIEVEMENTS.length} Desbloqueados
+           {unlockedIds.length} / {ALL_ACHIEVEMENTS.length} Sbloccati
          </span>
       </div>
 

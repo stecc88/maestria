@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow, format } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import { EvolutionChart } from "@/components/student/EvolutionChart"
 import { RadarChart } from "@/components/student/RadarChart"
 import { ErrorAnalysis } from "@/components/teacher/ErrorAnalysis"
@@ -52,10 +52,10 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   const last5Corrections = writings?.slice(0, 5).filter(w => w.corrections?.[0]).map(w => w.corrections[0]) || []
 
   const radarData = last5Corrections.length > 0 ? [
-    { subject: 'Coherencia', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_coherence || 0), 0) / last5Corrections.length), fullMark: 25 },
-    { subject: 'Léxico', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_vocabulary || 0), 0) / last5Corrections.length), fullMark: 25 },
-    { subject: 'Gramática', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_grammar || 0), 0) / last5Corrections.length), fullMark: 25 },
-    { subject: 'Tarea', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_task_completion || 0), 0) / last5Corrections.length), fullMark: 25 },
+    { subject: 'Coerenza', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_coherence || 0), 0) / last5Corrections.length), fullMark: 25 },
+    { subject: 'Lessico', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_vocabulary || 0), 0) / last5Corrections.length), fullMark: 25 },
+    { subject: 'Grammatica', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_grammar || 0), 0) / last5Corrections.length), fullMark: 25 },
+    { subject: 'Compito', A: Math.round(last5Corrections.reduce((a, b) => a + (b.score_task_completion || 0), 0) / last5Corrections.length), fullMark: 25 },
   ] : []
 
   // 4. Error Analysis
@@ -82,7 +82,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
       <header className="space-y-6">
         <Link href="/teacher/students">
           <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
-            <ChevronLeft className="h-4 w-4" /> Volver a mis alumnos
+            <ChevronLeft className="h-4 w-4" /> Torna ai miei studenti
           </Button>
         </Link>
 
@@ -102,19 +102,19 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     </span>
                     <div className="h-1 w-1 rounded-full bg-gray-300" />
                     <span className="flex items-center gap-1.5 text-sm">
-                       <Calendar className="h-4 w-4" /> Alumno desde {format(new Date(student.created_at), 'MMMM yyyy', { locale: es })}
+                       <Calendar className="h-4 w-4" /> Studente da {format(new Date(student.created_at), 'MMMM yyyy', { locale: it })}
                     </span>
                  </div>
                  <div className="flex flex-wrap gap-2 mt-4">
-                    <Badge variant="outline" className="bg-gray-50 border-gray-200 text-gray-500 font-bold px-3 py-1">OBJETIVO: {student.target_level}</Badge>
-                    <Badge className="bg-primary text-white border-none px-3 py-1">ACTUAL: {student.current_level || 'A1'}</Badge>
+                    <Badge variant="outline" className="bg-gray-50 border-gray-200 text-gray-500 font-bold px-3 py-1">OBIETTIVO: {student.target_level}</Badge>
+                    <Badge className="bg-primary text-white border-none px-3 py-1">ATTUALE: {student.current_level || 'A1'}</Badge>
                  </div>
               </div>
            </div>
            <div className="text-right">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Última actividad</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ultima attività</p>
               <p className="text-xl font-bold text-gray-900 mt-1">
-                 {student.last_activity ? formatDistanceToNow(new Date(student.last_activity), { addSuffix: true, locale: es }) : 'Sin actividad'}
+                 {student.last_activity ? formatDistanceToNow(new Date(student.last_activity), { addSuffix: true, locale: it }) : 'Nessuna attività'}
               </p>
            </div>
         </div>

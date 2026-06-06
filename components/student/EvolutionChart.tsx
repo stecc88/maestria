@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { it } from 'date-fns/locale'
 import { TrendingUp } from "lucide-react"
 
 interface EvolutionChartProps {
@@ -26,7 +26,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-primary" />
-          <span>Tu evolución en el tiempo</span>
+          <span>La tua evoluzione nel tempo</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="h-[300px] w-full flex flex-col justify-center p-0 pt-6">
@@ -39,7 +39,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                 tick={{ fontSize: 10, fill: '#94a3b8' }}
                 axisLine={false}
                 tickLine={false}
-                tickFormatter={(str) => format(new Date(str), 'd MMM', { locale: es })}
+                tickFormatter={(str) => format(new Date(str), 'd MMM', { locale: it })}
               />
               <YAxis
                 domain={[0, 100]}
@@ -54,10 +54,10 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                   boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
                   padding: '12px'
                 }}
-                labelFormatter={(label) => format(new Date(label), 'PPP', { locale: es })}
+                labelFormatter={(label) => format(new Date(label), 'PPP', { locale: it })}
                 formatter={(value: any, name: any, props: any) => [
                   <span key="score" className="font-bold text-primary">{value} pts</span>,
-                  <span key="level">Nivel: {props.payload.detected_level}</span>
+                  <span key="level">Livello: {props.payload.detected_level}</span>
                 ]}
               />
               <Line
@@ -76,8 +76,8 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
               <TrendingUp className="h-10 w-10 text-gray-300" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Aún no hay datos suficientes</p>
-              <p className="text-xs text-gray-500 mt-1">Envía al menos 2 escritos para ver tu evolución gráfica.</p>
+              <p className="text-sm font-medium text-gray-900">Non ci sono ancora dati sufficienti</p>
+              <p className="text-xs text-gray-500 mt-1">Invia almeno 2 scritti per vedere il tuo grafico di evoluzione.</p>
             </div>
           </div>
         )}

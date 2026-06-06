@@ -5,7 +5,7 @@ import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
-import { es } from "date-fns/locale"
+import { it } from "date-fns/locale"
 import ApprovalActions from "../components/ApprovalActions"
 
 export default async function AdminApprovalsPage() {
@@ -32,8 +32,8 @@ export default async function AdminApprovalsPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Solicitudes de Aprobación</h1>
-          <p className="text-gray-500">Revisa y gestiona los nuevos registros en la plataforma.</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">Richieste di Approvazione</h1>
+          <p className="text-gray-500">Controlla e gestisci i nuovi account registrati sulla piattaforma.</p>
         </div>
       </div>
 
@@ -56,12 +56,12 @@ export default async function AdminApprovalsPage() {
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <Clock className="h-4 w-4" />
-                          Registrado el {format(new Date(user.created_at), "d 'de' MMMM, yyyy HH:mm", { locale: es })}
+                          Registrato il {format(new Date(user.created_at), "d MMMM yyyy HH:mm", { locale: it })}
                         </div>
                         {user.role === 'teacher' && user.teachers && (
                           <div className="flex items-center gap-2 text-sm font-medium text-primary col-span-2">
                             <Key className="h-4 w-4" />
-                            Código de Profesor: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
+                            Codice Insegnante: {Array.isArray(user.teachers) ? user.teachers[0]?.teacher_code : user.teachers.teacher_code}
                           </div>
                         )}
                       </div>
@@ -72,7 +72,7 @@ export default async function AdminApprovalsPage() {
                     <Badge variant="outline" className={`capitalize px-3 py-1 text-sm ${
                       user.role === 'teacher' ? 'border-purple-200 bg-purple-50 text-purple-700' : 'border-blue-200 bg-blue-50 text-blue-700'
                     }`}>
-                      {user.role === 'teacher' ? 'Profesor' : 'Alumno'}
+                      {user.role === 'teacher' ? 'Insegnante' : 'Studente'}
                     </Badge>
                     <ApprovalActions userId={user.id} userName={user.full_name} />
                   </div>
@@ -86,12 +86,12 @@ export default async function AdminApprovalsPage() {
               <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                 <UserCheck className="h-10 w-10 text-gray-300" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Todo al día</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Tutto in ordine</h3>
               <p className="text-gray-500 max-w-sm mx-auto">
-                No hay solicitudes pendientes de revisión en este momento. Los nuevos usuarios aparecerán aquí.
+                Non ci sono richieste in sospeso al momento. I nuovi utenti appariranno qui.
               </p>
               <Link href="/admin" className="mt-8 block">
-                <Button variant="outline">Volver al Dashboard</Button>
+                <Button variant="outline">Torna alla Dashboard</Button>
               </Link>
             </CardContent>
           </Card>

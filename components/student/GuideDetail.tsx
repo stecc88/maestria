@@ -46,7 +46,7 @@ export function GuideDetail({ guide }: GuideDetailProps) {
           <section className="space-y-4">
             <h3 className="flex items-center gap-2 font-bold text-gray-900">
               <ListChecks className="h-5 w-5 text-primary" />
-              Estructura recomendada
+              Struttura consigliata
             </h3>
             <div className="grid gap-3">
               {guide.structure.map((item, i) => (
@@ -63,7 +63,7 @@ export function GuideDetail({ guide }: GuideDetailProps) {
           <section className="space-y-4">
             <h3 className="flex items-center gap-2 font-bold text-gray-900">
               <Lightbulb className="h-5 w-5 text-accent" />
-              Conectores útiles
+              Connettori utili
             </h3>
             <div className="flex flex-wrap gap-2">
               {guide.connectors.map((item, i) => (
@@ -77,7 +77,7 @@ export function GuideDetail({ guide }: GuideDetailProps) {
           <section className="space-y-4">
             <h3 className="flex items-center gap-2 font-bold text-gray-900">
               <AlertTriangle className="h-5 w-5 text-secondary" />
-              Errores comunes a evitar
+              Errori comuni da evitare
             </h3>
             <div className="space-y-2">
               {guide.commonErrors.map((item, i) => (
@@ -92,7 +92,7 @@ export function GuideDetail({ guide }: GuideDetailProps) {
           <section className="space-y-4">
             <h3 className="flex items-center gap-2 font-bold text-gray-900">
               <PenLine className="h-5 w-5 text-primary" />
-              Ejemplo completo
+              Esempio completo
             </h3>
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
                <div className="absolute top-0 left-0 w-1 h-full bg-primary/20" />
@@ -108,7 +108,7 @@ export function GuideDetail({ guide }: GuideDetailProps) {
       <footer className="p-6 bg-white border-t border-gray-100 mt-auto">
         <Link href={`/student/write?type=${guide.type}&level=${guide.level}`} className="block">
           <Button className="w-full bg-primary hover:bg-primary-dark py-6 text-lg font-bold gap-2 shadow-lg shadow-primary/20">
-            Usar este tipo al escribir <ArrowRight className="h-5 w-5" />
+            Usa questo tipo scrivendo <ArrowRight className="h-5 w-5" />
           </Button>
         </Link>
       </footer>

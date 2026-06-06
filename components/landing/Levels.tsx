@@ -6,15 +6,15 @@ const levels = [
   {
     id: "A1",
     name: "Principiante",
-    description: "Primeras palabras y oraciones básicas",
+    description: "Prime parole e frasi elementari",
     color: "bg-gray-100",
     textColor: "text-gray-600",
     borderColor: "border-gray-200"
   },
   {
     id: "A2",
-    name: "Básico",
-    description: "Mensajes cortos y conversaciones simples",
+    name: "Elementare",
+    description: "Messaggi brevi e conversazioni semplici",
     color: "bg-green-100",
     textColor: "text-green-700",
     borderColor: "border-green-200"
@@ -22,31 +22,31 @@ const levels = [
   {
     id: "B1",
     name: "Intermedio",
-    description: "Me desenvuelvo en situaciones cotidianas",
+    description: "Gestione di situazioni quotidiane",
     color: "bg-blue-100",
     textColor: "text-blue-700",
     borderColor: "border-blue-200"
   },
   {
     id: "B2",
-    name: "Intermedio alto",
-    description: "Textos complejos y discusiones",
+    name: "Intermedio superiore",
+    description: "Testi complessi e discussioni",
     color: "bg-orange-100",
     textColor: "text-orange-700",
     borderColor: "border-orange-200"
   },
   {
     id: "C1",
-    name: "Avanzado",
-    description: "Casi nativo, expresión precisa",
+    name: "Avanzato",
+    description: "Quasi madrelingua, espressione precisa",
     color: "bg-purple-100",
     textColor: "text-purple-700",
     borderColor: "border-purple-200"
   },
   {
     id: "C2",
-    name: "Maestría",
-    description: "Dominio total del idioma",
+    name: "Padronanza",
+    description: "Dominio totale della lingua",
     color: "bg-yellow-100",
     textColor: "text-yellow-700",
     borderColor: "border-yellow-200"
@@ -64,7 +64,7 @@ export default function Levels() {
           className="mb-16"
         >
           <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-            ¿En qué nivel estás?
+            A che livello sei?
           </h2>
           <div className="w-24 h-1 bg-accent rounded-full" />
         </motion.div>

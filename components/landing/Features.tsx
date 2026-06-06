@@ -12,33 +12,33 @@ import {
 
 const features = [
   {
-    title: "Corrección inteligente",
-    description: "La IA evalúa tu escrito según los estándares internacionales más exigentes de italiano",
+    title: "Correzione intelligente",
+    description: "L'IA valuta il tuo scritto secondo i più esigenti standard internazionali di italiano",
     icon: GraduationCap
   },
   {
-    title: "Tu nivel exacto",
-    description: "Después de cada escrito sabés exactamente en qué nivel estás: A1, A2, B1, B2, C1 o C2",
+    title: "Il tuo livello esatto",
+    description: "Dopo ogni scritto saprai esattamente a che livello sei: A1, A2, B1, B2, C1 o C2",
     icon: BarChart3
   },
   {
-    title: "Guías de escritura",
-    description: "Aprendé a estructurar emails, narraciones y textos argumentativos según tu nivel",
+    title: "Guide alla scrittura",
+    description: "Impara a strutturare email, narrazioni e testi argomentativi in base al tuo livello",
     icon: BookOpen
   },
   {
-    title: "Tareas del profesor",
-    description: "Tu profesor genera ejercicios personalizados basados en TUS errores específicos",
+    title: "Compiti dell'insegnante",
+    description: "Il tuo insegnante genera esercizi personalizzati basati sui TUOI errori specifici",
     icon: Users
   },
   {
-    title: "Ranking y desafíos",
-    description: "Competí con tus compañeros, ganá puntos y subí en el ranking semanal",
+    title: "Classifica e sfide",
+    description: "Competi con i tuoi compagni, guadagna punti e scala la classifica settimanale",
     icon: Trophy
   },
   {
-    title: "Seguí tu progreso",
-    description: "Gráficos visuales que muestran cómo mejorás cada semana",
+    title: "Segui il tuo progresso",
+    description: "Grafici visivi che mostrano come migliori ogni settimana",
     icon: LineChart
   }
 ]
@@ -54,7 +54,7 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-            Todo lo que necesitás para avanzar
+            Tutto ciò di cui hai bisogno per progredire
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto rounded-full" />
         </motion.div>

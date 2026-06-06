@@ -48,27 +48,27 @@ interface SidebarProps {
 }
 
 const studentNavItems = [
-  { label: "Mi progreso", href: "/student", icon: LayoutDashboard },
-  { label: "Enviar texto", href: "/student/write", icon: PenLine },
-  { label: "Mis correcciones", href: "/student/corrections", icon: FileText },
-  { label: "Guías de escritura", href: "/student/guides", icon: BookOpen },
-  { label: "Mis tareas", href: "/student/tasks", icon: ClipboardList, badge: true },
-  { label: "Ranking", href: "/student/ranking", icon: Trophy },
-  { label: "Mi perfil", href: "/student/profile", icon: Settings },
+  { label: "Miei progressi", href: "/student", icon: LayoutDashboard },
+  { label: "Invia testo", href: "/student/write", icon: PenLine },
+  { label: "Mie correzioni", href: "/student/corrections", icon: FileText },
+  { label: "Guide alla scrittura", href: "/student/guides", icon: BookOpen },
+  { label: "Miei compiti", href: "/student/tasks", icon: ClipboardList, badge: true },
+  { label: "Classifica", href: "/student/ranking", icon: Trophy },
+  { label: "Mio profilo", href: "/student/profile", icon: Settings },
 ]
 
 const teacherNavItems = [
-  { label: "Mi panel", href: "/teacher", icon: LayoutDashboard },
-  { label: "Mis alumnos", href: "/teacher/students", icon: Trophy },
-  { label: "Tareas generadas", href: "/teacher/tasks", icon: ClipboardList },
-  { label: "Notificaciones", href: "/teacher/notifications", icon: LayoutDashboard },
-  { label: "Mi perfil", href: "/teacher/profile", icon: Settings },
+  { label: "Mio pannello", href: "/teacher", icon: LayoutDashboard },
+  { label: "Miei studenti", href: "/teacher/students", icon: Trophy },
+  { label: "Compiti generati", href: "/teacher/tasks", icon: ClipboardList },
+  { label: "Notifiche", href: "/teacher/notifications", icon: LayoutDashboard },
+  { label: "Mio profilo", href: "/teacher/profile", icon: Settings },
 ] as const
 
 const adminNavItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Aprobaciones", href: "/admin/approvals", icon: CheckCircle2 },
-  { label: "Usuarios", href: "/admin/users", icon: Users },
+  { label: "Approvazioni", href: "/admin/approvals", icon: CheckCircle2 },
+  { label: "Utenti", href: "/admin/users", icon: Users },
 ] as const
 
 type NavItem = {
@@ -124,7 +124,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
                 </Badge>
               ) : user.role === 'teacher' ? (
                 <Badge variant="outline" className="border-primary text-primary text-[10px] uppercase font-bold px-2 py-0">
-                  Profesor
+                  Insegnante
                 </Badge>
               ) : (
                 <Badge variant="outline" className="border-secondary text-secondary text-[10px] uppercase font-bold px-2 py-0">
@@ -152,7 +152,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
             </div>
           ) : (
             <div className="space-y-1">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Código docente</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Codice docente</p>
               <p className="text-lg font-display font-bold text-primary">{teacherData?.teacher_code || '---'}</p>
             </div>
           )}
@@ -197,7 +197,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
           className="flex items-center gap-3 w-full px-4 py-3 text-gray-500 hover:text-secondary hover:bg-secondary/5 rounded-xl transition-colors font-medium"
         >
           <LogOut className="h-5 w-5" />
-          <span>Cerrar sesión</span>
+          <span>Disconnetti</span>
         </button>
       </div>
     </div>

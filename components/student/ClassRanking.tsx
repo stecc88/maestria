@@ -21,16 +21,16 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Ranking de mi clase</h3>
+            <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Classifica della mia classe</h3>
           </div>
           <p className="text-[10px] font-bold text-gray-500 italic">Con Prof. {teacherName}</p>
         </div>
 
         <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl">
            <p className="text-sm font-bold text-center">
-             {myPosition === 1 ? "¡Estás primero/a en tu clase! 🏆" :
-              myIndex > 0 ? `¡Estás a ${(students[myIndex-1].xp_points - students[myIndex].xp_points)} XP de ${students[myIndex-1].profiles.full_name}!` :
-              "¡Seguí así! Cada texto cuenta."}
+             {myPosition === 1 ? "Sei primo/a nella tua classe! 🏆" :
+              myIndex > 0 ? `Ti mancano ${(students[myIndex-1].xp_points - students[myIndex].xp_points)} XP per raggiungere ${students[myIndex-1].profiles.full_name}!` :
+              "Continua così! Ogni testo conta."}
            </p>
         </div>
 

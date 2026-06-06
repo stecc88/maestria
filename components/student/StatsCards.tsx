@@ -19,10 +19,13 @@ function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProp
   useEffect(() => {
     let start = 0
     const end = value
-    if (start === end) return
+    if (start === end) {
+      setCount(value)
+      return
+    }
 
     let totalMiliseconds = 1000
-    let incrementTime = (totalMiliseconds / end)
+    let incrementTime = Math.max((totalMiliseconds / (end || 1)), 10)
 
     let timer = setInterval(() => {
       start += 1
@@ -59,10 +62,10 @@ interface StatsCardsProps {
 
 export function StatsCards({ writings, avgScore, completedTasks, streak }: StatsCardsProps) {
   const stats = [
-    { label: "Textos enviados", value: writings, icon: PenLine, color: "bg-primary" },
-    { label: "Promedio puntaje", value: avgScore, icon: Star, color: "bg-accent", suffix: "/100" },
-    { label: "Tareas completadas", value: completedTasks, icon: CheckCircle2, color: "bg-blue-500" },
-    { label: "Racha actual", value: streak, icon: Flame, color: "bg-secondary" },
+    { label: "Testi inviati", value: writings, icon: PenLine, color: "bg-primary" },
+    { label: "Punteggio medio", value: avgScore, icon: Star, color: "bg-accent", suffix: "/100" },
+    { label: "Compiti completati", value: completedTasks, icon: CheckCircle2, color: "bg-blue-500" },
+    { label: "Striscia attuale", value: streak, icon: Flame, color: "bg-secondary" },
   ]
 
   return (

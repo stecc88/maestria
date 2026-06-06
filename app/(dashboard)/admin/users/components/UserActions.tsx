@@ -45,10 +45,10 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Error al eliminar usuario");
+        throw new Error(error.error || "Errore durante l'eliminazione dell'utente");
       }
 
-      toast.success("Usuario eliminado correctamente");
+      toast.success("Utente eliminato correttamente");
       setShowDeleteConfirm(false);
       router.refresh();
     } catch (error: any) {
@@ -69,10 +69,10 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Error al actualizar rol");
+        throw new Error(error.error || "Errore durante l'aggiornamento del ruolo");
       }
 
-      toast.success("Rol actualizado correctamente");
+      toast.success("Ruolo aggiornato correttamente");
       setShowRoleConfirm(false);
       router.refresh();
     } catch (error: any) {
@@ -94,10 +94,10 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Error al reasignar alumno");
+        throw new Error(error.error || "Errore durante la riassegnazione dello studente");
       }
 
-      toast.success("Alumno reasignado correctamente");
+      toast.success("Studente riassegnato correttamente");
       setShowReassignModal(false);
       router.refresh();
     } catch (error: any) {
@@ -106,6 +106,12 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
       setLoading(false);
     }
   };
+
+  const roleLabels: Record<string, string> = {
+    student: "Studente",
+    teacher: "Insegnante",
+    admin: "Admin"
+  }
 
   return (
     <>
@@ -118,7 +124,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
             className="text-primary border-primary/20 hover:bg-primary/5 gap-1.5"
           >
             <UserPlus className="h-3.5 w-3.5" />
-            Reasignar
+            Riassegna
           </Button>
         )}
         <Select
@@ -129,11 +135,11 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
             value={user.role}
         >
             <SelectTrigger className="w-32 h-8 text-xs">
-                <SelectValue placeholder="Rol" />
+                <SelectValue placeholder="Ruolo" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="student">Student</SelectItem>
-                <SelectItem value="teacher">Teacher</SelectItem>
+                <SelectItem value="student">Studente</SelectItem>
+                <SelectItem value="teacher">Insegnante</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
             </SelectContent>
         </Select>
@@ -153,18 +159,18 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center gap-3 mb-4 text-red-600">
               <AlertTriangle className="h-6 w-6" />
-              <h3 className="text-xl font-bold">Eliminar Usuario</h3>
+              <h3 className="text-xl font-bold">Elimina Utente</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              ¿Estás seguro de que deseas eliminar a <strong>{user.full_name}</strong>? Esta acción es permanente y eliminará todos sus datos asociados.
+              Sei sicuro di voler eliminare <strong>{user.full_name}</strong>? Questa azione è permanente e cancellerà tutti i dati associati.
             </p>
             <div className="flex items-center justify-end gap-3">
               <Button variant="ghost" onClick={() => setShowDeleteConfirm(false)} disabled={loading}>
-                Cancelar
+                Annulla
               </Button>
               <Button onClick={handleDelete} disabled={loading} className="bg-red-600 hover:bg-red-700 text-white">
                 {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Sí, Eliminar
+                Sì, Elimina
               </Button>
             </div>
           </div>
@@ -175,17 +181,17 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
       {showRoleConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
-            <h3 className="text-xl font-bold mb-4">Cambiar Rol</h3>
+            <h3 className="text-xl font-bold mb-4">Cambia Ruolo</h3>
             <p className="text-gray-600 mb-6">
-              ¿Confirmas el cambio de rol para <strong>{user.full_name}</strong> a <span className="font-bold capitalize">{newRole}</span>?
+              Confermi il cambio di ruolo per <strong>{user.full_name}</strong> in <span className="font-bold">{roleLabels[newRole] || newRole}</span>?
             </p>
             <div className="flex items-center justify-end gap-3">
               <Button variant="ghost" onClick={() => setShowRoleConfirm(false)} disabled={loading}>
-                Cancelar
+                Annulla
               </Button>
               <Button onClick={handleUpdateRole} disabled={loading} className="bg-primary text-white">
                 {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Confirmar
+                Conferma
               </Button>
             </div>
           </div>
@@ -197,20 +203,20 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold">Reasignar Alumno</h3>
+                <h3 className="text-xl font-bold">Riassegna Studente</h3>
                 <Button variant="ghost" size="icon" onClick={() => setShowReassignModal(false)}>
                     <X className="h-5 w-5" />
                 </Button>
             </div>
 
             <p className="text-gray-600 mb-4 text-sm">
-                Selecciona un nuevo profesor para <strong>{user.full_name}</strong>.
+                Seleziona un nuovo insegnante per <strong>{user.full_name}</strong>.
             </p>
 
             <div className="space-y-4">
                 <Select onValueChange={(value) => setSelectedTeacher(value)} value={selectedTeacher || undefined}>
                     <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecciona un profesor" />
+                        <SelectValue placeholder="Seleziona un insegnante" />
                     </SelectTrigger>
                     <SelectContent>
                         {teachers.map(teacher => (
@@ -224,11 +230,11 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
 
             <div className="flex items-center justify-end gap-3 mt-8">
               <Button variant="ghost" onClick={() => setShowReassignModal(false)} disabled={loading}>
-                Cancelar
+                Annulla
               </Button>
               <Button onClick={handleReassign} disabled={loading || !selectedTeacher} className="bg-primary text-white">
                 {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Reasignar Alumno
+                Riassegna Studente
               </Button>
             </div>
           </div>

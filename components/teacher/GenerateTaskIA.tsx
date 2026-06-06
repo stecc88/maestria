@@ -64,7 +64,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
         setPreviewTask(data)
         setIsEditing(false)
       } else {
-        throw new Error(data.error || "Error al generar la tarea")
+        throw new Error(data.error || "Errore durante la generazione del compito")
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -86,11 +86,10 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
       })
 
       if (response.ok) {
-        toast.success(`✅ Tarea enviada a ${student.profiles.full_name}`)
+        toast.success(`✅ Compito inviato a ${student.profiles.full_name}`)
         setPreviewTask(null)
-        // Reset form
       } else {
-        throw new Error("Error al enviar la tarea")
+        throw new Error("Errore durante l'invio del compito")
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -119,19 +118,19 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
                <Bot className="h-6 w-6 text-primary" />
-               <span>Preview de la Tarea</span>
+               <span>Anteprima del Compito</span>
             </div>
             <div className="flex items-center gap-2">
                <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)}>
-                  <Edit3 className="h-4 w-4 mr-2" /> {isEditing ? 'Bloquear' : 'Editar'}
+                  <Edit3 className="h-4 w-4 mr-2" /> {isEditing ? 'Blocca' : 'Modifica'}
                </Button>
-               <Button variant="outline" size="sm" onClick={() => setPreviewTask(null)}>Descartar</Button>
+               <Button variant="outline" size="sm" onClick={() => setPreviewTask(null)}>Scarta</Button>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-8 space-y-8">
            <div className="space-y-4">
-              <Label className="text-primary font-black uppercase text-xs">Título de la tarea</Label>
+              <Label className="text-primary font-black uppercase text-xs">Titolo del compito</Label>
               {isEditing ? (
                 <Input value={previewTask.title} onChange={e => setPreviewTask({...previewTask, title: e.target.value})} className="bg-white" />
               ) : (
@@ -140,7 +139,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
            </div>
 
            <div className="space-y-4">
-              <Label className="text-primary font-black uppercase text-xs">Explicación Teórica</Label>
+              <Label className="text-primary font-black uppercase text-xs">Spiegazione Teorica</Label>
               {isEditing ? (
                 <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-white min-h-[150px]" />
               ) : (
@@ -152,7 +151,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
 
            <div className="pt-6 border-t border-primary/10 flex justify-end">
               <Button onClick={handleSend} className="bg-primary hover:bg-primary-dark font-bold px-10 py-6 text-lg rounded-2xl gap-2 shadow-lg shadow-primary/20">
-                 Enviar a {student.profiles.full_name.split(' ')[0]} <Send className="h-5 w-5" />
+                 Invia a {student.profiles.full_name.split(' ')[0]} <Send className="h-5 w-5" />
               </Button>
            </div>
         </CardContent>
@@ -171,16 +170,16 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
           <div className="p-2 bg-primary/20 rounded-lg">
             <Bot className="h-6 w-6" />
           </div>
-          Generar tarea con IA
+          Genera compito con l&apos;IA
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label className="font-bold text-gray-700">1. Basar en este texto:</Label>
+            <Label className="font-bold text-gray-700">1. Basa su questo testo:</Label>
             <Select onValueChange={(value: string | null) => setSelectedWritingId(value || "")}>
               <SelectTrigger className="bg-white">
-                <SelectValue placeholder="Seleccionar un texto reciente..." />
+                <SelectValue placeholder="Seleziona un testo recente..." />
               </SelectTrigger>
               <SelectContent>
                 {recentWritings.map(w => (
@@ -193,26 +192,26 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
           </div>
 
           <div className="space-y-2">
-            <Label className="font-bold text-gray-700">2. Error a trabajar:</Label>
+            <Label className="font-bold text-gray-700">2. Errore da approfondire:</Label>
             <Select value={errorType} onValueChange={(value: string | null) => setErrorType(value || "gramatica")}>
               <SelectTrigger className="bg-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gramatica">Gramática</SelectItem>
-                <SelectItem value="vocabulario">Vocabulario</SelectItem>
-                <SelectItem value="ortografia">Ortografía</SelectItem>
+                <SelectItem value="gramatica">Grammatica</SelectItem>
+                <SelectItem value="vocabulario">Vocabolario</SelectItem>
+                <SelectItem value="ortografia">Ortografia</SelectItem>
                 <SelectItem value="registro">Registro</SelectItem>
-                <SelectItem value="estructura">Estructura</SelectItem>
+                <SelectItem value="estructura">Struttura</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label className="font-bold text-gray-700">3. Especificá el error (detalle):</Label>
+          <Label className="font-bold text-gray-700">3. Specifica l&apos;errore (dettaglio):</Label>
           <Input
-            placeholder="Ej: Uso del condicional simple, concordancia de género..."
+            placeholder="Es: Uso del condizionale semplice, concordanza di genere..."
             value={errorDetail}
             onChange={e => setErrorDetail(e.target.value)}
             className="bg-white"
@@ -220,12 +219,12 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
         </div>
 
         <div className="space-y-2">
-          <Label className="font-bold text-gray-700 block mb-3">4. Tipo de ejercicio:</Label>
+          <Label className="font-bold text-gray-700 block mb-3">4. Tipo di esercizio:</Label>
           <div className="flex flex-wrap gap-2">
-             <ExerciseTypeChip id="escritura" label="Escritura" icon={Edit3} />
-             <ExerciseTypeChip id="completar" label="Completar" icon={CheckCircle2} />
-             <ExerciseTypeChip id="transformacion" label="Transformar" icon={Sparkles} />
-             <ExerciseTypeChip id="reescritura" label="Reescribir" icon={Bot} />
+             <ExerciseTypeChip id="escritura" label="Scrittura" icon={Edit3} />
+             <ExerciseTypeChip id="completar" label="Completamento" icon={CheckCircle2} />
+             <ExerciseTypeChip id="transformacion" label="Trasformazione" icon={Sparkles} />
+             <ExerciseTypeChip id="reescritura" label="Riscrittura" icon={Bot} />
           </div>
         </div>
 
@@ -238,11 +237,11 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
             {isGenerating ? (
               <>
                  <div className="h-6 w-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                 <span>Generando tarea mágica...</span>
+                 <span>Generazione compito magico...</span>
               </>
             ) : (
               <>
-                 Generar tarea con IA <Sparkles className="h-6 w-6" />
+                 Genera compito con l&apos;IA <Sparkles className="h-6 w-6" />
               </>
             )}
           </Button>

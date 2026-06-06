@@ -35,15 +35,15 @@ export default function Hero() {
               variants={itemVariants}
               className="text-5xl md:text-7xl font-display font-bold leading-tight mb-6"
             >
-              Domina el italiano. <br />
-              <span className="text-primary text-4xl md:text-6xl">Un texto a la vez.</span>
+              Domina l&apos;italiano. <br />
+              <span className="text-primary text-4xl md:text-6xl">Un testo alla volta.</span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="text-xl text-muted-foreground font-body mb-10 max-w-lg"
             >
-              La IA que corrige tus escritos como un examinador profesional, detecta tu nivel de A1 a C2 y crea un plan personalizado para que mejores cada día.
+              L&apos;IA che corregge i tuoi scritti come un esaminatore professionista, rileva il tuo livello da A1 a C2 e crea un piano personalizzato per migliorare ogni giorno.
             </motion.p>
 
             <motion.div
@@ -52,13 +52,13 @@ export default function Hero() {
             >
               <Link href="/register">
                 <Button className="bg-primary hover:bg-primary-dark text-white text-lg px-8 py-6 h-auto shadow-xl shadow-primary/20 relative group overflow-hidden transition-all">
-                  <span className="relative z-10 font-body font-bold">Empezar ahora — es gratis</span>
+                  <span className="relative z-10 font-body font-bold">Inizia ora — è gratis</span>
                   <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out skew-x-[-20deg]" />
                 </Button>
               </Link>
               <Link href="#teachers">
                 <Button variant="ghost" className="text-lg px-8 py-6 h-auto font-body font-medium hover:bg-primary/5 transition-colors">
-                  Soy profesor &rarr;
+                  Sono un insegnante &rarr;
                 </Button>
               </Link>
             </motion.div>
@@ -68,9 +68,9 @@ export default function Hero() {
               className="flex flex-wrap gap-6"
             >
               {[
-                "Sin tarjeta de crédito",
-                "Niveles A1-C2",
-                "Para alumnos y profesores"
+                "Nessuna carta di credito",
+                "Livelli A1-C2",
+                "Per studenti e insegnanti"
               ].map((text, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm font-body text-secondary font-medium">
                   <CheckCircle2 className="w-4 h-4 text-accent" />
@@ -134,7 +134,7 @@ export default function Hero() {
                   transition={{ delay: 2.5 }}
                   className="absolute left-[-20px] bottom-[100px] bg-primary text-white p-3 rounded-lg text-xs shadow-lg max-w-[150px]"
                 >
-                   Livello rilevato: B1. Suggerimento: usa il congiuntivo.
+                   Livello rilevato: B1. Consiglio: usa il congiuntivo.
                 </motion.div>
 
                 <div className="h-4 w-full bg-muted rounded animate-pulse delay-75" />

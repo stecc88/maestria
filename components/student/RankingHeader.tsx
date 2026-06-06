@@ -31,7 +31,7 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
                 #{rank}
               </div>
               <div>
-                <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Tu posición actual</p>
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">La tua posizione attuale</p>
                 <h2 className="text-5xl md:text-7xl font-display font-black text-white mt-1">
                   #{rank}
                 </h2>
@@ -51,10 +51,10 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
           <div className="w-full md:w-80 space-y-6">
             <div className="flex justify-between items-end">
               <div>
-                 <p className="text-xs font-bold text-gray-400 uppercase">Siguiente nivel</p>
+                 <p className="text-xs font-bold text-gray-400 uppercase">Prossimo livello</p>
                  <p className="text-lg font-bold text-accent">{next?.name || 'Maestro'}</p>
               </div>
-              <p className="text-xs font-bold text-gray-400">+{xpToNext} XP para subir</p>
+              <p className="text-xs font-bold text-gray-400">+{xpToNext} XP per salire</p>
             </div>
 
             <div className="space-y-2">

@@ -13,12 +13,12 @@ import { WritingAssistant } from "@/components/student/WritingAssistant"
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
 const TYPES = [
-  { id: "email_formal", label: "Email formal" },
-  { id: "email_informal", label: "Email informal" },
+  { id: "email_formal", label: "Email formale" },
+  { id: "email_informal", label: "Email informale" },
   { id: "narrativo", label: "Narrativo" },
-  { id: "descriptivo", label: "Descriptivo" },
-  { id: "argumentativo", label: "Argumentativo" },
-  { id: "reclamo", label: "Solicitud/Reclamo" },
+  { id: "descriptivo", label: "Descrittivo" },
+  { id: "argumentativo", label: "Argomentativo" },
+  { id: "reclamo", label: "Richiesta/Reclamo" },
 ]
 
 export default function GuidesPage() {
@@ -78,7 +78,7 @@ export default function GuidesPage() {
             <h2 className="text-2xl font-display font-bold text-gray-900">✍️ Assistente alla scrittura</h2>
           </div>
           <p className="text-gray-600 mb-8">
-            Non sai da dove cominciare? L&apos;IA ti guida passo per passo prima di scrivere.
+            Non sai da dove cominciare? L&apos;IA ti guida passo dopo passo prima di scrivere.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -96,7 +96,7 @@ export default function GuidesPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Nivel</label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Livello</label>
               <div className="relative">
                 <select
                   value={assistantLevel}
@@ -126,11 +126,11 @@ export default function GuidesPage() {
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
             <div className="flex items-center gap-2 font-bold text-gray-900 border-b border-gray-50 pb-4">
               <Filter className="h-4 w-4 text-primary" />
-              <span>Filtros</span>
+              <span>Filtri</span>
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nivel</label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Livello</label>
               <div className="flex flex-wrap gap-2">
                 {LEVELS.map(level => (
                   <button
@@ -150,7 +150,7 @@ export default function GuidesPage() {
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tipo de texto</label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tipo di testo</label>
               <div className="space-y-2">
                 {TYPES.map(type => (
                   <button
@@ -177,7 +177,7 @@ export default function GuidesPage() {
                 className="w-full text-xs text-secondary hover:text-secondary hover:bg-secondary/5"
                 onClick={() => { setSelectedLevels([]); setSelectedTypes([]); }}
               >
-                Limpiar filtros
+                Pulisci filtri
               </Button>
             )}
           </div>
@@ -188,13 +188,13 @@ export default function GuidesPage() {
           <header className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-display font-bold text-gray-900">Guías de escritura 📚</h1>
-                <p className="text-gray-500 mt-1">Aprendé a estructurar tus textos según el tipo y tu nivel</p>
+                <h1 className="text-3xl font-display font-bold text-gray-900">Guide alla scrittura 📚</h1>
+                <p className="text-gray-500 mt-1">Impara a strutturare i tuoi testi in base al tipo e al tuo livello</p>
               </div>
               <div className="relative w-full md:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar guías..."
+                  placeholder="Cerca guide..."
                   className="pl-10 bg-white border-gray-200 rounded-xl focus:ring-primary"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -208,7 +208,7 @@ export default function GuidesPage() {
             <section className="space-y-4">
               <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                 <Star className="h-4 w-4 text-accent fill-accent" />
-                Recomendadas para vos
+                Consigliate per te
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {recommendedGuides.map(guide => (
@@ -227,7 +227,7 @@ export default function GuidesPage() {
           {/* All Guides Grid */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-gray-900">Todas las guías ({filteredGuides.length})</h2>
+              <h2 className="text-sm font-bold text-gray-900">Tutte le guide ({filteredGuides.length})</h2>
             </div>
 
             {filteredGuides.length > 0 ? (
@@ -254,13 +254,13 @@ export default function GuidesPage() {
             ) : (
               <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
                 <BookOpen className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium">No encontramos guías que coincidan con tu búsqueda.</p>
+                <p className="text-gray-500 font-medium">Non abbiamo trovato guide che corrispondano alla tua ricerca.</p>
                 <Button
                   variant="link"
                   className="text-primary"
                   onClick={() => { setSearchQuery(""); setSelectedLevels([]); setSelectedTypes([]); }}
                 >
-                  Ver todas las guías
+                  Vedi tutte le guide
                 </Button>
               </div>
             )}

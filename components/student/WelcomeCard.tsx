@@ -32,24 +32,24 @@ export function WelcomeCard({ name, targetLevel, currentLevel, streak, xp }: Wel
             </h1>
             <div className="flex flex-wrap items-center gap-4 mb-6">
               <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-1">
-                <span className="text-sm font-medium">Nivel objetivo:</span>
+                <span className="text-sm font-medium">Livello obiettivo:</span>
                 <Badge className="bg-accent text-white border-none">{targetLevel}</Badge>
               </div>
               {currentLevel && (
                 <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-1">
-                  <span className="text-sm font-medium">Nivel actual:</span>
+                  <span className="text-sm font-medium">Livello attuale:</span>
                   <Badge className="bg-blue-500 text-white border-none">{currentLevel}</Badge>
                 </div>
               )}
               <div className="flex items-center gap-2 bg-secondary/80 backdrop-blur-sm rounded-full px-4 py-1">
                 <Flame className="h-4 w-4 fill-white" />
-                <span className="text-sm font-bold">{streak} días consecutivos</span>
+                <span className="text-sm font-bold">{streak} giorni consecutivi</span>
               </div>
             </div>
 
             <div className="max-w-md space-y-3">
               <div className="flex justify-between text-sm font-medium">
-                <span>Progreso al siguiente nivel</span>
+                <span>Progresso al prossimo livello</span>
                 <span>{xp} / {nextLevelXp} XP</span>
               </div>
               <div className="h-3 w-full bg-white/20 rounded-full overflow-hidden">

@@ -83,12 +83,12 @@ const guides: Record<string, GuideData> = {
       "Si trova a...",
       "È caratterizzato da...",
       "Sembra che...",
-      "Quello que mi piace di più è...",
+      "Quello che mi piace di più è...",
       "Dal punto di vista estetico..."
     ],
     commonErrors: [
       "Concordanza genere/numero degli aggettivi",
-      "Vocabulario limitato",
+      "Vocabolario limitato",
       "Mancanza di avverbi di grado (molto, abbastanza, piuttosto)"
     ]
   }
@@ -103,12 +103,23 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
   const guideKey = `${type}_${level}`
   const guide = guides[guideKey] || guides[`${type}_B1`] || null
 
+  const typeLabels: Record<string, string> = {
+    email_formal: "Email formale",
+    email_informal: "Email informale",
+    narrativo: "Testo narrativo",
+    descriptivo: "Testo descrittivo",
+    argumentativo: "Testo argomentativo",
+    reclamo: "Reclamo",
+    articulo: "Articolo di opinione",
+    libre: "Scrittura libera"
+  }
+
   if (!guide) {
     return (
       <Card className="border-dashed border-gray-200 bg-gray-50/50">
         <CardContent className="p-8 text-center">
           <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">Seleccioná un tipo de texto para ver sugerencias de escritura</p>
+          <p className="text-gray-500 font-medium">Seleziona un tipo di testo per vedere suggerimenti di scrittura</p>
         </CardContent>
       </Card>
     )
@@ -119,15 +130,15 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
       <Card className="border-primary/10 shadow-sm overflow-hidden">
         <CardHeader className="bg-primary/5 pb-4">
           <CardTitle className="text-lg flex items-center gap-2 text-primary-dark">
-            <BookOpen className="h-5 w-5" />
-            Guía para {type.replace('_', ' ')} ({level})
+            < BookOpen className="h-5 w-5" />
+            Guida per {typeLabels[type] || type} ({level})
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <section>
             <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
               <ListChecks className="h-4 w-4 text-primary" />
-              Estructura recomendada
+              Struttura consigliata
             </h4>
             <ul className="space-y-2">
               {guide.structure.map((item, i) => (
@@ -142,7 +153,7 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
           <section>
             <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
               <Lightbulb className="h-4 w-4 text-accent" />
-              Conectores útiles
+              Connettori utili
             </h4>
             <div className="flex flex-wrap gap-2">
               {guide.connectors.map((item, i) => (
@@ -156,7 +167,7 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
           <section>
             <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
               <AlertTriangle className="h-4 w-4 text-secondary" />
-              Errores comunes a evitar
+              Errori comuni da evitare
             </h4>
             <ul className="space-y-2">
               {guide.commonErrors.map((item, i) => (
@@ -175,9 +186,9 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
           <div className="flex items-start gap-3">
             <Lightbulb className="h-5 w-5 text-accent shrink-0 mt-0.5" />
             <div>
-              <p className="text-xs font-bold text-accent-dark mb-1">Pro-tip del examinador</p>
+              <p className="text-xs font-bold text-accent-dark mb-1">Pro-tip dell&apos;esaminatore</p>
               <p className="text-xs text-gray-600 leading-relaxed">
-                Intentá variar el inicio de tus oraciones y usa sinónimos para no repetir palabras básicas como &quot;fare&quot; o &quot;andare&quot;.
+                Prova a variare l&apos;inizio delle tue frasi e usa sinonimi per non ripetere parole base come &quot;fare&quot; o &quot;andare&quot;.
               </p>
             </div>
           </div>
