@@ -55,12 +55,18 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Main Analysis Column */}
-        <div className="lg:col-span-2 space-y-12">
-          <ExaminerCard comment={correction.examiner_comment} />
+        <div className="lg:col-span-2">
+            <ExaminerCard comment={correction.examiner_comment} />
+        </div>
+        <div className="lg:col-span-1">
+            <RadarChart data={radarData} />
+        </div>
+      </div>
 
+      {/* Main Analysis Section - FULL WIDTH */}
+      <div className="space-y-12">
           <Tabs defaultValue="strengths" className="w-full">
-            <TabsList className="bg-white border border-gray-100 p-1.5 h-14 rounded-2xl w-fit flex gap-2 shadow-sm">
+            <TabsList className="bg-white border border-gray-100 p-1.5 h-14 rounded-2xl w-fit flex gap-2 shadow-sm mb-8">
               <TabsTrigger
                 value="strengths"
                 className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white font-bold transition-all"
@@ -81,15 +87,15 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="strengths" className="mt-8 space-y-4">
+            <TabsContent value="strengths" className="space-y-4">
               {correction.pros.map((pro: string, i: number) => (
-                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
+                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/30 group-hover:w-2 transition-all" />
                   <CardContent className="p-8 flex items-start gap-5">
                     <div className="p-2.5 bg-primary/10 rounded-xl shrink-0 mt-1">
                       <CheckCircle2 className="h-5 w-5 text-primary" />
                     </div>
-                    <div className="max-h-[200px] overflow-y-auto">
+                    <div className="max-h-[200px] overflow-y-auto w-full">
                       <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
                     </div>
                   </CardContent>
@@ -97,15 +103,15 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               ))}
             </TabsContent>
 
-            <TabsContent value="to_improve" className="mt-8 space-y-4">
+            <TabsContent value="to_improve" className="space-y-4">
               {correction.cons.map((con: string, i: number) => (
-                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
+                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary/30 group-hover:w-2 transition-all" />
                   <CardContent className="p-8 flex items-start gap-5">
                     <div className="p-2.5 bg-secondary/10 rounded-xl shrink-0 mt-1">
                       <Target className="h-5 w-5 text-secondary" />
                     </div>
-                    <div className="max-h-[200px] overflow-y-auto">
+                    <div className="max-h-[200px] overflow-y-auto w-full">
                       <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
                     </div>
                   </CardContent>
@@ -113,16 +119,16 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               ))}
             </TabsContent>
 
-            <TabsContent value="suggestions" className="mt-8 space-y-6">
+            <TabsContent value="suggestions" className="space-y-6">
               {correction.suggestions.map((sug: any, i: number) => (
-                <Card key={i} className="border-none shadow-sm bg-white">
+                <Card key={i} className="border-none shadow-sm bg-white w-full">
                   <CardContent className="p-8 space-y-5">
                     <div className="flex items-center gap-3">
                       <Badge className="bg-accent/10 text-accent-dark hover:bg-accent/20 border-none px-4 py-1 rounded-full font-black text-[10px] uppercase tracking-widest">
                         {sug.category}
                       </Badge>
                     </div>
-                    <div className="max-h-[200px] overflow-y-auto space-y-4">
+                    <div className="max-h-[200px] overflow-y-auto space-y-4 w-full">
                       <p className="font-display font-bold text-lg text-gray-900 leading-tight">{sug.tip}</p>
                       <div className="p-5 bg-cream rounded-2xl border border-gray-100/50 text-sm italic leading-relaxed">
                         <span className="text-primary font-black uppercase text-[10px] tracking-widest mr-3 not-italic">Esempio:</span>
@@ -145,18 +151,60 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                   <p className="text-gray-500 text-sm">Revisione parola per parola e correzioni suggerite.</p>
                </div>
             </div>
-            <AnnotatedText
-              originalText={correction.writings.content}
-              correctedText={correction.corrected_text}
-              corrections={correction.inline_corrections}
-            />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <Card className="lg:col-span-2 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+                    <CardContent className="p-8 md:p-12">
+                        <AnnotatedText
+                            originalText={correction.writings.content}
+                            correctedText={correction.corrected_text}
+                            corrections={correction.inline_corrections}
+                        />
+                    </CardContent>
+                </Card>
+
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-display font-bold text-xl text-gray-900">Analisi dettagliata</h3>
+                        <Badge className="bg-gray-100 text-gray-500 border-none font-bold rounded-full">
+                        {correction.inline_corrections.length} error{correction.inline_corrections.length === 1 ? 'e' : 'i'}
+                        </Badge>
+                    </div>
+                    <div className="space-y-4">
+                        {correction.inline_corrections.map((c: any, i: number) => (
+                        <div key={i} className="flex gap-4 p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
+                            <div className={cn(
+                            "shrink-0 w-1 h-12 rounded-full",
+                            c.error_type === 'gramatica' ? 'bg-secondary/40' :
+                            c.error_type === 'vocabulario' ? 'bg-accent/40' :
+                            c.error_type === 'ortografia' ? 'bg-blue-400/40' :
+                            'bg-purple-400/40'
+                            )} />
+                            <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1.5">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{c.error_type}</span>
+                                <span className="text-xs font-bold text-secondary/60 line-through truncate ml-2">{c.original}</span>
+                            </div>
+                            <p className="font-bold text-gray-900 text-lg leading-tight">{c.corrected}</p>
+                            <p className="text-xs text-gray-500 mt-2 leading-relaxed">{c.explanation}</p>
+                            </div>
+                        </div>
+                        ))}
+                        {correction.inline_corrections.length === 0 && (
+                            <div className="text-center py-12 px-6 bg-primary/5 rounded-3xl border border-dashed border-primary/20">
+                                <Sparkles className="h-8 w-8 text-primary mx-auto mb-4" />
+                                <p className="font-bold text-primary">Nessun errore rilevato!</p>
+                                <p className="text-xs text-primary/60 mt-1">Ottimo lavoro, il testo è eccellente.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
           </section>
-        </div>
+      </div>
 
-        {/* Sidebar Column */}
-        <div className="space-y-10">
-          <RadarChart data={radarData} />
-
+      {/* Footer Section Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <Card className="border-none shadow-sm rounded-3xl bg-white">
             <CardContent className="p-8 space-y-8">
               <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Progresso per livelli</h4>
@@ -222,7 +270,6 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               </div>
             </CardContent>
           </Card>
-        </div>
       </div>
     </div>
   )
