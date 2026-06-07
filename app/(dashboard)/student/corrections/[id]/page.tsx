@@ -52,11 +52,11 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       />
 
       {/* Examiner & Performance Radar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        <div className="lg:col-span-8 flex flex-col h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="lg:col-span-8">
             <ExaminerCard comment={correction.examiner_comment} />
         </div>
-        <div className="lg:col-span-4 flex flex-col h-full">
+        <div className="lg:col-span-4">
             <RadarChart data={radarData} />
         </div>
       </div>
@@ -86,7 +86,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </TabsList>
 
             <TabsContent value="strengths" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 {correction.pros.map((pro: string, i: number) => (
                     <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-1.5 transition-all" />
@@ -104,7 +104,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </TabsContent>
 
             <TabsContent value="to_improve" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 {correction.cons.map((con: string, i: number) => (
                     <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary group-hover:w-1.5 transition-all" />
@@ -122,7 +122,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </TabsContent>
 
             <TabsContent value="suggestions" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 {correction.suggestions.map((sug: any, i: number) => (
                     <Card key={i} className="border-none shadow-sm bg-white group">
                     <CardContent className="p-6 space-y-4">
@@ -158,7 +158,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <Card className="lg:col-span-8 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
                 <CardContent className="p-8 md:p-10">
                     <AnnotatedText
@@ -209,7 +209,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       </section>
 
       {/* Footer Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <Card className="border-none shadow-sm rounded-3xl bg-white">
             <CardContent className="p-8 space-y-6">
               <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Progresso per livelli</h4>
@@ -249,12 +249,12 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 transition-transform">
                <Sparkles className="h-32 w-32" />
             </div>
-            <CardContent className="p-8 space-y-6 relative z-10 flex flex-col h-full">
+            <CardContent className="p-8 space-y-6 relative z-10 flex flex-col">
               <h4 className="font-display font-bold text-xl flex items-center gap-2">
                 <Star className="h-5 w-5 text-accent fill-accent" />
                 Prossimi passi
               </h4>
-              <ul className="space-y-4 flex-1">
+              <ul className="space-y-4">
                 {correction.next_steps.map((step: string, i: number) => (
                   <li key={i} className="flex items-start gap-3 text-gray-300">
                     <div className="w-5 h-5 rounded-md bg-white/10 flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-black text-white">
