@@ -9,10 +9,10 @@ interface ExaminerCardProps {
 
 export function ExaminerCard({ comment }: ExaminerCardProps) {
   return (
-    <Card className="bg-white border-none relative overflow-hidden shadow-sm rounded-3xl h-full flex flex-col">
+    <Card className="bg-white border-none relative overflow-hidden shadow-sm rounded-3xl">
       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent" />
 
-      <CardContent className="p-8 md:p-10 flex-1 flex flex-col">
+      <CardContent className="p-8 md:p-10">
         <div className="flex items-center justify-between border-b border-gray-50 pb-6 mb-8">
           <div className="flex items-center gap-4">
             <div className="p-2.5 bg-accent/10 rounded-2xl">
@@ -26,7 +26,7 @@ export function ExaminerCard({ comment }: ExaminerCardProps) {
           <Quote className="h-8 w-8 text-gray-100 shrink-0" />
         </div>
 
-        <div className="relative flex-1">
+        <div className="relative">
           <p className="font-body text-gray-700 leading-relaxed italic text-lg px-2">
             {comment}
           </p>

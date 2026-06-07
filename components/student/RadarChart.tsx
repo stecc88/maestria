@@ -26,14 +26,14 @@ export function RadarChart({ data }: RadarChartProps) {
   const hasData = data && data.length > 0
 
   return (
-    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white h-full flex flex-col">
+    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
       <CardHeader className="pb-2">
         <CardTitle className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
           <Target className="h-3.5 w-3.5 text-secondary" />
           <span>Profilo prestazionale</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col justify-center p-4 pt-0">
+      <CardContent className="p-4 pt-0">
         {hasData && mounted ? (
           <div className="w-full h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
