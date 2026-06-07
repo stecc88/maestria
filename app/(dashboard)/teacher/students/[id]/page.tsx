@@ -82,7 +82,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
       <header className="space-y-6">
         <Link href="/teacher/students">
           <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
-            <ChevronLeft className="h-4 w-4" /> Torna ai miei studenti
+            <ChevronLeft className="h-4 w-4" /> Torna agli studenti
           </Button>
         </Link>
 

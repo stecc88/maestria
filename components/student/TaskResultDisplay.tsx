@@ -125,7 +125,7 @@ export function TaskResultDisplay({ result }: TaskResultDisplayProps) {
               </Link>
               <Link href="/student/tasks" className="w-full sm:w-auto">
                 <Button variant="outline" className="w-full border-gray-200 hover:bg-gray-50 font-bold py-6 px-10 rounded-2xl gap-2">
-                  Vedi i miei compiti 📝
+                  Vedi i compiti 📝
                 </Button>
               </Link>
             </motion.div>

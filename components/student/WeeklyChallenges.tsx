@@ -1,8 +1,7 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Zap, Clock, CheckCircle2, Trophy } from "lucide-react"
 import { motion } from "framer-motion"
@@ -60,7 +59,7 @@ export function WeeklyChallenges() {
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-sm font-bold text-gray-200">{challenge.title}</p>
-                    <p className="text-xs font-black text-primary mt-0.5">+{challenge.reward} XP Premio</p>
+                    <p className="text-xs font-black text-primary mt-0.5">+{challenge.reward} XP di premio</p>
                   </div>
                 </div>
 
@@ -85,5 +84,3 @@ export function WeeklyChallenges() {
     </Card>
   )
 }
-
-import { useState, useEffect } from "react"
