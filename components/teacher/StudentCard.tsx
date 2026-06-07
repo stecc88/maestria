@@ -65,11 +65,13 @@ export function StudentCard({ student }: StudentCardProps) {
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Punteggi</p>
               <div className="h-5 w-full mt-1">
-                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={sparkData}>
-                       <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
-                    </LineChart>
-                 </ResponsiveContainer>
+                 <div style={{ width: '100%', height: 20 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={sparkData}>
+                            <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                 </div>
               </div>
            </div>
         </div>
