@@ -109,7 +109,7 @@ export default function TaskDetailPage() {
       <header className="space-y-4">
         <Link href="/student/tasks">
           <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
-            <ChevronLeft className="h-4 w-4" /> Torna ai miei compiti
+            <ChevronLeft className="h-4 w-4" /> Torna ai compiti
           </Button>
         </Link>
 

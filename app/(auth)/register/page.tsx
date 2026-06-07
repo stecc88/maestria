@@ -171,7 +171,7 @@ export default function RegisterPage() {
                       <GraduationCap className="w-8 h-8 text-primary" />
                     </div>
                     <span className="text-xl font-display font-bold">Studente</span>
-                    <p className="text-sm text-muted-foreground text-center mt-2">Voglio migliorare il mio italiano e ricevere correzioni.</p>
+                    <p className="text-sm text-muted-foreground text-center mt-2">Per migliorare l&apos;italiano e ricevere correzioni.</p>
                     {role === "student" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4"><CheckCircle2 className="text-primary" /></motion.div>}
                   </button>
 
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                       <User className="w-8 h-8 text-primary" />
                     </div>
                     <span className="text-xl font-display font-bold">Insegnante</span>
-                    <p className="text-sm text-muted-foreground text-center mt-2">Voglio gestire i miei studenti e generare compiti.</p>
+                    <p className="text-sm text-muted-foreground text-center mt-2">Per gestire gli studenti e generare compiti.</p>
                     {role === "teacher" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4"><CheckCircle2 className="text-primary" /></motion.div>}
                   </button>
                 </div>
@@ -291,7 +291,7 @@ export default function RegisterPage() {
                       {errors.bio && <p className="text-xs text-secondary">{errors.bio.message}</p>}
                     </div>
                     <p className="text-xs p-3 bg-accent/10 text-accent-foreground rounded-lg border border-accent/20">
-                      ⚠️ Il tuo account sarà revisionato e approvato da un amministratore nelle prossime 24 ore.
+                      ⚠️ L&apos;account sarà revisionato e approvato da un amministratore nelle prossime 24 ore.
                     </p>
                   </div>
                 )}
@@ -346,7 +346,7 @@ export default function RegisterPage() {
                   <Button type="button" variant="ghost" disabled={isLoading} onClick={prevStep}>Indietro</Button>
                   <Button type="submit" className="flex-grow bg-primary hover:bg-primary-dark" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Crea il mio account ✨
+                    Crea account ✨
                   </Button>
                 </div>
               </motion.div>
