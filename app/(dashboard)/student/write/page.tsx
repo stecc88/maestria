@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, Suspense } from "react"
+import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import {
   Mail,
@@ -33,9 +33,9 @@ const TEXT_TYPES = [
   { id: "reclamo", label: "Reclamo", icon: AlertCircle },
   { id: "articulo", label: "Articolo di opinione", icon: PenTool },
   { id: "libre", label: "Libero", icon: FileEdit },
-]
+] as const
 
-const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
+const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const
 
 const WORD_RANGES: Record<string, string> = {
   A1: "30-50 parole",
@@ -72,22 +72,23 @@ function WriteForm() {
     setWordCount(words.length)
   }, [content])
 
-  // Auto-save logic
+  // Auto-save load logic
   useEffect(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("maestria_draft") : null
     if (saved) {
       try {
         const draft = JSON.parse(saved)
-        setTextType(draft.textType || "email_formal")
-        setLevel(draft.level || "B1")
-        setPrompt(draft.prompt || "")
-        setContent(draft.content || "")
+        if (draft.textType) setTextType(draft.textType)
+        if (draft.level) setLevel(draft.level)
+        if (draft.prompt) setPrompt(draft.prompt)
+        if (draft.content) setContent(draft.content)
       } catch (e) {
-        console.error("Error loading draft", e)
+        // Silently ignore parse errors
       }
     }
   }, [])
 
+  // Auto-save interval logic
   useEffect(() => {
     const interval = setInterval(() => {
       if (content.length > 10) {
@@ -111,7 +112,7 @@ function WriteForm() {
     return () => clearInterval(interval)
   }, [isSubmitting])
 
-  // Update state if query params change (e.g. navigation from guides)
+  // Update state if query params change
   useEffect(() => {
     const typeParam = searchParams.get("type")
     const levelParam = searchParams.get("level")
@@ -124,7 +125,7 @@ function WriteForm() {
     }
   }, [searchParams])
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (wordCount < 10) {
       toast.error("Il testo è troppo breve per essere valutato (minimo 10 parole)")
       return
@@ -139,8 +140,6 @@ function WriteForm() {
       })
 
       const data = await response.json()
-      console.log("Risposta di /api/correct:", JSON.stringify(data))
-
       const correctionId = data.correctionId || data.id
 
       if (correctionId) {
@@ -153,7 +152,9 @@ function WriteForm() {
       toast.error(error.message)
       setIsSubmitting(false)
     }
-  }
+  }, [content, level, prompt, router, textType, wordCount])
+
+  const wordRangeInfo = useMemo(() => WORD_RANGES[level] || "", [level])
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-20">
@@ -182,6 +183,7 @@ function WriteForm() {
               {TEXT_TYPES.map((type) => (
                 <button
                   key={type.id}
+                  type="button"
                   onClick={() => setTextType(type.id)}
                   className={cn(
                     "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all gap-2",
@@ -205,6 +207,7 @@ function WriteForm() {
               {LEVELS.map((l) => (
                 <button
                   key={l}
+                  type="button"
                   onClick={() => setLevel(l)}
                   className={cn(
                     "px-6 py-2 rounded-full font-bold text-sm transition-all",
@@ -250,7 +253,7 @@ function WriteForm() {
                   {wordCount} parole
                 </span>
                 <span className="text-[10px] text-gray-400">
-                  Range consigliato: {WORD_RANGES[level]}
+                  Range consigliato: {wordRangeInfo}
                 </span>
               </div>
             </div>
@@ -291,7 +294,7 @@ function WriteForm() {
 
 export default function WritePage() {
   return (
-    <Suspense fallback={<div>Caricamento...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center p-20 text-gray-400">Caricamento modulo...</div>}>
       <WriteForm />
     </Suspense>
   )

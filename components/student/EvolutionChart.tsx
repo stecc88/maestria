@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   LineChart,
@@ -19,6 +20,12 @@ interface EvolutionChartProps {
 }
 
 export function EvolutionChart({ data }: EvolutionChartProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const hasData = data && data.length >= 2
 
   return (
@@ -30,9 +37,9 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="w-full flex flex-col justify-center p-0 pt-6">
-        {hasData ? (
-          <div style={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+        {hasData && mounted ? (
+          <div style={{ width: '100%', height: 300 }} className="min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis
@@ -40,7 +47,13 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                   tick={{ fontSize: 10, fill: '#94a3b8' }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={(str) => format(new Date(str), 'd MMM', { locale: it })}
+                  tickFormatter={(str) => {
+                    try {
+                        return format(new Date(str), 'd MMM', { locale: it })
+                    } catch (e) {
+                        return ""
+                    }
+                  }}
                 />
                 <YAxis
                   domain={[0, 100]}
@@ -55,7 +68,13 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                     boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
                     padding: '12px'
                   }}
-                  labelFormatter={(label) => format(new Date(label), 'PPP', { locale: it })}
+                  labelFormatter={(label) => {
+                    try {
+                        return format(new Date(label), 'PPP', { locale: it })
+                    } catch (e) {
+                        return ""
+                    }
+                  }}
                   formatter={(value: any, name: any, props: any) => [
                     <span key="score" className="font-bold text-primary">{value} pts</span>,
                     <span key="level">Livello: {props.payload.detected_level}</span>
@@ -72,7 +91,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        ) : (
+        ) : !hasData ? (
           <div className="text-center space-y-4 py-12">
             <div className="bg-cream rounded-full w-20 h-20 flex items-center justify-center mx-auto">
               <TrendingUp className="h-10 w-10 text-gray-300" />
@@ -81,6 +100,10 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
               <p className="text-sm font-medium text-gray-900">Non ci sono ancora dati sufficienti</p>
               <p className="text-xs text-gray-500 mt-1">Invia almeno 2 scritti per vedere il tuo grafico di evoluzione.</p>
             </div>
+          </div>
+        ) : (
+          <div className="w-full h-[300px] flex items-center justify-center">
+             <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
           </div>
         )}
       </CardContent>

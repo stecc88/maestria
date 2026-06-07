@@ -12,7 +12,6 @@ import {
   User,
   GraduationCap,
   Check,
-  Search,
   CheckCircle2,
   XCircle
 } from "lucide-react"
@@ -32,10 +31,9 @@ const levels = [
   { id: "B2", label: "B2", color: "bg-orange-100 border-orange-200 text-orange-700", desc: "Intermedio superiore" },
   { id: "C1", label: "C1", color: "bg-purple-100 border-purple-200 text-purple-700", desc: "Avanzato" },
   { id: "C2", label: "C2", color: "bg-yellow-100 border-yellow-200 text-yellow-700", desc: "Padronanza" },
-]
+] as const
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [step, setStep] = React.useState(1)
   const [isLoading, setIsLoading] = React.useState(false)
   const [teacherStatus, setTeacherStatus] = React.useState<{ exists?: boolean; name?: string }>({})
@@ -61,7 +59,7 @@ export default function RegisterPage() {
   const teacherCode = watch("teacher_code")
 
   // Password strength indicator
-  const getPasswordStrength = (pwd: string) => {
+  const getPasswordStrength = React.useCallback((pwd: string) => {
     if (!pwd) return 0
     let strength = 0
     if (pwd.length >= 8) strength += 25
@@ -69,9 +67,9 @@ export default function RegisterPage() {
     if (/[0-9]/.test(pwd)) strength += 25
     if (/[^A-Za-z0-9]/.test(pwd)) strength += 25
     return strength
-  }
+  }, [])
 
-  const strength = getPasswordStrength(password)
+  const strength = React.useMemo(() => getPasswordStrength(password), [password, getPasswordStrength])
   const strengthColor = strength <= 25 ? "bg-secondary" : strength <= 75 ? "bg-accent" : "bg-primary"
 
   // Teacher code debounce check
@@ -92,9 +90,7 @@ export default function RegisterPage() {
   async function onSubmit(data: RegisterValues) {
     setIsLoading(true)
     try {
-      console.log("Invio dati:", data)
       const result = await signUp(data)
-      console.log("Risultato:", JSON.stringify(result))
 
       if (!result) {
         toast.error("Nessuna risposta ricevuta dal server")
@@ -111,7 +107,6 @@ export default function RegisterPage() {
       }
 
       if (result.success) {
-        // Success messages based on role and context
         if (data.role === 'teacher') {
           toast.success("Account creato! Un amministratore lo revisionerà presto. Ti avviseremo via email.", { duration: 6000 })
         } else if (data.teacher_code) {
@@ -125,7 +120,6 @@ export default function RegisterPage() {
         toast.error("Risposta imprevista dal server")
       }
     } catch (error: any) {
-      console.log("Errore nella registrazione:", error)
       toast.error("Errore imprevisto: " + error.message)
     } finally {
       setIsLoading(false)
@@ -135,13 +129,12 @@ export default function RegisterPage() {
   const nextStep = () => setStep(prev => prev + 1)
   const prevStep = () => setStep(prev => prev - 1)
 
-  const onError = (errors: any) => {
-    console.log("Errori di validazione:", JSON.stringify(errors))
+  const onError = React.useCallback((errors: any) => {
     const errorMessages = Object.entries(errors)
       .map(([field, error]: any) => `${field}: ${error.message}`)
       .join(', ')
     toast.error("Campi non validi: " + errorMessages)
-  }
+  }, [])
 
   return (
     <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-4">
@@ -247,7 +240,7 @@ export default function RegisterPage() {
                           <button
                             key={lvl.id}
                             type="button"
-                            onClick={() => setValue("target_level", lvl.id as any)}
+                            onClick={() => setValue("target_level", lvl.id)}
                             title={lvl.desc}
                             className={cn(
                               "h-12 rounded-lg border-2 flex items-center justify-center font-bold transition-all",

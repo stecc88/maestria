@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@base-ui/react": "latest",
-    "@google/genai": "^2.7.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.4.0",
     "@supabase/ssr": "latest",
@@ -26,7 +25,6 @@
     "react-hook-form": "^7.51.5",
     "react-hot-toast": "latest",
     "recharts": "latest",
-    "shadcn": "latest",
     "tailwind-merge": "latest",
     "tailwindcss-animate": "latest",
     "zod": "^3.23.8"

@@ -1,9 +1,15 @@
-import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import {
-  CheckCircle2, Star, ArrowRight, FileSearch,
-  Sparkles, Target, ShieldCheck, Quote
+  CheckCircle2,
+  ChevronRight,
+  Star,
+  ArrowRight,
+  FileSearch,
+  Sparkles,
+  BookOpen,
+  LayoutDashboard,
+  Target
 } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,17 +17,16 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { CorrectionHeader } from "@/components/student/CorrectionHeader"
+import { ExaminerCard } from "@/components/student/ExaminerCard"
 import { AnnotatedText } from "@/components/student/AnnotatedText"
 import { RadarChart } from "@/components/student/RadarChart"
 import Link from "next/link"
 
 export default async function CorrectionResultPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) notFound()
 
-  const adminSupabase = createAdminClient()
-  const { data: correction } = await adminSupabase
+  // 1. Fetch data
+  const { data: correction } = await supabase
     .from("corrections")
     .select("*, writings(*)")
     .eq("id", params.id)
@@ -37,274 +42,234 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
   ]
 
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"]
-  const pros = Array.isArray(correction.pros) ? correction.pros : []
-  const cons = Array.isArray(correction.cons) ? correction.cons : []
-  const suggestions = Array.isArray(correction.suggestions) ? correction.suggestions : []
-  const nextSteps = Array.isArray(correction.next_steps) ? correction.next_steps : []
-  const inlineCorrections = Array.isArray(correction.inline_corrections) ? correction.inline_corrections : []
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-24 px-4 md:px-0">
-
-      {/* HEADER */}
+    <div className="max-w-7xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000 px-4 md:px-0">
+      {/* Header Section */}
       <CorrectionHeader
         level={correction.detected_level}
-        targetLevel={correction.writings?.target_level}
+        targetLevel={correction.writings.target_level}
         score={correction.overall_score}
         examCompliant={correction.exam_compliant}
         xpEarned={correction.xp_earned}
       />
 
-      {/* ESAMINATORE + RADAR */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-
-        {/* Esaminatore */}
-        <Card className="lg:col-span-3 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
-          <div className="h-1 w-full bg-gradient-to-r from-accent via-accent/60 to-transparent" />
-          <CardContent className="p-6 md:p-8 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-accent/10 rounded-xl">
-                <ShieldCheck className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base">Rapporto dell&apos;Esaminatore</h3>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Maestria AI Assessment</p>
-              </div>
-            </div>
-            <p className="text-gray-600 leading-relaxed text-sm italic">
-              {correction.examiner_comment}
-            </p>
-            <div className="pt-2 border-t border-gray-50 flex justify-end">
-              <div className="text-right">
-                <p className="font-bold text-gray-800 text-sm">Maestria AI</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Valutazione Professionale</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Radar */}
-        <Card className="lg:col-span-2 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
-          <CardContent className="p-4 flex flex-col items-center justify-center h-full">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Il tuo profilo</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2">
+            <ExaminerCard comment={correction.examiner_comment} />
+        </div>
+        <div className="lg:col-span-1">
             <RadarChart data={radarData} />
-          </CardContent>
-        </Card>
-
+        </div>
       </div>
 
-      {/* TABS: PUNTI DI FORZA / AREE / SUGGERIMENTI */}
-      <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
-        <CardContent className="p-6 md:p-8">
+      {/* Main Analysis Section - FULL WIDTH */}
+      <div className="space-y-12">
           <Tabs defaultValue="strengths" className="w-full">
-            <TabsList className="bg-gray-50 p-1 h-11 rounded-xl w-full flex gap-1 mb-6">
+            <TabsList className="bg-white border border-gray-100 p-1.5 h-14 rounded-2xl w-fit flex gap-2 shadow-sm mb-8">
               <TabsTrigger
                 value="strengths"
-                className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
+                className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white font-bold transition-all"
               >
-                ✅ Punti di forza
+                Punti di forza ✅
               </TabsTrigger>
               <TabsTrigger
                 value="to_improve"
-                className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-secondary data-[state=active]:text-white transition-all"
+                className="rounded-xl px-6 data-[state=active]:bg-secondary data-[state=active]:text-white font-bold transition-all"
               >
-                ⚠️ Aree da migliorare
+                Aree da migliorare ⚠️
               </TabsTrigger>
               <TabsTrigger
                 value="suggestions"
-                className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-amber-500 data-[state=active]:text-white transition-all"
+                className="rounded-xl px-6 data-[state=active]:bg-accent data-[state=active]:text-white font-bold transition-all"
               >
-                💡 Suggerimenti
+                Suggerimenti 💡
               </TabsTrigger>
             </TabsList>
 
-            {/* Punti di forza */}
-            <TabsContent value="strengths">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {pros.map((pro: string, i: number) => (
-                  <div key={i} className="bg-green-50 border border-green-100 rounded-2xl p-5 flex items-start gap-3">
-                    <div className="p-1.5 bg-green-100 rounded-lg shrink-0 mt-0.5">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <TabsContent value="strengths" className="space-y-4">
+              {correction.pros.map((pro: string, i: number) => (
+                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/30 group-hover:w-2 transition-all" />
+                  <CardContent className="p-8 flex items-start gap-5">
+                    <div className="p-2.5 bg-primary/10 rounded-xl shrink-0 mt-1">
+                      <CheckCircle2 className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{pro}</p>
-                  </div>
-                ))}
-              </div>
+                    <div className="max-h-[200px] overflow-y-auto w-full">
+                      <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </TabsContent>
 
-            {/* Aree da migliorare */}
-            <TabsContent value="to_improve">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {cons.map((con: string, i: number) => (
-                  <div key={i} className="bg-red-50 border border-red-100 rounded-2xl p-5 flex items-start gap-3">
-                    <div className="p-1.5 bg-red-100 rounded-lg shrink-0 mt-0.5">
-                      <Target className="h-4 w-4 text-red-500" />
+            <TabsContent value="to_improve" className="space-y-4">
+              {correction.cons.map((con: string, i: number) => (
+                <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary/30 group-hover:w-2 transition-all" />
+                  <CardContent className="p-8 flex items-start gap-5">
+                    <div className="p-2.5 bg-secondary/10 rounded-xl shrink-0 mt-1">
+                      <Target className="h-5 w-5 text-secondary" />
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{con}</p>
-                  </div>
-                ))}
-              </div>
+                    <div className="max-h-[200px] overflow-y-auto w-full">
+                      <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </TabsContent>
 
-            {/* Suggerimenti */}
-            <TabsContent value="suggestions">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {suggestions.map((sug: any, i: number) => (
-                  <div key={i} className="bg-amber-50 border border-amber-100 rounded-2xl p-5 space-y-3">
-                    <Badge className="bg-amber-100 text-amber-700 border-none text-[10px] font-black uppercase tracking-wider">
-                      {sug.category}
-                    </Badge>
-                    <p className="font-bold text-gray-900 text-sm leading-snug">{sug.tip}</p>
-                    <div className="bg-white rounded-xl p-3 border border-amber-100">
-                      <p className="text-xs text-gray-500 italic">&ldquo;{sug.example}&rdquo;</p>
+            <TabsContent value="suggestions" className="space-y-6">
+              {correction.suggestions.map((sug: any, i: number) => (
+                <Card key={i} className="border-none shadow-sm bg-white w-full">
+                  <CardContent className="p-8 space-y-5">
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-accent/10 text-accent-dark hover:bg-accent/20 border-none px-4 py-1 rounded-full font-black text-[10px] uppercase tracking-widest">
+                        {sug.category}
+                      </Badge>
                     </div>
-                  </div>
-                ))}
-              </div>
+                    <div className="max-h-[200px] overflow-y-auto space-y-4 w-full">
+                      <p className="font-display font-bold text-lg text-gray-900 leading-tight">{sug.tip}</p>
+                      <div className="p-5 bg-cream rounded-2xl border border-gray-100/50 text-sm italic leading-relaxed">
+                        <span className="text-primary font-black uppercase text-[10px] tracking-widest mr-3 not-italic">Esempio:</span>
+                        &ldquo;{sug.example}&rdquo;
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
 
-      {/* ANALISI DEL TESTO */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center">
-            <FileSearch className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-bold text-gray-900 text-xl">Analisi del Testo</h3>
-            <p className="text-gray-400 text-xs">Revisione e correzioni suggerite</p>
-          </div>
-        </div>
+          <section className="space-y-8 pt-10">
+            <div className="flex items-center gap-4">
+               <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center">
+                  <FileSearch className="h-6 w-6 text-primary" />
+               </div>
+               <div>
+                  <h3 className="text-3xl font-display font-bold text-gray-900">Analisi del Testo</h3>
+                  <p className="text-gray-500 text-sm">Revisione parola per parola e correzioni suggerite.</p>
+               </div>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <Card className="lg:col-span-2 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+                    <CardContent className="p-8 md:p-12">
+                        <AnnotatedText
+                            originalText={correction.writings.content}
+                            correctedText={correction.corrected_text}
+                            corrections={correction.inline_corrections}
+                        />
+                    </CardContent>
+                </Card>
 
-          {/* Testo corretto */}
-          <Card className="lg:col-span-2 border-none shadow-sm rounded-3xl bg-white overflow-hidden">
-            <CardContent className="p-6 md:p-8">
-              <AnnotatedText
-                originalText={correction.writings?.content}
-                correctedText={correction.corrected_text}
-                corrections={inlineCorrections}
-              />
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-display font-bold text-xl text-gray-900">Analisi dettagliata</h3>
+                        <Badge className="bg-gray-100 text-gray-500 border-none font-bold rounded-full">
+                        {correction.inline_corrections.length} error{correction.inline_corrections.length === 1 ? 'e' : 'i'}
+                        </Badge>
+                    </div>
+                    <div className="space-y-4">
+                        {correction.inline_corrections.map((c: any, i: number) => (
+                        <div key={i} className="flex gap-4 p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
+                            <div className={cn(
+                            "shrink-0 w-1 h-12 rounded-full",
+                            c.error_type === 'gramatica' ? 'bg-secondary/40' :
+                            c.error_type === 'vocabulario' ? 'bg-accent/40' :
+                            c.error_type === 'ortografia' ? 'bg-blue-400/40' :
+                            'bg-purple-400/40'
+                            )} />
+                            <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1.5">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{c.error_type}</span>
+                                <span className="text-xs font-bold text-secondary/60 line-through truncate ml-2">{c.original}</span>
+                            </div>
+                            <p className="font-bold text-gray-900 text-lg leading-tight">{c.corrected}</p>
+                            <p className="text-xs text-gray-500 mt-2 leading-relaxed">{c.explanation}</p>
+                            </div>
+                        </div>
+                        ))}
+                        {correction.inline_corrections.length === 0 && (
+                            <div className="text-center py-12 px-6 bg-primary/5 rounded-3xl border border-dashed border-primary/20">
+                                <Sparkles className="h-8 w-8 text-primary mx-auto mb-4" />
+                                <p className="font-bold text-primary">Nessun errore rilevato!</p>
+                                <p className="text-xs text-primary/60 mt-1">Ottimo lavoro, il testo è eccellente.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+          </section>
+      </div>
+
+      {/* Footer Section Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <Card className="border-none shadow-sm rounded-3xl bg-white">
+            <CardContent className="p-8 space-y-8">
+              <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Progresso per livelli</h4>
+              <div className="space-y-5">
+                {levels.map((l) => {
+                  const isMet = correction.meets_level_requirements[l]
+                  const isCurrent = correction.detected_level === l
+                  return (
+                    <div key={l} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-4">
+                        <div className={cn(
+                          "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm border-2 transition-all",
+                          isMet ? "bg-primary text-white border-primary" : "bg-gray-50 text-gray-400 border-gray-100"
+                        )}>
+                          {l}
+                        </div>
+                        {isCurrent && <Badge className="text-[10px] bg-accent font-black tracking-widest px-2 py-0">ATTUALE</Badge>}
+                      </div>
+                      {isMet ? (
+                        <div className="p-1.5 bg-primary/10 rounded-full">
+                           <CheckCircle2 className="h-4 w-4 text-primary" />
+                        </div>
+                      ) : (
+                        <div className="h-2 w-2 rounded-full bg-gray-100 mr-2" />
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
             </CardContent>
           </Card>
 
-          {/* Errori dettagliati */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <h4 className="font-bold text-gray-900 text-sm">Errori rilevati</h4>
-              <Badge className="bg-gray-100 text-gray-500 border-none text-xs font-bold rounded-full">
-                {inlineCorrections.length}
-              </Badge>
+          <Card className="border-none bg-[#1a1a1a] text-white shadow-2xl rounded-3xl overflow-hidden relative group">
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform">
+               <Sparkles className="h-24 w-24" />
             </div>
-
-            {inlineCorrections.length === 0 ? (
-              <div className="text-center py-10 bg-green-50 rounded-2xl border border-dashed border-green-200">
-                <Sparkles className="h-6 w-6 text-green-500 mx-auto mb-2" />
-                <p className="font-bold text-green-700 text-sm">Nessun errore!</p>
-                <p className="text-xs text-green-500 mt-1">Ottimo lavoro 🎉</p>
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                {inlineCorrections.map((c: any, i: number) => (
-                  <div key={i} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={cn(
-                        "text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
-                        c.error_type === 'gramatica' ? 'bg-red-100 text-red-600' :
-                        c.error_type === 'vocabulario' ? 'bg-amber-100 text-amber-600' :
-                        c.error_type === 'ortografia' ? 'bg-blue-100 text-blue-600' :
-                        'bg-purple-100 text-purple-600'
-                      )}>
-                        {c.error_type}
-                      </span>
-                      <span className="text-xs text-gray-400 line-through">{c.original}</span>
-                      <span className="text-xs">→</span>
-                      <span className="text-xs font-bold text-gray-800">{c.corrected}</span>
+            <CardContent className="p-8 space-y-8 relative z-10">
+              <h4 className="font-display font-bold text-2xl flex items-center gap-3">
+                <Star className="h-6 w-6 text-accent fill-accent" />
+                Prossimi passi
+              </h4>
+              <ul className="space-y-6">
+                {correction.next_steps.map((step: string, i: number) => (
+                  <li key={i} className="flex items-start gap-4 text-gray-300">
+                    <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5 text-xs font-black text-white">
+                      {i + 1}
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed">{c.explanation}</p>
-                  </div>
+                    <span className="text-sm leading-relaxed">{step}</span>
+                  </li>
                 ))}
+              </ul>
+              <div className="pt-6 space-y-4">
+                <Link href="/student/write" className="block">
+                  <Button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-7 rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-[0.98]">
+                    Invia un altro testo
+                  </Button>
+                </Link>
+                <Link href="/student/tasks" className="block">
+                  <Button variant="outline" className="w-full border-white/20 hover:bg-white/10 text-white font-bold py-7 rounded-2xl transition-all active:scale-[0.98]">
+                    Vai ai compiti
+                  </Button>
+                </Link>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* FOOTER: PROGRESSO + PROSSIMI PASSI */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Progresso livelli */}
-        <Card className="border-none shadow-sm rounded-3xl bg-white">
-          <CardContent className="p-6 space-y-5">
-            <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Progresso per livelli</h4>
-            <div className="space-y-3">
-              {levels.map((l) => {
-                const isMet = correction.meets_level_requirements?.[l]
-                const isCurrent = correction.detected_level === l
-                return (
-                  <div key={l} className="flex items-center gap-3">
-                    <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 transition-all",
-                      isMet ? "bg-primary text-white" : "bg-gray-100 text-gray-400"
-                    )}>
-                      {l}
-                    </div>
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div className={cn(
-                        "h-full rounded-full transition-all",
-                        isMet ? "bg-primary" : "bg-transparent"
-                      )} style={{ width: isMet ? '100%' : '0%' }} />
-                    </div>
-                    {isCurrent && (
-                      <Badge className="text-[10px] bg-accent/20 text-accent border-none font-black tracking-wider shrink-0">
-                        ATTUALE
-                      </Badge>
-                    )}
-                    {isMet && !isCurrent && (
-                      <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Prossimi passi */}
-        <Card className="border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden">
-          <CardContent className="p-6 space-y-5">
-            <h4 className="font-bold text-lg flex items-center gap-2">
-              <Star className="h-5 w-5 text-accent fill-accent" />
-              Prossimi passi
-            </h4>
-            <ul className="space-y-4">
-              {nextSteps.map((step: string, i: number) => (
-                <li key={i} className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5 text-xs font-black">
-                    {i + 1}
-                  </div>
-                  <span className="text-sm leading-relaxed text-gray-300">{step}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="pt-4 space-y-3">
-              <Link href="/student/write" className="block">
-                <Button className="w-full bg-primary hover:bg-primary-dark font-bold rounded-xl py-6">
-                  Invia un altro testo <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/student/tasks" className="block">
-                <Button variant="outline" className="w-full border-white/20 hover:bg-white/10 text-white font-bold rounded-xl py-6">
-                  Vai ai compiti
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
+            </CardContent>
+          </Card>
       </div>
     </div>
   )

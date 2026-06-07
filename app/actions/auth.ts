@@ -51,7 +51,6 @@ export async function signUp(formData: any) {
   }
 
   const { email, password, full_name, role, ...extra } = validatedFields.data
-  console.log("1. Iniziando registrazione", { email, role })
 
   // Check if user already exists in profiles
   const { data: existingProfile } = await adminSupabase
@@ -75,10 +74,7 @@ export async function signUp(formData: any) {
     }
   })
 
-  console.log("Debug signUp - authData:", JSON.stringify(authData))
-
   if (authError) {
-    console.log("Auth error completo:", JSON.stringify(authError))
     return { error: authError.message + " (codice: " + authError.status + ")" }
   }
 
@@ -88,7 +84,6 @@ export async function signUp(formData: any) {
   }
 
   const userId = authData.user.id
-  console.log("2. Utente creato in Auth", { userId })
 
   // 1. Create Profile
   const { error: profileError } = await adminSupabase.from('profiles').insert({
@@ -100,7 +95,6 @@ export async function signUp(formData: any) {
   })
 
   if (profileError) return { error: profileError.message }
-  console.log("3. Profilo creato")
 
   // 2. Role specific data
   if (role === 'student') {
@@ -130,7 +124,6 @@ export async function signUp(formData: any) {
       institution: extra.institution,
     })
   }
-  console.log("4. Dati del ruolo creati")
 
   // 3. Try to notify first available admin
   const { data: admin } = await adminSupabase
@@ -149,7 +142,6 @@ export async function signUp(formData: any) {
     })
   }
 
-  console.log("5. Registrazione completa")
   return { success: true }
 }
 
