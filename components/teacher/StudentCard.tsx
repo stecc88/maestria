@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -20,8 +20,16 @@ interface StudentCardProps {
 }
 
 export function StudentCard({ student }: StudentCardProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Mock sparkline data
-  const sparkData = Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) }))
+  const sparkData = React.useMemo(() =>
+    Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) })),
+  [])
 
   const lastSeen = student.last_activity ? new Date(student.last_activity) : null
 
@@ -66,11 +74,13 @@ export function StudentCard({ student }: StudentCardProps) {
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Punteggi</p>
               <div className="h-5 w-full mt-1">
                  <div style={{ width: '100%', height: 20 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={sparkData}>
-                            <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    {mounted && (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={sparkData}>
+                                <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    )}
                  </div>
               </div>
            </div>
