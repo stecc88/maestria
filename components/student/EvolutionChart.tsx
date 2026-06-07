@@ -29,49 +29,51 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
           <span>La tua evoluzione nel tempo</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px] w-full flex flex-col justify-center p-0 pt-6">
+      <CardContent className="w-full flex flex-col justify-center p-0 pt-6">
         {hasData ? (
-          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-            <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 10, fill: '#94a3b8' }}
-                axisLine={false}
-                tickLine={false}
-                tickFormatter={(str) => format(new Date(str), 'd MMM', { locale: it })}
-              />
-              <YAxis
-                domain={[0, 100]}
-                tick={{ fontSize: 10, fill: '#94a3b8' }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <Tooltip
-                contentStyle={{
-                  borderRadius: '12px',
-                  border: 'none',
-                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                  padding: '12px'
-                }}
-                labelFormatter={(label) => format(new Date(label), 'PPP', { locale: it })}
-                formatter={(value: any, name: any, props: any) => [
-                  <span key="score" className="font-bold text-primary">{value} pts</span>,
-                  <span key="level">Livello: {props.payload.detected_level}</span>
-                ]}
-              />
-              <Line
-                type="monotone"
-                dataKey="writing_score"
-                stroke="#009246"
-                strokeWidth={3}
-                dot={{ r: 4, fill: '#009246', strokeWidth: 2, stroke: '#fff' }}
-                activeDot={{ r: 6, fill: '#F5A623', stroke: '#fff', strokeWidth: 2 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div style={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(str) => format(new Date(str), 'd MMM', { locale: it })}
+                />
+                <YAxis
+                  domain={[0, 100]}
+                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: '12px',
+                    border: 'none',
+                    boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                    padding: '12px'
+                  }}
+                  labelFormatter={(label) => format(new Date(label), 'PPP', { locale: it })}
+                  formatter={(value: any, name: any, props: any) => [
+                    <span key="score" className="font-bold text-primary">{value} pts</span>,
+                    <span key="level">Livello: {props.payload.detected_level}</span>
+                  ]}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="writing_score"
+                  stroke="#009246"
+                  strokeWidth={3}
+                  dot={{ r: 4, fill: '#009246', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 6, fill: '#F5A623', stroke: '#fff', strokeWidth: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-4 py-12">
             <div className="bg-cream rounded-full w-20 h-20 flex items-center justify-center mx-auto">
               <TrendingUp className="h-10 w-10 text-gray-300" />
             </div>
