@@ -126,7 +126,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       {/* Pros/Cons/Suggestions Tabs */}
       <section className="space-y-6">
           <Tabs defaultValue="strengths" className="w-full">
-            <TabsList className="bg-gray-100/50 border border-gray-100 p-1 h-12 rounded-2xl w-full flex gap-1 shadow-sm mb-6">
+            <TabsList className="bg-gray-100/50 border border-gray-100 p-1 rounded-2xl w-full flex gap-1 shadow-sm mb-6 h-auto">
               <TabsTrigger
                 value="strengths"
                 className="flex-1 rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white font-bold transition-all text-xs h-full"
@@ -156,7 +156,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                         <div className="p-2 bg-primary/10 rounded-xl shrink-0">
                         <CheckCircle2 className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="max-h-[200px] overflow-y-auto w-full">
+                        <div className="w-full">
                         <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
                         </div>
                     </CardContent>
@@ -174,7 +174,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                         <div className="p-2 bg-secondary/10 rounded-xl shrink-0">
                         <Target className="h-4 w-4 text-secondary" />
                         </div>
-                        <div className="max-h-[200px] overflow-y-auto w-full">
+                        <div className="w-full">
                         <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
                         </div>
                     </CardContent>
@@ -193,7 +193,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                             {sug.category}
                         </Badge>
                         </div>
-                        <div className="max-h-[200px] overflow-y-auto space-y-3 w-full">
+                        <div className="space-y-3 w-full">
                         <p className="font-display font-bold text-base text-gray-900 leading-snug">{sug.tip}</p>
                         <div className="p-4 bg-gray-50 rounded-xl border border-gray-100/50 text-xs italic leading-relaxed text-gray-600">
                             <span className="text-primary font-bold uppercase text-[9px] tracking-widest mr-2 not-italic">Esempio:</span>
