@@ -24,8 +24,8 @@ function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProp
       return
     }
 
-    let totalMiliseconds = 1000
-    let incrementTime = Math.max((totalMiliseconds / (end || 1)), 10)
+    let totalMiliseconds = 800
+    let incrementTime = Math.max((totalMiliseconds / (end || 1)), 20)
 
     let timer = setInterval(() => {
       start += 1
@@ -37,16 +37,18 @@ function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProp
   }, [value])
 
   return (
-    <Card className="hover:shadow-md transition-shadow border-gray-100">
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className={`p-3 rounded-2xl ${color} bg-opacity-10`}>
-            <Icon className={`h-6 w-6 ${color.replace('bg-', 'text-')}`} />
-          </div>
+    <Card className="border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all duration-300">
+      <CardContent className="p-5 flex items-center gap-4">
+        <div className={`p-3 rounded-2xl ${color.replace('bg-', 'bg-opacity-10 ')} shrink-0`}>
+          <Icon className={`h-5 w-5 ${color.replace('bg-', 'text-')}`} />
         </div>
-        <div>
-          <p className="text-3xl font-bold text-gray-900">{count}{suffix}</p>
-          <p className="text-sm font-medium text-gray-500 mt-1">{label}</p>
+        <div className="min-w-0">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1 group-hover:text-gray-500 transition-colors">
+            {label}
+          </p>
+          <p className="text-2xl font-display font-bold text-gray-900 leading-none">
+            {count}{suffix}
+          </p>
         </div>
       </CardContent>
     </Card>
@@ -62,20 +64,20 @@ interface StatsCardsProps {
 
 export function StatsCards({ writings, avgScore, completedTasks, streak }: StatsCardsProps) {
   const stats = [
-    { label: "Testi inviati", value: writings, icon: PenLine, color: "bg-primary" },
-    { label: "Punteggio medio", value: avgScore, icon: Star, color: "bg-accent", suffix: "/100" },
-    { label: "Compiti completati", value: completedTasks, icon: CheckCircle2, color: "bg-blue-500" },
-    { label: "Striscia attuale", value: streak, icon: Flame, color: "bg-secondary" },
+    { label: "Scritti", value: writings, icon: PenLine, color: "bg-primary" },
+    { label: "Punteggio", value: avgScore, icon: Star, color: "bg-accent", suffix: "" },
+    { label: "Compiti", value: completedTasks, icon: CheckCircle2, color: "bg-blue-500" },
+    { label: "Streak", value: streak, icon: Flame, color: "bg-secondary" },
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {stats.map((stat, i) => (
         <motion.div
           key={stat.label}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: i * 0.1 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: i * 0.05 }}
         >
           <StatCard {...stat} />
         </motion.div>

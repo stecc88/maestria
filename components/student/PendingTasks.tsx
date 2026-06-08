@@ -14,42 +14,39 @@ interface PendingTasksProps {
 
 export function PendingTasks({ tasks }: PendingTasksProps) {
   return (
-    <Card className="border-gray-100">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ClipboardList className="h-5 w-5 text-blue-500" />
-            <span>Compiti in sospeso</span>
-          </div>
-          <Link href="/student/tasks" className="text-xs text-primary font-medium hover:underline">
-            Vedi tutti →
-          </Link>
+    <Card className="border-none shadow-sm bg-white overflow-hidden">
+      <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+          <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
+          <span>Compiti Sospesi</span>
         </CardTitle>
+        <Link href="/student/tasks" className="text-[10px] font-bold text-primary hover:underline">
+          TUTTI →
+        </Link>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         {tasks.length > 0 ? (
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+          <div className="divide-y divide-gray-50">
             {tasks.map((task) => (
-              <div
-                key={task.id}
-                className="min-w-[280px] p-4 rounded-xl border border-gray-50 bg-white hover:border-primary/20 transition-colors shadow-sm snap-center"
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-bold text-gray-900 leading-tight mb-1">{task.title}</h4>
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-[10px] uppercase tracking-wider">
-                      {task.exercise_type}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>{task.due_date ? format(new Date(task.due_date), 'd MMM', { locale: it }) : 'Senza data'}</span>
+              <div key={task.id} className="p-4 hover:bg-gray-50/50 transition-colors group">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-sm font-bold text-gray-900 leading-snug mb-1 group-hover:text-primary transition-colors">
+                      {task.title}
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-widest px-1.5 py-0 border-none">
+                        {task.exercise_type}
+                      </Badge>
+                      <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
+                        <Calendar className="h-3 w-3" />
+                        <span>{task.due_date ? format(new Date(task.due_date), 'd MMM', { locale: it }) : 'No data'}</span>
+                      </div>
+                    </div>
                   </div>
                   <Link href={`/student/tasks/${task.id}`}>
-                    <Button size="xs" variant="outline" className="text-[11px] h-7 gap-1">
-                      Inizia <ArrowRight className="h-3 w-3" />
+                    <Button size="icon-sm" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary h-8 w-8">
+                      <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
                 </div>
@@ -57,8 +54,11 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-6">
-            <p className="text-sm text-gray-500 italic">Il tuo insegnante non ha ancora generato compiti per te</p>
+          <div className="p-8 text-center">
+            <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+              <ClipboardList className="h-5 w-5 text-gray-300" />
+            </div>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nessun compito</p>
           </div>
         )}
       </CardContent>
