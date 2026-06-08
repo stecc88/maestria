@@ -33,9 +33,9 @@ export function RadarChart({ data }: RadarChartProps) {
           <span>Profilo prestazionale</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4 pt-0">
+      <CardContent className="p-6 pt-0 flex flex-col justify-center min-h-[300px]">
         {hasData && mounted ? (
-          <div className="w-full h-[240px]">
+          <div className="w-full h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsRadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
                 <PolarGrid stroke="#f1f5f9" />
