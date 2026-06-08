@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { FileText, Calendar, Eye } from "lucide-react"
+import { FileText, Calendar, Eye, Star } from "lucide-react"
 import { format } from "date-fns"
 import { it } from "date-fns/locale"
 import Link from "next/link"
@@ -14,64 +14,57 @@ interface LatestCorrectionsProps {
 
 export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
   return (
-    <Card className="border-gray-100">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-bold flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <span>Ultime correzioni</span>
-          </div>
-          <Link href="/student/corrections" className="text-xs text-primary font-medium hover:underline">
-            Vedi tutte →
-          </Link>
+    <Card className="border-none shadow-sm bg-white overflow-hidden">
+      <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+          <FileText className="h-3.5 w-3.5 text-primary" />
+          <span>Ultime Correzioni</span>
         </CardTitle>
+        <Link href="/student/corrections" className="text-[10px] font-bold text-primary hover:underline">
+          TUTTE →
+        </Link>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         {corrections.length > 0 ? (
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+          <div className="divide-y divide-gray-50">
             {corrections.map((correction) => (
-              <div
-                key={correction.id}
-                className="min-w-[280px] p-4 rounded-xl border border-gray-50 bg-white hover:border-primary/20 transition-colors shadow-sm snap-center"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col items-center justify-center h-12 w-12 bg-cream rounded-lg border border-primary/5">
-                      <span className="text-lg font-bold text-primary leading-none">
-                        {correction.overall_score}
-                      </span>
-                      <span className="text-[8px] text-gray-400 uppercase font-bold mt-1">pts</span>
+              <div key={correction.id} className="p-4 hover:bg-gray-50/50 transition-colors group">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="h-10 w-10 bg-primary/5 rounded-xl flex flex-col items-center justify-center shrink-0 border border-primary/5">
+                      <span className="text-sm font-black text-primary leading-none">{correction.overall_score}</span>
+                      <span className="text-[8px] font-black text-primary/40 uppercase">pts</span>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 leading-tight mb-1 truncate max-w-[120px]">
-                        {correction.writings.title || 'Scritto senza titolo'}
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-sm font-bold text-gray-900 truncate leading-none mb-1.5">
+                        {correction.writings.title || 'Senza titolo'}
                       </h4>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-600 border-none px-1.5 py-0">
+                        <Badge variant="outline" className="text-[9px] font-black bg-blue-50/50 text-blue-600 border-none px-1 py-0 uppercase">
                           {correction.detected_level}
                         </Badge>
-                        <span className="text-[10px] text-gray-400 capitalize">
-                          {correction.writings.writing_type}
-                        </span>
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
+                          <Calendar className="h-3 w-3" />
+                          <span>{format(new Date(correction.created_at), 'd MMM', { locale: it })}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <Link href={`/student/corrections/${correction.id}`}>
-                    <Button size="icon-sm" variant="ghost" className="rounded-full hover:bg-primary/5 hover:text-primary">
+                    <Button size="icon-sm" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary h-8 w-8">
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-medium">
-                  <Calendar className="h-3 w-3" />
-                  <span>{format(new Date(correction.created_at), 'd MMMM yyyy', { locale: it })}</span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-6">
-            <p className="text-sm text-gray-500 italic">Non ci sono ancora correzioni da mostrare</p>
+          <div className="p-8 text-center">
+            <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+              <FileText className="h-5 w-5 text-gray-300" />
+            </div>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nessuna correzione</p>
           </div>
         )}
       </CardContent>

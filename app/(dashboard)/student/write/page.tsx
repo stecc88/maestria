@@ -12,7 +12,10 @@ import {
   PenTool,
   FileEdit,
   Sparkles,
-  Info
+  Info,
+  Clock,
+  Save,
+  CheckCircle2
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -31,27 +34,27 @@ const TEXT_TYPES = [
   { id: "descriptivo", label: "Descrittivo", icon: ImageIcon },
   { id: "argumentativo", label: "Argomentativo", icon: Lightbulb },
   { id: "reclamo", label: "Reclamo", icon: AlertCircle },
-  { id: "articulo", label: "Articolo di opinione", icon: PenTool },
+  { id: "articulo", label: "Articolo", icon: PenTool },
   { id: "libre", label: "Libero", icon: FileEdit },
 ] as const
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const
 
 const WORD_RANGES: Record<string, string> = {
-  A1: "30-50 parole",
-  A2: "50-80 parole",
-  B1: "80-120 parole",
-  B2: "120-180 parole",
-  C1: "180-250 parole",
-  C2: "250+ parole",
+  A1: "30-50",
+  A2: "50-80",
+  B1: "80-120",
+  B2: "120-180",
+  C1: "180-250",
+  C2: "250+",
 }
 
 const LOADING_MESSAGES = [
-  "Analizzando la tua scrittura...",
-  "Valutando coerenza e coesione...",
-  "Revisionando grammatica e vocabolario...",
-  "Rilevando il tuo livello...",
-  "Preparando il tuo feedback...",
+  "Analizzando il testo...",
+  "Valutando la coerenza...",
+  "Revisionando la grammatica...",
+  "Rilevando il livello...",
+  "Quasi pronto...",
 ]
 
 function WriteForm() {
@@ -66,13 +69,11 @@ function WriteForm() {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // Word count logic
   useEffect(() => {
     const words = content.trim().split(/\s+/).filter(w => w.length > 0)
     setWordCount(words.length)
   }, [content])
 
-  // Auto-save load logic
   useEffect(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("maestria_draft") : null
     if (saved) {
@@ -82,13 +83,10 @@ function WriteForm() {
         if (draft.level) setLevel(draft.level)
         if (draft.prompt) setPrompt(draft.prompt)
         if (draft.content) setContent(draft.content)
-      } catch (e) {
-        // Silently ignore parse errors
-      }
+      } catch (e) {}
     }
   }, [])
 
-  // Auto-save interval logic
   useEffect(() => {
     const interval = setInterval(() => {
       if (content.length > 10) {
@@ -97,11 +95,10 @@ function WriteForm() {
         }))
         setLastSaved(new Date())
       }
-    }, 30000)
+    }, 15000)
     return () => clearInterval(interval)
   }, [textType, level, prompt, content])
 
-  // Loading message rotation
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (isSubmitting) {
@@ -112,7 +109,6 @@ function WriteForm() {
     return () => clearInterval(interval)
   }, [isSubmitting])
 
-  // Update state if query params change
   useEffect(() => {
     const typeParam = searchParams.get("type")
     const levelParam = searchParams.get("level")
@@ -120,14 +116,12 @@ function WriteForm() {
 
     if (typeParam) setTextType(typeParam)
     if (levelParam) setLevel(levelParam)
-    if (schemaParam) {
-      setContent(decodeURIComponent(schemaParam))
-    }
+    if (schemaParam) setContent(decodeURIComponent(schemaParam))
   }, [searchParams])
 
   const handleSubmit = useCallback(async () => {
     if (wordCount < 10) {
-      toast.error("Il testo è troppo breve per essere valutato (minimo 10 parole)")
+      toast.error("Testo troppo breve (minimo 10 parole)")
       return
     }
 
@@ -146,7 +140,7 @@ function WriteForm() {
         localStorage.removeItem("maestria_draft")
         router.push(`/student/corrections/${correctionId}`)
       } else {
-        throw new Error(data.error || "Errore durante la correzione")
+        throw new Error(data.error || "Errore di correzione")
       }
     } catch (error: any) {
       toast.error(error.message)
@@ -154,138 +148,134 @@ function WriteForm() {
     }
   }, [content, level, prompt, router, textType, wordCount])
 
-  const wordRangeInfo = useMemo(() => WORD_RANGES[level] || "", [level])
-
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="max-w-6xl mx-auto pb-20">
+      {/* App-like Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Nuova Scrittura</h1>
-          <p className="text-gray-500 mt-1">
-            Pratica il tuo italiano con feedback in tempo reale dall&apos;IA.
-          </p>
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 tracking-tight mb-2">Nuova Scrittura</h1>
+          <p className="text-gray-500 font-medium">Affina il tuo italiano con feedback istantaneo dell&apos;IA.</p>
         </div>
-        <div className="flex items-center gap-4 text-sm text-gray-400 font-medium">
-          {lastSaved && (
-            <span className="flex items-center gap-1 text-primary">
-              Bozza salvata ✓ {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-            </span>
-          )}
+        <div className="flex items-center gap-3">
+           <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-100 shadow-sm text-[10px] font-black uppercase tracking-widest text-gray-400">
+             {lastSaved ? (
+               <><CheckCircle2 className="h-3 w-3 text-primary" /> Salvato {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</>
+             ) : (
+               <><Clock className="h-3 w-3" /> Auto-salvataggio attivo</>
+             )}
+           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Form Column */}
-        <div className="lg:col-span-2 space-y-8">
-          <section>
-            <Label className="text-base font-bold mb-4 block">1. Scegli il tipo di testo</Label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {TEXT_TYPES.map((type) => (
-                <button
-                  key={type.id}
-                  type="button"
-                  onClick={() => setTextType(type.id)}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all gap-2",
-                    textType === type.id
-                      ? "border-primary bg-primary/5 text-primary shadow-sm"
-                      : "border-gray-100 bg-white text-gray-400 hover:border-primary/20 hover:text-gray-600"
-                  )}
-                >
-                  <type.icon className="h-6 w-6" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">{type.label}</span>
-                </button>
-              ))}
-            </div>
-          </section>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* Editor Main Area */}
+        <div className="lg:col-span-8 space-y-10">
+          {/* Step 1: Type Selection */}
+          <div className="space-y-4">
+             <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 ml-1">1. Tipo di testo</Label>
+             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {TEXT_TYPES.map((type) => (
+                  <button
+                    key={type.id}
+                    onClick={() => setTextType(type.id)}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-xl border-2 transition-all group",
+                      textType === type.id
+                        ? "border-primary bg-primary/5 text-primary shadow-sm"
+                        : "border-gray-50 bg-white text-gray-400 hover:border-gray-200"
+                    )}
+                  >
+                    <type.icon className={cn("h-4 w-4 shrink-0", textType === type.id ? "text-primary" : "text-gray-400")} />
+                    <span className="text-[11px] font-bold truncate tracking-tight">{type.label}</span>
+                  </button>
+                ))}
+             </div>
+          </div>
 
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <Label className="text-base font-bold">2. Livello dell&apos;esercizio</Label>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {LEVELS.map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLevel(l)}
-                  className={cn(
-                    "px-6 py-2 rounded-full font-bold text-sm transition-all",
-                    level === l
-                      ? "bg-primary text-white shadow-md shadow-primary/20"
-                      : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-                  )}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </section>
+          {/* Step 2: Level Selection */}
+          <div className="space-y-4">
+             <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 ml-1">2. Livello obiettivo</Label>
+             <div className="flex flex-wrap gap-2">
+                {LEVELS.map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLevel(l)}
+                    className={cn(
+                      "h-10 px-6 rounded-full font-bold text-xs transition-all",
+                      level === l
+                        ? "bg-gray-900 text-white shadow-lg shadow-black/10"
+                        : "bg-white border border-gray-100 text-gray-400 hover:border-gray-300"
+                    )}
+                  >
+                    {l}
+                  </button>
+                ))}
+             </div>
+          </div>
 
-          <section>
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="text-base font-bold">3. Traccia / Istruzioni</Label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="h-4 w-4 text-gray-400 cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  Aiuta l&apos;IA a valutare se hai rispettato la richiesta
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <Textarea
-              placeholder="Copia qui la traccia o l'istruzione dell'esercizio (se presente)..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="bg-white border-gray-200 min-h-[80px] focus:ring-primary"
-            />
-          </section>
+          {/* Step 3: Prompt & Editor */}
+          <div className="space-y-6 pt-4">
+             <div className="space-y-3">
+               <div className="flex items-center justify-between px-1">
+                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">3. Istruzioni (opzionale)</Label>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="h-3.5 w-3.5 text-gray-300 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>Includi la traccia per una valutazione più precisa</TooltipContent>
+                  </Tooltip>
+               </div>
+               <Textarea
+                 placeholder="Cosa devi scrivere? Es: 'Scrivi un'email per prenotare un hotel...'"
+                 value={prompt}
+                 onChange={(e) => setPrompt(e.target.value)}
+                 className="bg-gray-50/50 border-gray-100 min-h-[60px] text-sm focus:bg-white transition-colors rounded-xl"
+               />
+             </div>
 
-          <section>
-            <div className="flex items-center justify-between mb-2">
-              <Label className="text-base font-bold">4. Il tuo testo in italiano</Label>
-              <div className="flex flex-col items-end">
-                <span className={cn(
-                  "text-xs font-bold",
-                  wordCount > 0 ? "text-primary" : "text-gray-400"
-                )}>
-                  {wordCount} parole
-                </span>
-                <span className="text-[10px] text-gray-400">
-                  Range consigliato: {wordRangeInfo}
-                </span>
-              </div>
-            </div>
-            <Textarea
-              placeholder="Scrivi qui il tuo testo in italiano..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="bg-white border-gray-200 min-h-[350px] text-lg font-body leading-relaxed focus:ring-primary"
-            />
-          </section>
-
-          <Button
-            size="lg"
-            className="w-full py-8 text-xl font-bold bg-primary hover:bg-primary-dark shadow-xl shadow-primary/20 group"
-            onClick={handleSubmit}
-            disabled={isSubmitting || wordCount < 5}
-          >
-            {isSubmitting ? (
-              <div className="flex flex-col items-center animate-pulse">
-                <span>{LOADING_MESSAGES[loadingMessageIndex]}</span>
-              </div>
-            ) : (
-              <span className="flex items-center gap-2">
-                Invia per la correzione <Sparkles className="h-6 w-6 group-hover:animate-spin" />
-              </span>
-            )}
-          </Button>
+             <div className="space-y-3">
+               <div className="flex items-center justify-between px-1">
+                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">4. Il tuo testo</Label>
+                  <div className="text-right">
+                    <p className={cn("text-[10px] font-black uppercase tracking-widest", wordCount > 0 ? "text-primary" : "text-gray-300")}>
+                      {wordCount} Parole
+                    </p>
+                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Target: {WORD_RANGES[level]} parole</p>
+                  </div>
+               </div>
+               <Card className="border-none shadow-sm overflow-hidden ring-1 ring-gray-100">
+                  <Textarea
+                    placeholder="Scrivi qui..."
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="min-h-[400px] border-none focus:ring-0 p-8 text-lg font-body leading-relaxed bg-white scrollbar-hide"
+                  />
+                  <div className="bg-gray-50/50 border-t border-gray-50 p-4 flex justify-end">
+                    <Button
+                      size="lg"
+                      onClick={handleSubmit}
+                      disabled={isSubmitting || wordCount < 5}
+                      className="bg-primary hover:bg-primary-dark text-white font-bold h-12 px-10 rounded-xl shadow-lg shadow-primary/20"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-2 animate-pulse">
+                          {LOADING_MESSAGES[loadingMessageIndex]}
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          Analizza testo <Sparkles className="h-4 w-4" />
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+               </Card>
+             </div>
+          </div>
         </div>
 
-        {/* Guide Column */}
-        <div className="sticky top-24">
-          <ContextualGuide type={textType} level={level} />
+        {/* Info Column */}
+        <div className="lg:col-span-4 sticky top-24 space-y-6">
+           <ContextualGuide type={textType} level={level} />
         </div>
       </div>
     </div>
@@ -294,7 +284,7 @@ function WriteForm() {
 
 export default function WritePage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center p-20 text-gray-400">Caricamento modulo...</div>}>
+    <Suspense fallback={<div className="p-20 text-center text-gray-400 font-bold uppercase tracking-widest animate-pulse">Caricamento...</div>}>
       <WriteForm />
     </Suspense>
   )
