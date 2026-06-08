@@ -26,8 +26,8 @@ export function ExaminerCard({ comment }: ExaminerCardProps) {
           <Quote className="h-8 w-8 text-gray-100 shrink-0" />
         </div>
 
-        <div className="relative">
-          <p className="font-body text-gray-700 leading-relaxed italic text-lg px-2">
+        <div className="relative max-w-3xl">
+          <p className="font-body text-gray-700 leading-relaxed italic text-lg px-2 text-balance">
             {comment}
           </p>
         </div>

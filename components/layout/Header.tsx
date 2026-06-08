@@ -48,7 +48,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
     })
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/70 backdrop-blur-md px-4 md:px-8">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 backdrop-blur-md px-4 md:px-8">
       {/* Mobile Toggle & Logo */}
       <div className="flex items-center gap-4 md:hidden">
         <Sheet>
