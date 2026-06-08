@@ -41,7 +41,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10 pb-24 animate-in fade-in duration-1000 px-4 md:px-0">
+    <div className="max-w-5xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000 px-4 md:px-0">
       {/* Header Section */}
       <CorrectionHeader
         level={correction.detected_level}
@@ -60,91 +60,6 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             <RadarChart data={radarData} />
         </div>
       </div>
-
-      {/* Pros/Cons/Suggestions Tabs */}
-      <section className="space-y-6">
-          <Tabs defaultValue="strengths" className="w-full">
-            <TabsList className="bg-gray-100/50 border border-gray-100 p-1 h-12 rounded-2xl w-full sm:w-fit flex gap-1 shadow-sm mb-6">
-              <TabsTrigger
-                value="strengths"
-                className="flex-1 sm:flex-none rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white font-bold transition-all text-xs"
-              >
-                Punti di forza ✅
-              </TabsTrigger>
-              <TabsTrigger
-                value="to_improve"
-                className="flex-1 sm:flex-none rounded-xl px-6 data-[state=active]:bg-secondary data-[state=active]:text-white font-bold transition-all text-xs"
-              >
-                Aree da migliorare ⚠️
-              </TabsTrigger>
-              <TabsTrigger
-                value="suggestions"
-                className="flex-1 sm:flex-none rounded-xl px-6 data-[state=active]:bg-accent data-[state=active]:text-white font-bold transition-all text-xs"
-              >
-                Suggerimenti 💡
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="strengths" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                {correction.pros.map((pro: string, i: number) => (
-                    <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-1.5 transition-all" />
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <div className="p-2 bg-primary/10 rounded-xl shrink-0">
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="max-h-[200px] overflow-y-auto w-full">
-                        <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
-                        </div>
-                    </CardContent>
-                    </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="to_improve" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                {correction.cons.map((con: string, i: number) => (
-                    <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary group-hover:w-1.5 transition-all" />
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <div className="p-2 bg-secondary/10 rounded-xl shrink-0">
-                        <Target className="h-4 w-4 text-secondary" />
-                        </div>
-                        <div className="max-h-[200px] overflow-y-auto w-full">
-                        <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
-                        </div>
-                    </CardContent>
-                    </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="suggestions" className="space-y-4 outline-none">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                {correction.suggestions.map((sug: any, i: number) => (
-                    <Card key={i} className="border-none shadow-sm bg-white group">
-                    <CardContent className="p-6 space-y-4">
-                        <div className="flex items-center gap-2">
-                        <Badge className="bg-accent/10 text-accent-dark hover:bg-accent/20 border-none px-3 py-0.5 rounded-full font-bold text-[10px] uppercase tracking-wider">
-                            {sug.category}
-                        </Badge>
-                        </div>
-                        <div className="max-h-[200px] overflow-y-auto space-y-3 w-full">
-                        <p className="font-display font-bold text-base text-gray-900 leading-snug">{sug.tip}</p>
-                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100/50 text-xs italic leading-relaxed text-gray-600">
-                            <span className="text-primary font-bold uppercase text-[9px] tracking-widest mr-2 not-italic">Esempio:</span>
-                            &ldquo;{sug.example}&rdquo;
-                        </div>
-                        </div>
-                    </CardContent>
-                    </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-      </section>
 
       {/* Main Text Analysis Section */}
       <section className="space-y-8">
@@ -181,9 +96,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
                         <div className={cn(
                         "shrink-0 w-1 h-10 rounded-full mt-1",
-                        c.error_type === 'gramatica' ? 'bg-secondary' :
-                        c.error_type === 'vocabulario' ? 'bg-accent' :
-                        c.error_type === 'ortografia' ? 'bg-blue-400' :
+                    (c.error_type === 'grammatica' || c.error_type === 'gramatica' || c.error_type === 'Grammatica') ? 'bg-secondary' :
+                    (c.error_type === 'lessico' || c.error_type === 'vocabulario' || c.error_type === 'Lessico') ? 'bg-accent' :
+                    (c.error_type === 'ortografia' || c.error_type === 'Ortografia') ? 'bg-blue-400' :
                         'bg-purple-400'
                         )} />
                         <div className="flex-1 min-w-0">
@@ -208,8 +123,93 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
         </div>
       </section>
 
-      {/* Footer Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      {/* Pros/Cons/Suggestions Tabs */}
+      <section className="space-y-6">
+          <Tabs defaultValue="strengths" className="w-full">
+            <TabsList className="bg-gray-100/50 border border-gray-100 p-1 h-12 rounded-2xl w-full flex gap-1 shadow-sm mb-6">
+              <TabsTrigger
+                value="strengths"
+                className="flex-1 rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white font-bold transition-all text-xs h-full"
+              >
+                Punti di forza ✅
+              </TabsTrigger>
+              <TabsTrigger
+                value="to_improve"
+                className="flex-1 rounded-xl px-6 data-[state=active]:bg-secondary data-[state=active]:text-white font-bold transition-all text-xs h-full"
+              >
+                Aree da migliorare ⚠️
+              </TabsTrigger>
+              <TabsTrigger
+                value="suggestions"
+                className="flex-1 rounded-xl px-6 data-[state=active]:bg-accent data-[state=active]:text-white font-bold transition-all text-xs h-full"
+              >
+                Suggerimenti 💡
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="strengths" className="space-y-4 outline-none">
+              <div className="flex flex-col gap-4">
+                {correction.pros.map((pro: string, i: number) => (
+                    <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-1.5 transition-all" />
+                    <CardContent className="p-6 flex items-start gap-4">
+                        <div className="p-2 bg-primary/10 rounded-xl shrink-0">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="max-h-[200px] overflow-y-auto w-full">
+                        <p className="text-gray-800 leading-relaxed text-sm font-medium">{pro}</p>
+                        </div>
+                    </CardContent>
+                    </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="to_improve" className="space-y-4 outline-none">
+              <div className="flex flex-col gap-4">
+                {correction.cons.map((con: string, i: number) => (
+                    <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group w-full">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary group-hover:w-1.5 transition-all" />
+                    <CardContent className="p-6 flex items-start gap-4">
+                        <div className="p-2 bg-secondary/10 rounded-xl shrink-0">
+                        <Target className="h-4 w-4 text-secondary" />
+                        </div>
+                        <div className="max-h-[200px] overflow-y-auto w-full">
+                        <p className="text-gray-800 leading-relaxed text-sm font-medium">{con}</p>
+                        </div>
+                    </CardContent>
+                    </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="suggestions" className="space-y-4 outline-none">
+              <div className="flex flex-col gap-4">
+                {correction.suggestions.map((sug: any, i: number) => (
+                    <Card key={i} className="border-none shadow-sm bg-white group w-full">
+                    <CardContent className="p-6 space-y-4">
+                        <div className="flex items-center gap-2">
+                        <Badge className="bg-accent/10 text-accent-dark hover:bg-accent/20 border-none px-3 py-0.5 rounded-full font-bold text-[10px] uppercase tracking-wider">
+                            {sug.category}
+                        </Badge>
+                        </div>
+                        <div className="max-h-[200px] overflow-y-auto space-y-3 w-full">
+                        <p className="font-display font-bold text-base text-gray-900 leading-snug">{sug.tip}</p>
+                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100/50 text-xs italic leading-relaxed text-gray-600">
+                            <span className="text-primary font-bold uppercase text-[9px] tracking-widest mr-2 not-italic">Esempio:</span>
+                            &ldquo;{sug.example}&rdquo;
+                        </div>
+                        </div>
+                    </CardContent>
+                    </Card>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+      </section>
+
+      {/* Footer Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <Card className="border-none shadow-sm rounded-3xl bg-white">
             <CardContent className="p-8 space-y-6">
               <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Progresso per livelli</h4>
@@ -245,7 +245,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </CardContent>
           </Card>
 
-          <Card className="border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden relative group">
+          <Card className="border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden relative group w-full">
             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 transition-transform">
                <Sparkles className="h-32 w-32" />
             </div>
