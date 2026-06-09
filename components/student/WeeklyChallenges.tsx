@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Zap, Clock, CheckCircle2, Trophy } from "lucide-react"
+import { Zap, Clock, CheckCircle2 } from "lucide-react"
 import { motion } from "framer-motion"
 
 const CHALLENGES = [
@@ -36,45 +35,54 @@ export function WeeklyChallenges() {
   }, [])
 
   return (
-    <Card className="bg-gray-900 border-gray-800 text-white shadow-2xl">
-      <CardContent className="p-6 space-y-6">
-        <div className="flex items-center justify-between border-b border-white/5 pb-4">
-          <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-accent fill-accent" />
-            <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Sfide settimanali</h3>
+    <Card className="bg-white/[0.02] border-white/5 text-white shadow-2xl rounded-[2rem] overflow-hidden">
+      <CardContent className="p-8 space-y-8">
+        <div className="flex items-center justify-between border-b border-white/5 pb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-accent/10 rounded-xl">
+               <Zap className="h-5 w-5 text-accent fill-accent" />
+            </div>
+            <h3 className="font-display font-bold text-xl text-white">Sfide Settimanali</h3>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase">
-             <Clock className="h-3 w-3" />
-             Mancano {timeLeft}
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest border border-white/5">
+             <Clock className="h-3.5 w-3.5" />
+             Scade in: {timeLeft}
           </div>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+        <div className="grid grid-cols-1 gap-4">
           {CHALLENGES.map((challenge) => {
             const progress = (challenge.current / challenge.target) * 100
             const isCompleted = challenge.current >= challenge.target
 
             return (
-              <div key={challenge.id} className="min-w-[240px] space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5 snap-center">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-bold text-gray-200">{challenge.title}</p>
-                    <p className="text-xs font-black text-primary mt-0.5">+{challenge.reward} XP di premio</p>
+              <div key={challenge.id} className="w-full flex items-center justify-between gap-6 bg-white/[0.03] p-5 rounded-2xl border border-white/5 transition-all hover:bg-white/[0.05] group">
+                <div className="flex-1 min-w-0 space-y-3">
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-gray-100 leading-tight group-hover:text-white transition-colors">{challenge.title}</p>
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest">+{challenge.reward} XP Bonus</p>
+                  </div>
+
+                  <div className="space-y-2 max-w-xs">
+                    <div className="flex justify-between text-[9px] font-black text-gray-500 uppercase tracking-tighter">
+                        <span>Progresso</span>
+                        <span className={isCompleted ? "text-primary" : ""}>{challenge.current} / {challenge.target}</span>
+                    </div>
+                    <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          className="absolute inset-y-0 left-0 bg-primary shadow-[0_0_10px_rgba(0,146,70,0.3)]"
+                        />
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                   <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase">
-                      <span>Progresso</span>
-                      <span>{challenge.current} / {challenge.target}</span>
-                   </div>
-                   <div className="relative h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progress}%` }}
-                        className="absolute inset-y-0 left-0 bg-primary shadow-[0_0_10px_rgba(0,146,70,0.5)]"
-                      />
-                   </div>
+                <div className={cn(
+                  "h-12 w-12 rounded-2xl flex items-center justify-center border-2 transition-all duration-500",
+                  isCompleted ? "bg-primary/20 border-primary text-primary" : "bg-white/5 border-white/5 text-gray-600"
+                )}>
+                  {isCompleted ? <CheckCircle2 className="h-6 w-6" /> : <Zap className="h-5 w-5 opacity-20" />}
                 </div>
               </div>
             )
@@ -84,3 +92,5 @@ export function WeeklyChallenges() {
     </Card>
   )
 }
+
+import { cn } from "@/lib/utils"
