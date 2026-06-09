@@ -3,7 +3,9 @@ import { redirect } from "next/navigation"
 import { RankingHeader } from "@/components/student/RankingHeader"
 import { Podium } from "@/components/student/Podium"
 import { RankingTable } from "@/components/student/RankingTable"
+import { Users } from "lucide-react"
 import { AchievementsGrid } from "@/components/student/AchievementsGrid"
+import { Card } from "@/components/ui/card"
 import { ClassRanking } from "@/components/student/ClassRanking"
 import { WeeklyChallenges } from "@/components/student/WeeklyChallenges"
 import { getLevelFromXP } from "@/lib/utils/levels"
@@ -46,39 +48,44 @@ export default async function RankingPage() {
         <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Competi con studenti da tutto il mondo 🇮🇹</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-12">
-          <RankingHeader
-            rank={myRank}
-            xp={me?.xp_points || 0}
-            xpToNext={xpToNext}
-          />
-
-          <AchievementsGrid unlockedIds={me?.achievements || []} />
-
-          <section>
-             <Podium topStudents={students.slice(0, 3)} />
-          </section>
-
-          <section className="space-y-6">
-             <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm uppercase tracking-widest text-gray-400">Classifica Globale</h3>
-                <span className="text-[10px] font-black text-gray-600 uppercase">Aggiornato un momento fa</span>
-             </div>
-             <RankingTable students={students.slice(0, 20)} userId={user.id} />
-          </section>
-        </div>
+      <div className="max-w-5xl mx-auto space-y-12">
+        <RankingHeader
+          rank={myRank}
+          xp={me?.xp_points || 0}
+          xpToNext={xpToNext}
+        />
 
         <div className="space-y-8">
            <WeeklyChallenges />
-           {myTeacherId && (
+           {myTeacherId ? (
              <ClassRanking
                students={classStudents || []}
                teacherName={teacherName}
                userId={user.id}
              />
+           ) : (
+             <Card className="bg-gray-900 border-gray-800 text-white p-12 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="h-20 w-20 bg-white/5 rounded-full flex items-center justify-center">
+                   <Users className="h-10 w-10 text-gray-500" />
+                </div>
+                <h3 className="text-2xl font-bold">Nessuna classe attiva</h3>
+                <p className="text-gray-400 max-w-sm">Unisciti a una classe inserendo il codice del tuo docente nel profilo per competere con i tuoi compagni.</p>
+             </Card>
            )}
         </div>
+
+        <AchievementsGrid unlockedIds={me?.achievements || []} />
+
+        <section className="pt-16 space-y-12">
+           <div className="text-center space-y-3">
+              <h2 className="text-3xl md:text-5xl font-display font-black tracking-tighter">Classifica Globale</h2>
+              <div className="h-1 w-20 bg-primary mx-auto rounded-full" />
+              <p className="text-gray-500 uppercase tracking-[0.2em] text-[10px] font-black">Aggiornato ogni minuto</p>
+           </div>
+
+           <Podium topStudents={students.slice(0, 3)} />
+           <RankingTable students={students.slice(0, 20)} userId={user.id} />
+        </section>
       </div>
     </div>
   )
