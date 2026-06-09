@@ -54,6 +54,8 @@ export default async function RankingPage() {
             xpToNext={xpToNext}
           />
 
+          <AchievementsGrid unlockedIds={me?.achievements || []} />
+
           <section>
              <Podium topStudents={students.slice(0, 3)} />
           </section>
@@ -68,7 +70,6 @@ export default async function RankingPage() {
         </div>
 
         <div className="space-y-8">
-           <AchievementsGrid unlockedIds={me?.achievements || []} />
            <WeeklyChallenges />
            {myTeacherId && (
              <ClassRanking
