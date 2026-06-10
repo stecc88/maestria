@@ -39,6 +39,10 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
 
   if (!student) notFound()
 
+  // Handle potential array response for profiles (Supabase join behavior)
+  const studentProfile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+  if (!studentProfile) notFound();
+
   // 2. Fetch Writing & Correction History
   const { data: writings } = await adminSupabase
     .from("writings")
@@ -93,16 +97,16 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
            <div className="flex items-center gap-6">
               <Avatar className="h-24 w-24 border-4 border-primary/10">
-                 <AvatarImage src={student.profiles.avatar_url} />
+                 <AvatarImage src={studentProfile.avatar_url} />
                  <AvatarFallback className="bg-primary/5 text-primary text-3xl font-black">
-                    {student.profiles.full_name.split(' ').map((n:any) => n[0]).join('')}
+                    {studentProfile.full_name.split(' ').map((n:any) => n[0]).join('')}
                  </AvatarFallback>
               </Avatar>
               <div>
-                 <h1 className="text-4xl font-display font-bold text-gray-900">{student.profiles.full_name}</h1>
+                 <h1 className="text-4xl font-display font-bold text-gray-900">{studentProfile.full_name}</h1>
                  <div className="flex items-center gap-3 mt-2 text-gray-500">
                     <span className="flex items-center gap-1.5 text-sm">
-                       <Mail className="h-4 w-4" /> {student.profiles.email}
+                       <Mail className="h-4 w-4" /> {studentProfile.email}
                     </span>
                     <div className="h-1 w-1 rounded-full bg-gray-300" />
                     <span className="flex items-center gap-1.5 text-sm">

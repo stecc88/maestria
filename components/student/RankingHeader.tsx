@@ -31,7 +31,7 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
                 #{rank}
               </div>
               <div>
-                <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">La tua posizione attuale</p>
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Posizione in classifica</p>
                 <h2 className="text-5xl md:text-7xl font-display font-black text-white mt-1">
                   #{rank}
                 </h2>

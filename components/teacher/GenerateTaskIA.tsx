@@ -32,6 +32,9 @@ interface GenerateTaskIAProps {
 }
 
 export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: GenerateTaskIAProps) {
+  const profile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+  const fullName = profile?.full_name || "Studente";
+
   const [isGenerating, setIsGenerating] = useState(false)
   const [previewTask, setPreviewTask] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -86,7 +89,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
       })
 
       if (response.ok) {
-        toast.success(`✅ Compito inviato a ${student.profiles.full_name}`)
+        toast.success(`✅ Compito inviato a ${fullName}`)
         setPreviewTask(null)
       } else {
         throw new Error("Errore durante l'invio del compito")
@@ -151,7 +154,7 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
 
            <div className="pt-6 border-t border-primary/10 flex justify-end">
               <Button onClick={handleSend} className="bg-primary hover:bg-primary-dark font-bold px-10 py-6 text-lg rounded-2xl gap-2 shadow-lg shadow-primary/20">
-                 Invia a {student.profiles.full_name.split(' ')[0]} <Send className="h-5 w-5" />
+                 Invia a {fullName.split(' ')[0]} <Send className="h-5 w-5" />
               </Button>
            </div>
         </CardContent>

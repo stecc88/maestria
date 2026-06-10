@@ -33,10 +33,10 @@ export function ActivityBarChart({ data }: ActivityBarChartProps) {
           <span>Attività studenti — ultimi 14 giorni</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div style={{ width: '100%', height: 300 }} className="min-h-[300px]">
+      <CardContent className="p-6">
+        <div style={{ width: '100%', height: 300 }}>
           {mounted ? (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis

@@ -26,17 +26,17 @@ export function RadarChart({ data }: RadarChartProps) {
   const hasData = data && data.length > 0
 
   return (
-    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
+    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white min-h-[400px] flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
           <Target className="h-3.5 w-3.5 text-secondary" />
           <span>Profilo prestazionale</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6 pt-0 flex flex-col justify-center min-h-[300px]">
+      <CardContent className="p-6 pt-0 flex-grow flex flex-col justify-center">
         {hasData && mounted ? (
-          <div className="w-full h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div style={{ width: '100%', height: 280 }} className="flex justify-center">
+            <ResponsiveContainer width="100%" height={280}>
               <RechartsRadarChart cx="50%" cy="50%" outerRadius="70%" data={data}>
                 <PolarGrid stroke="#f1f5f9" />
                 <PolarAngleAxis

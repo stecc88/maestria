@@ -35,7 +35,7 @@ export function AchievementsGrid({ unlockedIds }: AchievementsGridProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between px-1">
          <div className="flex items-center gap-2">
-            <h3 className="font-display font-bold text-lg text-white">I tuoi Traguardi</h3>
+            <h3 className="font-display font-bold text-lg text-white">Traguardi Raggiunti</h3>
             <span className="text-[10px] font-black bg-white/10 text-white/40 px-2 py-0.5 rounded-md uppercase tracking-widest">Achievements</span>
          </div>
          <span className="text-xs font-black text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">

@@ -11,6 +11,8 @@ const CHALLENGES = [
   { id: 3, title: 'Ottieni 80+ in un testo', current: 0, target: 1, reward: 200 },
 ]
 
+import { cn } from "@/lib/utils"
+
 export function WeeklyChallenges() {
   const [timeLeft, setTimeLeft] = useState("")
 
@@ -92,5 +94,3 @@ export function WeeklyChallenges() {
     </Card>
   )
 }
-
-import { cn } from "@/lib/utils"
