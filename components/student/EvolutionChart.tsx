@@ -36,10 +36,10 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
           <span>La tua evoluzione nel tempo</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="w-full flex flex-col justify-center p-0 pt-6">
+      <CardContent className="w-full flex flex-col justify-center p-0 pt-6 min-h-[360px]">
         {hasData && mounted ? (
-          <div style={{ width: '100%', height: 300 }} className="min-h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div style={{ width: '100%', height: 300 }}>
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis

@@ -26,6 +26,11 @@ export function StudentCard({ student }: StudentCardProps) {
     setMounted(true)
   }, [])
 
+  const profile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+  const fullName = profile?.full_name || "Studente";
+  const email = profile?.email || "";
+  const avatarUrl = profile?.avatar_url;
+
   // Mock sparkline data
   const sparkData = React.useMemo(() =>
     Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) })),
@@ -39,16 +44,16 @@ export function StudentCard({ student }: StudentCardProps) {
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-14 w-14 border-2 border-gray-100">
-               <AvatarImage src={student.profiles.avatar_url} />
+               <AvatarImage src={avatarUrl} />
                <AvatarFallback className="bg-primary text-white font-bold text-lg">
-                 {student.profiles.full_name.split(' ').map((n:any) => n[0]).join('')}
+                 {fullName.split(' ').map((n:any) => n[0]).join('')}
                </AvatarFallback>
             </Avatar>
             <div>
               <h3 className="font-display font-bold text-gray-900 text-lg leading-tight group-hover:text-primary transition-colors">
-                {student.profiles.full_name}
+                {fullName}
               </h3>
-              <p className="text-xs text-gray-400">{student.profiles.email}</p>
+              <p className="text-xs text-gray-400">{email}</p>
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -75,7 +80,7 @@ export function StudentCard({ student }: StudentCardProps) {
               <div className="h-5 w-full mt-1">
                  <div style={{ width: '100%', height: 20 }}>
                     {mounted && (
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height={20}>
                             <LineChart data={sparkData}>
                                 <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
                             </LineChart>

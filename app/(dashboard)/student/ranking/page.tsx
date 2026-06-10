@@ -40,23 +40,24 @@ export default async function RankingPage() {
   const teacherName = (classStudents?.[0]?.teachers as any)?.profiles?.full_name || "il tuo insegnante"
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F] -m-4 md:-m-8 p-4 md:p-8 text-white space-y-12 pb-20">
-      <header className="space-y-4">
+    <div className="min-h-screen bg-[#0F0F0F] -m-4 md:-m-8 p-4 md:p-8 text-white space-y-12 pb-20 overflow-x-hidden">
+      <header className="space-y-4 max-w-5xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
           Hall of Fame
         </h1>
         <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Competi con studenti da tutto il mondo 🇮🇹</p>
       </header>
 
-      <div className="max-w-5xl mx-auto space-y-12">
+      <div className="max-w-5xl mx-auto space-y-16">
         <RankingHeader
           rank={myRank}
           xp={me?.xp_points || 0}
           xpToNext={xpToNext}
         />
 
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 gap-12">
            <WeeklyChallenges />
+
            {myTeacherId ? (
              <ClassRanking
                students={classStudents || []}
@@ -64,7 +65,7 @@ export default async function RankingPage() {
                userId={user.id}
              />
            ) : (
-             <Card className="bg-gray-900 border-gray-800 text-white p-12 flex flex-col items-center justify-center text-center space-y-4">
+             <Card className="bg-gray-900 border-gray-800 text-white p-12 flex flex-col items-center justify-center text-center space-y-4 rounded-[2rem]">
                 <div className="h-20 w-20 bg-white/5 rounded-full flex items-center justify-center">
                    <Users className="h-10 w-10 text-gray-500" />
                 </div>

@@ -20,10 +20,10 @@ export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) 
         <CardTitle className="text-lg font-bold">Cronologia scritti</CardTitle>
         <Badge variant="outline" className="font-bold">{writings.length} testi</Badge>
       </CardHeader>
-      <CardContent>
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {writings.map((w) => (
-            <div key={w.id} className="min-w-[300px] p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm snap-center">
+            <div key={w.id} className="p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
               <div className="flex items-center justify-between mb-4">
                  <div className="flex flex-col">
                     <span className="text-[10px] text-gray-400 font-medium">{format(new Date(w.submitted_at), 'd MMM yyyy', { locale: it })}</span>

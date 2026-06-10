@@ -37,13 +37,13 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
     { subject: 'COERENZA', A: correction.score_coherence, fullMark: 25 },
     { subject: 'LESSICO', A: correction.score_vocabulary, fullMark: 25 },
     { subject: 'GRAMMATICA', A: correction.score_grammar, fullMark: 25 },
-    { subject: 'COMPITI', A: correction.score_task_completion, fullMark: 25 },
+    { subject: 'COMPITO', A: correction.score_task_completion, fullMark: 25 },
   ]
 
   const levels = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000 px-4 md:px-0">
+    <div className="max-w-5xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000 px-4 md:px-0">
       {/* Header Section */}
       <CorrectionHeader
         level={correction.detected_level}
@@ -89,7 +89,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     </TabsList>
 
                     <TabsContent value="strengths" className="outline-none">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                             {correction.pros.map((pro: string, i: number) => (
                                 <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group hover:ring-1 ring-primary/20 transition-all">
                                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-1.5 transition-all" />
@@ -105,7 +105,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     </TabsContent>
 
                     <TabsContent value="to_improve" className="outline-none">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                             {correction.cons.map((con: string, i: number) => (
                                 <Card key={i} className="border-none shadow-sm bg-white overflow-hidden group hover:ring-1 ring-secondary/20 transition-all">
                                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-secondary group-hover:w-1.5 transition-all" />
@@ -121,7 +121,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     </TabsContent>
 
                     <TabsContent value="suggestions" className="outline-none">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                             {correction.suggestions.map((sug: any, i: number) => (
                                 <Card key={i} className="border-none shadow-sm bg-white group hover:ring-1 ring-accent/20 transition-all">
                                     <CardContent className="p-6 space-y-4">

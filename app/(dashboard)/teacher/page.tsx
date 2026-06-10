@@ -55,12 +55,15 @@ export default async function TeacherDashboard() {
     .order("created_at", { ascending: false })
     .limit(5)
 
+  const profile = Array.isArray(teacher.profiles) ? teacher.profiles[0] : teacher.profiles;
+  const teacherFirstName = profile?.full_name?.split(' ')[0] || "Professore";
+
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 tracking-tight mb-2">
-            Benvenuto, Prof. {teacher.profiles.full_name.split(' ')[0]}
+            Benvenuto, Prof. {teacherFirstName}
           </h1>
           <p className="text-gray-500 font-medium">Gestisci i tuoi studenti e monitora i loro progressi.</p>
         </div>
@@ -109,19 +112,22 @@ export default async function TeacherDashboard() {
                     {students?.slice(0, 5).map((student) => {
                       const lastSeen = student.last_activity ? new Date(student.last_activity) : null
                       const diffDays = lastSeen ? Math.floor((new Date().getTime() - lastSeen.getTime()) / (1000 * 60 * 60 * 24)) : 999
+                      const sProfile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+                      const sFullName = sProfile?.full_name || "Studente";
+                      const sAvatarUrl = sProfile?.avatar_url;
 
                       return (
                         <tr key={student.id} className="hover:bg-gray-50/50 transition-colors group">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <Avatar className="h-9 w-9 border-2 border-white shadow-sm ring-1 ring-gray-100">
-                                <AvatarImage src={student.profiles.avatar_url} />
+                                <AvatarImage src={sAvatarUrl} />
                                 <AvatarFallback className="bg-primary/5 text-primary text-xs font-bold">
-                                  {student.profiles.full_name.split(' ').map((n:any) => n[0]).join('')}
+                                  {sFullName.split(' ').map((n:any) => n[0]).join('')}
                                 </AvatarFallback>
                               </Avatar>
                               <span className="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors truncate max-w-[150px]">
-                                {student.profiles.full_name}
+                                {sFullName}
                               </span>
                             </div>
                           </td>
