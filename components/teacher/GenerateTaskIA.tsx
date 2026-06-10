@@ -28,10 +28,9 @@ import { Badge } from "@/components/ui/badge"
 interface GenerateTaskIAProps {
   student: any
   recentWritings: any[]
-  mostFrequentError: string
 }
 
-export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: GenerateTaskIAProps) {
+export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps) {
   const profile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
   const fullName = profile?.full_name || "Studente";
 
@@ -40,12 +39,22 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
   const [isEditing, setIsEditing] = useState(false)
 
   const [selectedWritingId, setSelectedWritingId] = useState<string>("")
-  const [errorType, setErrorType] = useState<string>(mostFrequentError || "grammatica")
-  const [errorDetail, setErrorDetail] = useState("")
   const [exerciseType, setExerciseType] = useState("completamento")
-  const [additionalNotes, setAdditionalNotes] = useState("")
 
   const handleGenerate = async () => {
+    if (!selectedWritingId) {
+      toast.error("Seleziona un testo per iniziare")
+      return
+    }
+
+    const selectedWriting = recentWritings.find(w => w.id === selectedWritingId)
+    const correction = selectedWriting?.corrections?.[0]
+
+    if (!correction) {
+      toast.error("Il testo selezionato non ha una correzione valida")
+      return
+    }
+
     setIsGenerating(true)
     try {
       const response = await fetch("/api/generate-task", {
@@ -54,11 +63,9 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
         body: JSON.stringify({
           studentId: student.id,
           writingId: selectedWritingId,
-          errorType,
-          errorDetail,
           exerciseType,
-          additionalNotes,
-          studentLevel: student.current_level || student.target_level
+          errorCategories: correction.error_categories,
+          studentLevel: correction.detected_level || student.current_level || student.target_level
         }),
       })
 
@@ -116,44 +123,54 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
 
   if (previewTask) {
     return (
-      <Card className="border-primary/30 bg-primary/5 shadow-xl animate-in zoom-in-95 duration-300">
-        <CardHeader className="bg-white border-b border-primary/10">
+      <Card className="border-emerald-200 bg-emerald-50/50 shadow-xl animate-in zoom-in-95 duration-300">
+        <CardHeader className="bg-white border-b border-emerald-100 rounded-t-3xl">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-               <Bot className="h-6 w-6 text-primary" />
-               <span>Anteprima del Compito</span>
+               <Bot className="h-6 w-6 text-emerald-600" />
+               <span className="text-emerald-900">Anteprima del Compito</span>
             </div>
             <div className="flex items-center gap-2">
-               <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)}>
-                  <Edit3 className="h-4 w-4 mr-2" /> {isEditing ? 'Blocca' : 'Modifica'}
+               <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)} className="text-emerald-700 hover:bg-emerald-50">
+                  <Edit3 className="h-4 w-4 mr-2" /> {isEditing ? 'Salva' : 'Modifica'}
                </Button>
-               <Button variant="outline" size="sm" onClick={() => setPreviewTask(null)}>Scarta</Button>
+               <Button variant="outline" size="sm" onClick={() => setPreviewTask(null)} className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">Scarta</Button>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-8 space-y-8">
+           {previewTask.error_focus && (
+             <div className="bg-emerald-100/50 border border-emerald-200 p-4 rounded-xl flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                   <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Focus dell&apos;errore</p>
+                   <p className="text-sm text-emerald-900 font-medium">{previewTask.error_focus}</p>
+                </div>
+             </div>
+           )}
+
            <div className="space-y-4">
-              <Label className="text-primary font-black uppercase text-xs">Titolo del compito</Label>
+              <Label className="text-emerald-700 font-black uppercase text-xs tracking-widest">Titolo del compito</Label>
               {isEditing ? (
-                <Input value={previewTask.title} onChange={e => setPreviewTask({...previewTask, title: e.target.value})} className="bg-white" />
+                <Input value={previewTask.title} onChange={e => setPreviewTask({...previewTask, title: e.target.value})} className="bg-white border-emerald-200 focus:ring-emerald-500" />
               ) : (
-                <h3 className="text-2xl font-display font-bold text-gray-900">{previewTask.title}</h3>
+                <h3 className="text-2xl font-display font-bold text-emerald-950">{previewTask.title}</h3>
               )}
            </div>
 
            <div className="space-y-4">
-              <Label className="text-primary font-black uppercase text-xs">Spiegazione Teorica</Label>
+              <Label className="text-emerald-700 font-black uppercase text-xs tracking-widest">Spiegazione Teorica</Label>
               {isEditing ? (
-                <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-white min-h-[150px]" />
+                <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-white border-emerald-200 focus:ring-emerald-500 min-h-[150px]" />
               ) : (
-                <div className="p-6 bg-white rounded-2xl border border-primary/10 prose prose-sm max-w-none text-gray-700">
+                <div className="p-6 bg-white rounded-2xl border border-emerald-100 prose prose-sm max-w-none text-emerald-900 whitespace-pre-wrap">
                    {previewTask.theory_explanation}
                 </div>
               )}
            </div>
 
-           <div className="pt-6 border-t border-primary/10 flex justify-end">
-              <Button onClick={handleSend} className="bg-primary hover:bg-primary-dark font-bold px-10 py-6 text-lg rounded-2xl gap-2 shadow-lg shadow-primary/20">
+           <div className="pt-6 border-t border-emerald-100 flex justify-end">
+              <Button onClick={handleSend} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-10 py-6 text-lg rounded-2xl gap-2 shadow-lg shadow-emerald-200 transition-all active:scale-[0.98]">
                  Invia a {fullName.split(' ')[0]} <Send className="h-5 w-5" />
               </Button>
            </div>
@@ -163,26 +180,29 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
   }
 
   return (
-    <Card className="border-primary/20 bg-primary/5 relative overflow-hidden">
-      <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-        <Bot className="h-32 w-32 text-primary" />
+    <Card className="border-none bg-emerald-50 relative overflow-hidden shadow-sm">
+      <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+        <Sparkles className="h-40 w-40 text-emerald-600" />
       </div>
 
       <CardHeader>
-        <CardTitle className="flex items-center gap-3 text-primary-dark">
-          <div className="p-2 bg-primary/20 rounded-lg">
-            <Bot className="h-6 w-6" />
+        <CardTitle className="flex items-center gap-3 text-emerald-800">
+          <div className="p-2 bg-emerald-100 rounded-xl">
+            <Bot className="h-6 w-6 text-emerald-600" />
           </div>
-          Genera compito con l&apos;IA
+          Genera compito con l&apos;IA 🤖
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label className="font-bold text-gray-700">1. Basa su questo testo:</Label>
+      <CardContent className="space-y-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <Label className="font-bold text-emerald-900 flex items-center gap-2">
+              <span className="flex items-center justify-center w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full text-[10px]">1</span>
+              Basa su questo testo:
+            </Label>
             <Select onValueChange={(value: string | null) => setSelectedWritingId(value || "")}>
-              <SelectTrigger className="bg-white">
-                <SelectValue placeholder="Seleziona un testo recente..." />
+              <SelectTrigger className="bg-white border-emerald-100 rounded-xl h-12">
+                <SelectValue placeholder="Seleziona un testo..." />
               </SelectTrigger>
               <SelectContent>
                 {recentWritings.map(w => (
@@ -194,60 +214,40 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label className="font-bold text-gray-700">2. Errore da approfondire:</Label>
-            <Select value={errorType} onValueChange={(value: string | null) => setErrorType(value || "grammatica")}>
-              <SelectTrigger className="bg-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="grammatica">Grammatica</SelectItem>
-                <SelectItem value="lessico">Lessico</SelectItem>
-                <SelectItem value="ortografia">Ortografia</SelectItem>
-                <SelectItem value="registro">Registro</SelectItem>
-                <SelectItem value="struttura">Struttura</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="font-bold text-gray-700">3. Specifica l&apos;errore (dettaglio):</Label>
-          <Input
-            placeholder="Es: Uso del condizionale semplice, concordanza di genere..."
-            value={errorDetail}
-            onChange={e => setErrorDetail(e.target.value)}
-            className="bg-white"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="font-bold text-gray-700 block mb-3">4. Tipo di esercizio:</Label>
-          <div className="flex flex-wrap gap-2">
-             <ExerciseTypeChip id="scrittura" label="Scrittura" icon={Edit3} />
-             <ExerciseTypeChip id="completamento" label="Completamento" icon={CheckCircle2} />
-             <ExerciseTypeChip id="trasformazione" label="Trasformazione" icon={Sparkles} />
-             <ExerciseTypeChip id="riscrittura" label="Riscrittura" icon={Bot} />
+          <div className="space-y-3">
+            <Label className="font-bold text-emerald-900 flex items-center gap-2">
+              <span className="flex items-center justify-center w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full text-[10px]">2</span>
+              Tipo di esercizio:
+            </Label>
+            <div className="flex flex-wrap gap-2">
+               <ExerciseTypeChip id="scrittura" label="Scrittura" icon={Edit3} />
+               <ExerciseTypeChip id="completamento" label="Completamento" icon={CheckCircle2} />
+               <ExerciseTypeChip id="trasformazione" label="Trasformazione" icon={Sparkles} />
+               <ExerciseTypeChip id="riscrittura" label="Riscrittura" icon={Bot} />
+            </div>
           </div>
         </div>
 
         <div className="pt-4">
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating || !errorDetail}
-            className="w-full bg-primary hover:bg-primary-dark font-bold py-8 text-xl rounded-2xl gap-3 shadow-xl shadow-primary/20"
+            disabled={isGenerating || !selectedWritingId}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-8 text-xl rounded-2xl gap-3 shadow-lg shadow-emerald-200 transition-all active:scale-[0.98]"
           >
             {isGenerating ? (
               <>
                  <div className="h-6 w-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                 <span>Generazione compito magico...</span>
+                 <span>Analizzando errori e generando...</span>
               </>
             ) : (
               <>
-                 Genera compito con l&apos;IA <Sparkles className="h-6 w-6" />
+                 Genera compito automaticamente ✨
               </>
             )}
           </Button>
+          <p className="text-center text-[10px] text-emerald-600/60 mt-4 font-medium uppercase tracking-widest">
+            L&apos;IA identificherà l&apos;errore principale e creerà un esercizio mirato
+          </p>
         </div>
       </CardContent>
     </Card>

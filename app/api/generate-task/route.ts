@@ -14,31 +14,28 @@ export async function POST(request: Request) {
     const {
       studentId,
       writingId,
-      errorType,
-      errorDetail,
       exerciseType,
-      additionalNotes,
+      errorCategories,
       studentLevel
     } = await request.json()
 
     const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
 
-Sei un esperto in didattica dell'italiano per stranieri con ampia esperienza.
-Lo studente ha un livello rilevato di: ${studentLevel}.
-Ha commesso questo errore frequentemente: ${errorType} — nello specifico: ${errorDetail}.
-Note aggiuntive dell'insegnante: ${additionalNotes || 'Nessuna'}.
+Sei un esperto di didattica dell'italiano per stranieri.
+Lo studente di livello ${studentLevel} ha commesso questi errori nel suo testo:
+${JSON.stringify(errorCategories, null, 2)}
 
-Crea:
-1. Una spiegazione teorica chiara e pedagogica della regola grammaticale o di uso correlata (IN ITALIANO, con esempi evidenziati).
-2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel}.
-L'esercizio deve essere direttamente correlato a quell'errore specifico affinché lo studente possa esercitarsi.
+Analizza questi errori e crea:
+1. Una spiegazione teorica chiara e pedagogica della regola grammaticale principale (in italiano semplice, con esempi evidenziati in grassetto).
+2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel} che lavori specificamente su quell'errore.
 
-Rispondi UNICAMENTE con un oggetto JSON (senza markdown) con questa struttura:
+Rispondi UNICAMENTE con un oggetto JSON valido senza markdown, esattamente con questa struttura:
 {
-  "title": "Titolo accattivante per il compito IN ITALIANO",
-  "theory_explanation": "Spiegazione dettagliata in formato markdown IN ITALIANO (usa il grassetto per gli esempi in italiano)",
-  "exercise_instructions": "Istruzioni passo dopo passo per lo studente IN ITALIANO",
-  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio in base al tipo IN ITALIANO (es: testo con [___] da completare, o lista di frasi)"
+  "title": "Titolo accattivante in italiano",
+  "theory_explanation": "Spiegazione teorica in formato markdown (usa il grassetto per gli esempi)",
+  "exercise_instructions": "Istruzioni passo dopo passo per lo studente",
+  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio (es: testo con [___] o lista di frasi)",
+  "error_focus": "Breve descrizione dell'errore principale su cui si focalizza il compito"
 }`
 
     const geminiResponse = await fetch(

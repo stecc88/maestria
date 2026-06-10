@@ -124,7 +124,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     </span>
                     <div className="h-1 w-1 rounded-full bg-gray-300" />
                     <span className="flex items-center gap-1.5 text-sm">
-                       <Calendar className="h-4 w-4" /> Studente da {formatDate(student.created_at)}
+                       <Calendar className="h-4 w-4" /> Studente da {formatDate(studentProfile.created_at)}
                     </span>
                  </div>
                  <div className="flex flex-wrap gap-2 mt-4">
@@ -152,7 +152,6 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
             <GenerateTaskIA
               student={student}
               recentWritings={writings?.slice(0, 5) || []}
-              mostFrequentError={mostFrequentError}
             />
 
             <StudentWritingHistory writings={writings || []} />
