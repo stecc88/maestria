@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,8 +27,13 @@ interface NotificationsListProps {
 export default function NotificationsList({ initialNotifications, userId }: NotificationsListProps) {
   const [notifications, setNotifications] = useState(initialNotifications);
   const [filter, setFilter] = useState<"all" | "unread">("all");
+  const [mounted, setMounted] = useState(false);
   const supabase = createClient();
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filteredNotifications = filter === "all"
     ? notifications
@@ -123,7 +128,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
                     </p>
                     <div className="flex items-center gap-2 text-xs text-gray-400 pt-2">
                       <Clock className="h-3 w-3" />
-                      {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: it })}
+                      {mounted ? formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: it }) : '...'}
                     </div>
                   </div>
                 </div>

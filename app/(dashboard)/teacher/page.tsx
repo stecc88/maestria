@@ -20,6 +20,8 @@ import { formatDistanceToNow, subDays } from "date-fns"
 import { it } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 
+import { TeacherDashboardClient } from "./components/TeacherDashboardClient"
+
 export default async function TeacherDashboard() {
   const supabase = createClient()
   const adminSupabase = createAdminClient()
@@ -60,6 +62,7 @@ export default async function TeacherDashboard() {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
+      <TeacherDashboardClient />
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 tracking-tight mb-2">
@@ -142,7 +145,9 @@ export default async function TeacherDashboard() {
                                   "w-1.5 h-1.5 rounded-full ring-2 ring-white shadow-sm",
                                   diffDays < 3 ? "bg-primary" : diffDays < 7 ? "bg-accent" : "bg-secondary"
                                 )} />
-                                {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: it }) : 'Mai'}
+                                <span className="teacher-last-seen" data-date={lastSeen?.toISOString()}>
+                                  ...
+                                </span>
                              </div>
                           </td>
                           <td className="px-6 py-4 text-right">
@@ -181,7 +186,9 @@ export default async function TeacherDashboard() {
                         <p className="text-[11px] text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">{n.message}</p>
                         <div className="flex items-center gap-1.5 text-[10px] text-gray-400 mt-3 font-bold uppercase tracking-widest">
                            <Calendar className="h-3 w-3" />
-                           {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: it })}
+                           <span className="notification-date" data-date={n.created_at}>
+                             ...
+                           </span>
                         </div>
                      </div>
                    ))}

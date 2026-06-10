@@ -94,7 +94,7 @@ export function StudentCard({ student }: StudentCardProps) {
         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
            <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-medium">
               <Clock className="h-3 w-3" />
-              Attività: {lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: it }) : 'Mai'}
+              Attività: {mounted && lastSeen ? formatDistanceToNow(lastSeen, { addSuffix: true, locale: it }) : mounted && !lastSeen ? 'Mai' : '...'}
            </div>
            <Link href={`/teacher/students/${student.id}`}>
               <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/5 font-bold gap-1 p-0 h-auto">
