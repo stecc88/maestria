@@ -22,6 +22,20 @@ import { ErrorAnalysis } from "@/components/teacher/ErrorAnalysis"
 import { StudentWritingHistory } from "@/components/teacher/StudentWritingHistory"
 import { GenerateTaskIA } from "@/components/teacher/GenerateTaskIA"
 
+const formatDate = (date: string | null | undefined) => {
+  if (!date) return 'N/A'
+  const d = new Date(date)
+  if (isNaN(d.getTime())) return 'N/A'
+  return format(d, 'MMMM yyyy', { locale: it })
+}
+
+const formatLastActivity = (date: string | null | undefined) => {
+  if (!date) return 'Nessuna attività'
+  const d = new Date(date)
+  if (isNaN(d.getTime())) return 'Nessuna attività'
+  return formatDistanceToNow(d, { addSuffix: true, locale: it })
+}
+
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
   const adminSupabase = createAdminClient()
@@ -110,7 +124,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     </span>
                     <div className="h-1 w-1 rounded-full bg-gray-300" />
                     <span className="flex items-center gap-1.5 text-sm">
-                       <Calendar className="h-4 w-4" /> Studente da {format(new Date(student.created_at), 'MMMM yyyy', { locale: it })}
+                       <Calendar className="h-4 w-4" /> Studente da {formatDate(student.created_at)}
                     </span>
                  </div>
                  <div className="flex flex-wrap gap-2 mt-4">
@@ -122,7 +136,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
            <div className="text-right">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ultima attività</p>
               <p className="text-xl font-bold text-gray-900 mt-1">
-                 {student.last_activity ? formatDistanceToNow(new Date(student.last_activity), { addSuffix: true, locale: it }) : 'Nessuna attività'}
+                 {formatLastActivity(student.last_activity)}
               </p>
            </div>
         </div>
