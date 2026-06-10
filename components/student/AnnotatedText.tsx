@@ -10,7 +10,7 @@ interface InlineCorrection {
   original: string
   corrected: string
   explanation: string
-  error_type: 'gramatica' | 'vocabulario' | 'ortografia' | 'registro' | string
+  error_type: 'grammatica' | 'lessico' | 'ortografia' | 'registro' | string
 }
 
 interface AnnotatedTextProps {
@@ -50,8 +50,8 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
         segments.forEach((segment, index) => {
           newParts.push(segment)
           if (index < segments.length - 1) {
-            const isGrammar = corr.error_type === 'grammatica' || corr.error_type === 'gramatica'
-            const isVocabulary = corr.error_type === 'lessico' || corr.error_type === 'vocabulario'
+            const isGrammar = corr.error_type === 'grammatica' || corr.error_type === 'grammatica'
+            const isVocabulary = corr.error_type === 'lessico' || corr.error_type === 'lessico'
             const isSpelling = corr.error_type === 'ortografia'
 
             const underlineColor =

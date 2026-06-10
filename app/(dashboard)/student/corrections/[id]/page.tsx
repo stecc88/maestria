@@ -256,8 +256,8 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                     <div key={i} className="flex gap-4 p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
                         <div className={cn(
                             "shrink-0 w-1 h-12 rounded-full mt-1",
-                            (c.error_type === 'grammatica' || c.error_type === 'Grammatica' || c.error_type === 'gramatica') ? 'bg-secondary' :
-                            (c.error_type === 'lessico' || c.error_type === 'Lessico' || c.error_type === 'vocabulario') ? 'bg-accent' :
+                            (c.error_type === 'grammatica' || c.error_type === 'Grammatica' || c.error_type === 'grammatica') ? 'bg-secondary' :
+                            (c.error_type === 'lessico' || c.error_type === 'Lessico' || c.error_type === 'lessico') ? 'bg-accent' :
                             (c.error_type === 'ortografia' || c.error_type === 'Ortografia') ? 'bg-blue-400' :
                             'bg-purple-400'
                         )} />

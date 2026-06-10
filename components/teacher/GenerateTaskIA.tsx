@@ -37,9 +37,9 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
   const [isEditing, setIsEditing] = useState(false)
 
   const [selectedWritingId, setSelectedWritingId] = useState<string>("")
-  const [errorType, setErrorType] = useState<string>(mostFrequentError || "gramatica")
+  const [errorType, setErrorType] = useState<string>(mostFrequentError || "grammatica")
   const [errorDetail, setErrorDetail] = useState("")
-  const [exerciseType, setExerciseType] = useState("completar")
+  const [exerciseType, setExerciseType] = useState("completamento")
   const [additionalNotes, setAdditionalNotes] = useState("")
 
   const handleGenerate = async () => {
@@ -193,16 +193,16 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
 
           <div className="space-y-2">
             <Label className="font-bold text-gray-700">2. Errore da approfondire:</Label>
-            <Select value={errorType} onValueChange={(value: string | null) => setErrorType(value || "gramatica")}>
+            <Select value={errorType} onValueChange={(value: string | null) => setErrorType(value || "grammatica")}>
               <SelectTrigger className="bg-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gramatica">Grammatica</SelectItem>
-                <SelectItem value="vocabulario">Vocabolario</SelectItem>
+                <SelectItem value="grammatica">Grammatica</SelectItem>
+                <SelectItem value="lessico">Lessico</SelectItem>
                 <SelectItem value="ortografia">Ortografia</SelectItem>
                 <SelectItem value="registro">Registro</SelectItem>
-                <SelectItem value="estructura">Struttura</SelectItem>
+                <SelectItem value="struttura">Struttura</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -221,10 +221,10 @@ export function GenerateTaskIA({ student, recentWritings, mostFrequentError }: G
         <div className="space-y-2">
           <Label className="font-bold text-gray-700 block mb-3">4. Tipo di esercizio:</Label>
           <div className="flex flex-wrap gap-2">
-             <ExerciseTypeChip id="escritura" label="Scrittura" icon={Edit3} />
-             <ExerciseTypeChip id="completar" label="Completamento" icon={CheckCircle2} />
-             <ExerciseTypeChip id="transformacion" label="Trasformazione" icon={Sparkles} />
-             <ExerciseTypeChip id="reescritura" label="Riscrittura" icon={Bot} />
+             <ExerciseTypeChip id="scrittura" label="Scrittura" icon={Edit3} />
+             <ExerciseTypeChip id="completamento" label="Completamento" icon={CheckCircle2} />
+             <ExerciseTypeChip id="trasformazione" label="Trasformazione" icon={Sparkles} />
+             <ExerciseTypeChip id="riscrittura" label="Riscrittura" icon={Bot} />
           </div>
         </div>
 

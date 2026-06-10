@@ -1,16 +1,18 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { ClipboardList } from "lucide-react"
 import TeacherTasksList from "../components/TeacherTasksList"
 
 export default async function TeacherTasksPage() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Fetch Tasks with Student profiles
-  const { data: tasks } = await supabase
+  // Fetch Tasks with Student profiles using admin client
+  const { data: tasks } = await adminSupabase
     .from("tasks")
     .select(`
       *,

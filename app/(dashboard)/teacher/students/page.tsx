@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { StudentCard } from "@/components/teacher/StudentCard"
 import { Input } from "@/components/ui/input"
@@ -7,12 +8,24 @@ import { Search, Filter, Users, LayoutGrid, List } from "lucide-react"
 
 export default async function TeacherStudentsPage() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Fetch all students for this teacher
-  const { data: students } = await supabase
+  // Check if user is teacher
+  const { data: profile } = await adminSupabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single()
+
+  if (profile?.role !== 'teacher') {
+    redirect("/")
+  }
+
+  // Fetch all students for this teacher using admin client to bypass RLS on profiles
+  const { data: students } = await adminSupabase
     .from("students")
     .select("*, profiles(*)")
     .eq("teacher_id", user.id)
