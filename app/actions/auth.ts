@@ -103,9 +103,12 @@ export async function signUp(formData: any) {
       const { data: teacher } = await adminSupabase
         .from('teachers')
         .select('id')
-        .eq('teacher_code', extra.teacher_code)
+        .ilike('teacher_code', extra.teacher_code.trim())
         .single()
-      if (teacher) teacher_id = teacher.id
+
+      if (teacher) {
+        teacher_id = teacher.id
+      }
     }
 
     await adminSupabase.from('students').insert({
@@ -152,17 +155,23 @@ export async function signOut() {
 }
 
 export async function validateTeacherCode(code: string) {
-  const supabase = createClient()
-  const { data, error } = await supabase
+  if (!code) return { exists: false }
+
+  // Use admin client to bypass RLS during registration validation
+  const adminSupabase = createAdminClient()
+  const { data, error } = await adminSupabase
     .from('teachers')
     .select('id, profiles(full_name)')
-    .eq('teacher_code', code)
+    .ilike('teacher_code', code.trim())
     .single()
 
   if (error || !data) return { exists: false }
 
+  // Handle potential array response for profiles (Supabase join behavior)
+  const profile = Array.isArray(data.profiles) ? data.profiles[0] : data.profiles;
+
   return {
     exists: true,
-    teacherName: (data.profiles as any).full_name
+    teacherName: profile?.full_name || "Insegnante"
   }
 }

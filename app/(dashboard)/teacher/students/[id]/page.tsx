@@ -26,11 +26,15 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   const supabase = createClient()
   const adminSupabase = createAdminClient()
 
-  // 1. Fetch Student Data
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect("/login")
+
+  // 1. Fetch Student Data (with verification)
   const { data: student } = await adminSupabase
     .from("students")
     .select("*, profiles(*)")
     .eq("id", params.id)
+    .eq("teacher_id", user.id) // Ensure student belongs to this teacher
     .single()
 
   if (!student) notFound()

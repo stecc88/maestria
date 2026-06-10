@@ -8,8 +8,14 @@ export async function POST(request: Request) {
 
   const { data: { user: teacherUser } } = await supabase.auth.getUser()
   if (!teacherUser) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
   }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", teacherUser.id)
+    .single()
 
   try {
     const { studentId, task, writingId } = await request.json()
@@ -20,11 +26,11 @@ export async function POST(request: Request) {
       .insert({
         student_id: studentId,
         teacher_id: teacherUser.id,
-        correction_id: null, // Logic to link if needed
+        correction_id: null,
         title: task.title,
         theory_explanation: task.theory_explanation,
         exercise_instructions: task.exercise_instructions,
-        exercise_type: 'completar', // Defaulting for simplicity in this MVP action
+        exercise_type: 'completamento',
         exercise_content: task.exercise_content,
         status: 'pending'
       })
@@ -37,8 +43,8 @@ export async function POST(request: Request) {
     await adminSupabase.from("notifications").insert({
       user_id: studentId,
       type: 'new_task',
-      title: '📝 Nueva tarea de tu profesor',
-      message: `El Prof. ${teacherUser.user_metadata.full_name} te envió la tarea "${task.title}". ¡A trabajar!`,
+      title: '📝 Nuovo compito dal tuo insegnante',
+      message: `Il Prof. ${profile?.full_name || teacherUser.user_metadata.full_name} ti ha inviato il compito "${task.title}". Al lavoro!`,
       related_id: newTask.id
     })
 
