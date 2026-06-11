@@ -5,10 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, CheckCircle2, MessageSquare, AlertCircle, Bell } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { it } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { formatRelative } from "@/lib/utils/date";
 
 interface Notification {
   id: string;
@@ -128,7 +127,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
                     </p>
                     <div className="flex items-center gap-2 text-xs text-gray-400 pt-2">
                       <Clock className="h-3 w-3" />
-                      {mounted ? formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: it }) : '...'}
+                      {mounted ? formatRelative(notification.created_at) : '...'}
                     </div>
                   </div>
                 </div>

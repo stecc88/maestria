@@ -85,7 +85,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
     })
 
     if (rpcError) {
-      console.error("Error calling increment_xp RPC in check-task:", rpcError)
     }
 
     // 5. Notify Teacher
@@ -115,7 +114,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
     })
 
   } catch (error: any) {
-    console.error("Error in check-task API:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

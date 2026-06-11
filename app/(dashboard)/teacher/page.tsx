@@ -16,11 +16,9 @@ import {
   Sparkles
 } from "lucide-react"
 import Link from "next/link"
-import { formatDistanceToNow, subDays } from "date-fns"
-import { it } from "date-fns/locale"
+import { subDays } from "date-fns"
 import { cn } from "@/lib/utils"
-
-import { TeacherDashboardClient } from "./components/TeacherDashboardClient"
+import { formatRelative } from "@/lib/utils/date"
 
 export default async function TeacherDashboard() {
   const supabase = createClient()
@@ -29,18 +27,17 @@ export default async function TeacherDashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  const { data: teacher } = await adminSupabase
-    .from("teachers")
-    .select("*, profiles(*)")
-    .eq("id", user.id)
-    .single()
+  const [
+    { data: teacher },
+    { data: students },
+    { data: notifications }
+  ] = await Promise.all([
+    adminSupabase.from("teachers").select("*, profiles(*)").eq("id", user.id).single(),
+    adminSupabase.from("students").select("*, profiles(*)").eq("teacher_id", user.id),
+    supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5)
+  ])
 
   if (!teacher) return <div className="p-20 text-center animate-pulse text-gray-400 font-bold uppercase tracking-widest">Caricamento...</div>
-
-  const { data: students } = await adminSupabase
-    .from("students")
-    .select("*, profiles(*)")
-    .eq("teacher_id", user.id)
 
   const activeThisWeek = students?.filter(s => s.last_activity && new Date(s.last_activity) > subDays(new Date(), 7)).length || 0
 
@@ -50,19 +47,11 @@ export default async function TeacherDashboard() {
     compiti: Math.floor(Math.random() * 3)
   }))
 
-  const { data: notifications } = await supabase
-    .from("notifications")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(5)
-
   const profile = Array.isArray(teacher.profiles) ? teacher.profiles[0] : teacher.profiles;
   const teacherFirstName = profile?.full_name?.split(' ')[0] || "Professore";
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
-      <TeacherDashboardClient />
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 tracking-tight mb-2">
@@ -146,7 +135,7 @@ export default async function TeacherDashboard() {
                                   diffDays < 3 ? "bg-primary" : diffDays < 7 ? "bg-accent" : "bg-secondary"
                                 )} />
                                 <span className="teacher-last-seen" data-date={lastSeen?.toISOString()}>
-                                  ...
+                                  {formatRelative(student.last_activity)}
                                 </span>
                              </div>
                           </td>
@@ -187,7 +176,7 @@ export default async function TeacherDashboard() {
                         <div className="flex items-center gap-1.5 text-[10px] text-gray-400 mt-3 font-bold uppercase tracking-widest">
                            <Calendar className="h-3 w-3" />
                            <span className="notification-date" data-date={n.created_at}>
-                             ...
+                             {formatRelative(n.created_at)}
                            </span>
                         </div>
                      </div>

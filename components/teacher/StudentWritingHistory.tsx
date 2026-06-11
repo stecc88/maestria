@@ -4,10 +4,9 @@ import React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
 import { Eye, FileText } from "lucide-react"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils/date"
 
 interface StudentWritingHistoryProps {
   writings: any[]
@@ -26,7 +25,7 @@ export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) 
             <div key={w.id} className="p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
               <div className="flex items-center justify-between mb-4">
                  <div className="flex flex-col">
-                    <span className="text-[10px] text-gray-400 font-medium">{format(new Date(w.submitted_at), 'd MMM yyyy', { locale: it })}</span>
+                    <span className="text-[10px] text-gray-400 font-medium">{formatDate(w.submitted_at, 'd MMM yyyy')}</span>
                     <p className="font-bold text-gray-900 line-clamp-1">{w.title}</p>
                  </div>
                  <div className="flex flex-col items-end">

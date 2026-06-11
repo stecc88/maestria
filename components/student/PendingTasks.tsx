@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ClipboardList, Calendar, ArrowRight } from "lucide-react"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils/date"
 
 interface PendingTasksProps {
   tasks: any[]
@@ -40,7 +39,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
                       </Badge>
                       <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
                         <Calendar className="h-3 w-3" />
-                        <span>{task.due_date ? format(new Date(task.due_date), 'd MMM', { locale: it }) : 'No data'}</span>
+                        <span>{formatDate(task.due_date, 'd MMM')}</span>
                       </div>
                     </div>
                   </div>

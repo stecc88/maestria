@@ -16,8 +16,7 @@ import {
   Trophy,
   ClipboardList
 } from "lucide-react";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
+import { formatDate } from "@/lib/utils/date";
 
 interface TeacherTasksListProps {
   initialTasks: any[];
@@ -108,7 +107,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                         </div>
                         <div className="flex items-center gap-1.5">
                            <Calendar className="h-3.5 w-3.5" />
-                           {format(new Date(task.created_at), "d MMMM", { locale: it })}
+                           {formatDate(task.created_at, "d MMMM")}
                         </div>
                       </div>
                     </div>

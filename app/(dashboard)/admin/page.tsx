@@ -4,8 +4,7 @@ import { Users, CheckCircle2, ShieldCheck, UserCheck, Clock, Mail, User, Key } f
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
+import { formatDate } from "@/lib/utils/date"
 import ApprovalActions from "./components/ApprovalActions"
 
 export default async function AdminDashboard() {
@@ -110,7 +109,7 @@ export default async function AdminDashboard() {
                             </div>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                               <Clock className="h-3 w-3" />
-                              Registrato il {format(new Date(user.created_at), "d MMMM", { locale: it })}
+                              Registrato il {formatDate(user.created_at, "d MMMM")}
                             </div>
                             {user.role === 'teacher' && user.teachers && (
                               <div className="flex items-center gap-2 text-sm font-medium text-primary">

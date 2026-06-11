@@ -26,42 +26,32 @@ export default async function StudentDashboard() {
 
   if (!student) return <div>Caricamento dati studente...</div>
 
-  // 2. Fetch Stats
-  const { count: writingsCount } = await supabase
-    .from("writings")
-    .select("*", { count: "exact", head: true })
-    .eq("student_id", user.id)
-
-  // Fix: Join with writings to ensure we only get scores for the current student
-  const { data: corrections } = await supabase
-    .from("corrections")
-    .select("overall_score, detected_level, writings!inner(student_id)")
-    .eq("writings.student_id", user.id)
+  // 2-7. Parallel Fetch Data
+  const [
+    { count: writingsCount },
+    { data: corrections },
+    { count: completedTasks },
+    { data: evolutionData },
+    { data: radarCorrections },
+    { data: pendingTasks },
+    { data: latestCorrections },
+    { data: topStudents },
+    { data: rankData, error: rankError }
+  ] = await Promise.all([
+    supabase.from("writings").select("*", { count: "exact", head: true }).eq("student_id", user.id),
+    supabase.from("corrections").select("overall_score, detected_level, writings!inner(student_id)").eq("writings.student_id", user.id),
+    supabase.from("tasks").select("*", { count: "exact", head: true }).eq("student_id", user.id).eq("status", "completed"),
+    supabase.from("progress_history").select("date, writing_score, detected_level").eq("student_id", user.id).order("date", { ascending: true }),
+    supabase.from("corrections").select("score_coherence, score_vocabulary, score_grammar, score_task_completion, writings!inner(student_id)").eq("writings.student_id", user.id).order("created_at", { ascending: false }).limit(5),
+    supabase.from("tasks").select("*").eq("student_id", user.id).eq("status", "pending").order("due_date", { ascending: true }).limit(3),
+    supabase.from("corrections").select("*, writings!inner(student_id, title, writing_type)").eq("writings.student_id", user.id).order("created_at", { ascending: false }).limit(3),
+    supabase.from("students").select("id, xp_points, profiles(full_name, avatar_url)").order("xp_points", { ascending: false }).limit(3),
+    supabase.rpc('get_student_rank', { student_uuid: user.id })
+  ])
 
   const avgScore = corrections && corrections.length > 0
     ? Math.round(corrections.reduce((acc, curr) => acc + (curr.overall_score || 0), 0) / corrections.length)
     : 0
-
-  const { count: completedTasks } = await supabase
-    .from("tasks")
-    .select("*", { count: "exact", head: true })
-    .eq("student_id", user.id)
-    .eq("status", "completed")
-
-  // 3. Fetch Evolution History (Progress History)
-  const { data: evolutionData } = await supabase
-    .from("progress_history")
-    .select("date, writing_score, detected_level")
-    .eq("student_id", user.id)
-    .order("date", { ascending: true })
-
-  // 4. Fetch Radar Data (Avg of last 5 corrections for current student)
-  const { data: radarCorrections } = await supabase
-    .from("corrections")
-    .select("score_coherence, score_vocabulary, score_grammar, score_task_completion, writings!inner(student_id)")
-    .eq("writings.student_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(5)
 
   const radarData = radarCorrections && radarCorrections.length > 0
     ? [
@@ -72,32 +62,6 @@ export default async function StudentDashboard() {
       ]
     : []
 
-  // 5. Fetch Pending Tasks
-  const { data: pendingTasks } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("student_id", user.id)
-    .eq("status", "pending")
-    .order("due_date", { ascending: true })
-    .limit(3)
-
-  // 6. Fetch Latest Corrections
-  const { data: latestCorrections } = await supabase
-    .from("corrections")
-    .select("*, writings!inner(student_id, title, writing_type)")
-    .eq("writings.student_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(3)
-
-  // 7. Fetch Ranking (Top 3 + User Position)
-  const { data: topStudents } = await supabase
-    .from("students")
-    .select("id, xp_points, profiles(full_name, avatar_url)")
-    .order("xp_points", { ascending: false })
-    .limit(3)
-
-  // Get user rank (with error handling)
-  const { data: rankData, error: rankError } = await supabase.rpc('get_student_rank', { student_uuid: user.id })
   const userRank = rankError ? { rank: 0, diff: 0 } : (rankData || { rank: 0, diff: 0 })
 
   return (

@@ -61,7 +61,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, id: newTask.id })
 
   } catch (error: any) {
-    console.error("Error sending task:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

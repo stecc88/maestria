@@ -111,7 +111,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       .single()
 
     if (writingError) {
-      console.error("Error guardando writing:", writingError)
       return Response.json({ error: "Errore durante il salvataggio dello scritto" }, { status: 500 })
     }
 
@@ -145,7 +144,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       .single()
 
     if (correctionError) {
-      console.error("Error guardando correction:", correctionError)
       return Response.json({ error: "Errore durante il salvataggio della correzione" }, { status: 500 })
     }
 
@@ -165,7 +163,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
     })
 
     if (rpcError) {
-      console.error("Error calling increment_xp RPC:", rpcError)
     }
 
     // Guardar en progress_history
@@ -183,7 +180,6 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
     })
 
   } catch (error: any) {
-    console.error("Error en /api/correct:", error)
     return Response.json({ error: error.message || "Errore interno" }, { status: 500 })
   }
 }

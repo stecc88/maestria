@@ -60,7 +60,6 @@ Rispondi UNICAMENTE con un oggetto JSON valido senza markdown, esattamente con q
     return NextResponse.json(geminiResult)
 
   } catch (error: any) {
-    console.error("Error generating task:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

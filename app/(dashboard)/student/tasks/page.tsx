@@ -17,9 +17,8 @@ import {
   ExternalLink
 } from "lucide-react"
 import Link from "next/link"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
 import { cn } from "@/lib/utils"
+import { formatDate } from "@/lib/utils/date"
 
 export default async function StudentTasksPage() {
   const supabase = createClient()
@@ -39,7 +38,6 @@ export default async function StudentTasksPage() {
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Error fetching tasks:", error)
   }
 
   const pendingTasks = tasks?.filter(t => t.status === 'pending') || []
@@ -73,7 +71,7 @@ export default async function StudentTasksPage() {
             {task.due_date && (
               <span className="text-[10px] text-gray-400 flex items-center gap-1 font-medium">
                 <Clock className="h-3 w-3" />
-                Scadenza: {format(new Date(task.due_date), 'd MMM', { locale: it })}
+                Scadenza: {formatDate(task.due_date, 'd MMM')}
               </span>
             )}
           </div>
@@ -86,7 +84,7 @@ export default async function StudentTasksPage() {
             </h3>
             <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
               <User className="h-3 w-3" />
-              Creata da {task.teachers?.profiles?.full_name} · {format(new Date(task.created_at), 'd MMM yyyy', { locale: it })}
+              Creata da {task.teachers?.profiles?.full_name} · {formatDate(task.created_at)}
             </p>
           </div>
 

@@ -4,8 +4,7 @@ import { Users, Mail, Clock, User, ShieldCheck, ChevronLeft, Search } from "luci
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
+import { formatDate } from "@/lib/utils/date"
 import UserActions from "./components/UserActions"
 
 export default async function AdminUsersPage() {
@@ -108,7 +107,7 @@ export default async function AdminUsersPage() {
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Clock className="h-3.5 w-3.5" />
-                          Iscritto il {format(new Date(user.created_at), "d MMMM yyyy", { locale: it })}
+                          Iscritto il {formatDate(user.created_at)}
                         </div>
                       </div>
                       {user.role === 'student' && user.students && (
@@ -117,7 +116,7 @@ export default async function AdminUsersPage() {
                             const student = Array.isArray(user.students) ? user.students[0] : user.students;
                             const teacher = Array.isArray(student?.teachers) ? student.teachers[0] : student?.teachers;
                             const profile = Array.isArray(teacher?.profiles) ? teacher.profiles[0] : teacher?.profiles;
-                            return (profile as any)?.full_name || 'Non assegnato';
+                            return profile?.full_name || 'Non assegnato';
                           })()}
                         </div>
                       )}
@@ -136,7 +135,7 @@ export default async function AdminUsersPage() {
                         user={user}
                         teachers={teachers?.map(t => {
                           const profile = Array.isArray(t.profiles) ? t.profiles[0] : t.profiles;
-                          return { id: t.id, name: (profile as any)?.full_name || "Insegnante" };
+                          return { id: t.id, name: profile?.full_name || "Insegnante" };
                         }) || []}
                     />
                   </div>
