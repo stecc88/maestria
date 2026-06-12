@@ -24,6 +24,7 @@ import {
 import { cn } from "@/lib/utils"
 import toast from "react-hot-toast"
 import { Badge } from "@/components/ui/badge"
+import ReactMarkdown from 'react-markdown'
 
 interface GenerateTaskIAProps {
   student: any
@@ -164,8 +165,8 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
               {isEditing ? (
                 <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-white border-emerald-200 focus:ring-emerald-500 min-h-[150px]" />
               ) : (
-                <div className="p-6 bg-white rounded-2xl border border-emerald-100 prose prose-sm max-w-none text-emerald-900 whitespace-pre-wrap">
-                   {previewTask.theory_explanation}
+                <div className="p-6 bg-white rounded-2xl border border-emerald-100 prose prose-sm max-w-none text-emerald-900">
+                   <ReactMarkdown>{previewTask.theory_explanation}</ReactMarkdown>
                 </div>
               )}
            </div>

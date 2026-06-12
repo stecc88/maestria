@@ -2,26 +2,13 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { BookOpen, CheckCircle2 } from "lucide-react"
+import ReactMarkdown from 'react-markdown'
 
 interface TheoryCardProps {
   explanation: string
 }
 
 export function TheoryCard({ explanation }: TheoryCardProps) {
-  // Simple parser to highlight Italian examples in green
-  // Expects examples to be in [it: text] format or similar,
-  // but we'll just render the string and assume the teacher
-  // uses some basic markdown/HTML or we handle it here.
-
-  const formatText = (text: string) => {
-    // Basic formatting: replace newlines with br,
-    // and highlight text between asterisks or specific markers.
-    // For this requirement, we'll look for specific patterns or just render as is.
-    return text.split('\n').map((line, i) => (
-      <p key={i} className="mb-2">{line}</p>
-    ))
-  }
-
   return (
     <Card className="bg-accent/5 border-accent/20 border-2 overflow-hidden relative">
       <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -36,7 +23,7 @@ export function TheoryCard({ explanation }: TheoryCardProps) {
         </div>
 
         <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed font-body">
-          {formatText(explanation)}
+          <ReactMarkdown>{explanation}</ReactMarkdown>
         </div>
 
         <div className="mt-6 p-4 bg-primary/5 rounded-xl border border-primary/10">
