@@ -6,7 +6,7 @@ export const formatDate = (date: string | null | undefined, pattern: string = "d
   const d = new Date(date)
   if (isNaN(d.getTime())) return 'N/A'
   try {
-    return format(d, pattern, { locale: it })
+    return format(d, pattern || "d MMMM yyyy", { locale: it })
   } catch (e) {
     return 'N/A'
   }

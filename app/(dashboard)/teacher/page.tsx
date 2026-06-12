@@ -18,7 +18,7 @@ import {
 import Link from "next/link"
 import { subDays } from "date-fns"
 import { cn } from "@/lib/utils"
-import { formatRelative } from "@/lib/utils/date"
+import { SafeRelativeTime } from "@/components/ui/safe-relative-time"
 
 export default async function TeacherDashboard() {
   const supabase = createClient()
@@ -134,9 +134,7 @@ export default async function TeacherDashboard() {
                                   "w-1.5 h-1.5 rounded-full ring-2 ring-white shadow-sm",
                                   diffDays < 3 ? "bg-primary" : diffDays < 7 ? "bg-accent" : "bg-secondary"
                                 )} />
-                                <span className="teacher-last-seen" data-date={lastSeen?.toISOString()}>
-                                  {formatRelative(student.last_activity)}
-                                </span>
+                                <SafeRelativeTime date={student.last_activity} placeholder="Mai" />
                              </div>
                           </td>
                           <td className="px-6 py-4 text-right">
@@ -175,9 +173,7 @@ export default async function TeacherDashboard() {
                         <p className="text-[11px] text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">{n.message}</p>
                         <div className="flex items-center gap-1.5 text-[10px] text-gray-400 mt-3 font-bold uppercase tracking-widest">
                            <Calendar className="h-3 w-3" />
-                           <span className="notification-date" data-date={n.created_at}>
-                             {formatRelative(n.created_at)}
-                           </span>
+                           <SafeRelativeTime date={n.created_at} />
                         </div>
                      </div>
                    ))}

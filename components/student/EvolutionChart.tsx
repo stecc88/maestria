@@ -11,9 +11,8 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts'
-import { format } from 'date-fns'
-import { it } from 'date-fns/locale'
 import { TrendingUp } from "lucide-react"
+import { formatDate } from "@/lib/utils/date"
 
 interface EvolutionChartProps {
   data: any[]
@@ -47,13 +46,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                   tick={{ fontSize: 10, fill: '#94a3b8' }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={(str) => {
-                    try {
-                        return format(new Date(str), 'd MMM', { locale: it })
-                    } catch (e) {
-                        return ""
-                    }
-                  }}
+                  tickFormatter={(str) => formatDate(str, 'd MMM')}
                 />
                 <YAxis
                   domain={[0, 100]}
@@ -68,13 +61,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                     boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
                     padding: '12px'
                   }}
-                  labelFormatter={(label) => {
-                    try {
-                        return format(new Date(label), 'PPP', { locale: it })
-                    } catch (e) {
-                        return ""
-                    }
-                  }}
+                  labelFormatter={(label) => formatDate(label, 'PPP')}
                   formatter={(value: any, name: any, props: any) => [
                     <span key="score" className="font-bold text-primary">{value} pts</span>,
                     <span key="level">Livello: {props.payload.detected_level}</span>

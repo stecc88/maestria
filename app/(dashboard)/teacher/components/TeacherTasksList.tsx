@@ -17,6 +17,7 @@ import {
   ClipboardList
 } from "lucide-react";
 import { formatDate } from "@/lib/utils/date";
+import { useEffect } from "react";
 
 interface TeacherTasksListProps {
   initialTasks: any[];
@@ -25,6 +26,11 @@ interface TeacherTasksListProps {
 export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps) {
   const [filter, setFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filteredTasks = initialTasks.filter(task => {
     const matchesStatus = filter === "all" || task.status === filter;
@@ -107,7 +113,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                         </div>
                         <div className="flex items-center gap-1.5">
                            <Calendar className="h-3.5 w-3.5" />
-                           {formatDate(task.created_at, "d MMMM")}
+                           {mounted ? formatDate(task.created_at, "d MMMM") : "..."}
                         </div>
                       </div>
                     </div>

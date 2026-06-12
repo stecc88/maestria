@@ -7,12 +7,19 @@ import { Button } from "@/components/ui/button"
 import { Eye, FileText } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils/date"
+import { useState, useEffect } from "react"
 
 interface StudentWritingHistoryProps {
   writings: any[]
 }
 
 export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <Card className="border-gray-100 shadow-sm overflow-hidden">
       <CardHeader className="border-b border-gray-50 flex flex-row items-center justify-between">
@@ -25,7 +32,7 @@ export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) 
             <div key={w.id} className="p-5 rounded-2xl bg-white border border-gray-100 items-start group hover:border-primary/20 transition-all shadow-sm">
               <div className="flex items-center justify-between mb-4">
                  <div className="flex flex-col">
-                    <span className="text-[10px] text-gray-400 font-medium">{formatDate(w.submitted_at, 'd MMM yyyy')}</span>
+                    <span className="text-[10px] text-gray-400 font-medium">{mounted ? formatDate(w.submitted_at, 'd MMM yyyy') : '...'}</span>
                     <p className="font-bold text-gray-900 line-clamp-1">{w.title}</p>
                  </div>
                  <div className="flex flex-col items-end">
