@@ -4,8 +4,7 @@ import { Clock, Mail, User, Key, ChevronLeft, UserCheck } from "lucide-react"
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
+import { formatDate } from "@/lib/utils/date"
 import ApprovalActions from "../components/ApprovalActions"
 
 export default async function AdminApprovalsPage() {
@@ -56,7 +55,7 @@ export default async function AdminApprovalsPage() {
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <Clock className="h-4 w-4" />
-                          Registrato il {format(new Date(user.created_at), "d MMMM yyyy HH:mm", { locale: it })}
+                          Registrato il {formatDate(user.created_at, "d MMMM yyyy HH:mm")}
                         </div>
                         {user.role === 'teacher' && user.teachers && (
                           <div className="flex items-center gap-2 text-sm font-medium text-primary col-span-2">

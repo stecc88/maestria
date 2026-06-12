@@ -15,8 +15,10 @@ import { cn } from "@/lib/utils"
 
 export function WeeklyChallenges() {
   const [timeLeft, setTimeLeft] = useState("")
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const updateCountdown = () => {
       const now = new Date()
       const nextMonday = new Date()
@@ -46,9 +48,9 @@ export function WeeklyChallenges() {
             </div>
             <h3 className="font-display font-bold text-xl text-white">Sfide Settimanali</h3>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest border border-white/5">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest border border-white/5 min-w-[120px] justify-center">
              <Clock className="h-3.5 w-3.5" />
-             Scade in: {timeLeft}
+             Scade in: {mounted ? timeLeft : "..."}
           </div>
         </div>
 

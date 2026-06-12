@@ -18,7 +18,17 @@ export async function POST(request: Request) {
     .single()
 
   try {
-    const { studentId, task, writingId } = await request.json()
+    const { studentId, task, writingId, exerciseType } = await request.json()
+
+    // Map Italian UI types to database allowed values
+    const typeMap: Record<string, string> = {
+      'scrittura': 'escritura',
+      'completamento': 'completar',
+      'trasformazione': 'transformacion',
+      'riscrittura': 'reescritura'
+    }
+
+    const dbType = typeMap[exerciseType] || 'completar'
 
     // 1. Save Task
     const { data: newTask, error: taskError } = await adminSupabase
@@ -26,11 +36,11 @@ export async function POST(request: Request) {
       .insert({
         student_id: studentId,
         teacher_id: teacherUser.id,
-        correction_id: null,
+        correction_id: writingId || null,
         title: task.title,
         theory_explanation: task.theory_explanation,
         exercise_instructions: task.exercise_instructions,
-        exercise_type: 'completamento',
+        exercise_type: dbType,
         exercise_content: task.exercise_content,
         status: 'pending'
       })
@@ -51,7 +61,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, id: newTask.id })
 
   } catch (error: any) {
-    console.error("Error sending task:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

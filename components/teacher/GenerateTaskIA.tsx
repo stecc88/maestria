@@ -91,7 +91,8 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
         body: JSON.stringify({
           studentId: student.id,
           task: previewTask,
-          writingId: selectedWritingId
+          writingId: selectedWritingId,
+          exerciseType
         }),
       })
 

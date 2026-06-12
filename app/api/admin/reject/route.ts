@@ -56,7 +56,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Error rejecting user:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -9,7 +9,6 @@ export const safeParseJson = (text: string) => {
     const cleanText = text.replace(/```json|```/g, "").trim()
     return JSON.parse(cleanText)
   } catch (e) {
-    console.error("Failed to parse JSON from Gemini:", text)
     return null
   }
 }

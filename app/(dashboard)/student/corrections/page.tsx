@@ -4,9 +4,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FileText, Calendar, Eye, Search, Filter } from "lucide-react"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils/date"
 
 export default async function CorrectionsPage() {
   const supabase = createClient()
@@ -25,7 +24,6 @@ export default async function CorrectionsPage() {
     .order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Error fetching corrections:", error)
   }
 
   return (
@@ -71,7 +69,7 @@ export default async function CorrectionsPage() {
                        </Badge>
                        <div className="flex items-center gap-1 text-[10px] text-gray-400 font-medium">
                           <Calendar className="h-3 w-3" />
-                          <span>{format(new Date(correction.created_at), 'd MMMM yyyy', { locale: it })}</span>
+                          <span>{formatDate(correction.created_at)}</span>
                        </div>
                     </div>
                   </div>

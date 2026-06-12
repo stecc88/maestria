@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FileText, Calendar, Eye, Star } from "lucide-react"
-import { format } from "date-fns"
-import { it } from "date-fns/locale"
 import Link from "next/link"
+import { formatDate } from "@/lib/utils/date"
 
 interface LatestCorrectionsProps {
   corrections: any[]
@@ -45,7 +44,7 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
                         </Badge>
                         <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
                           <Calendar className="h-3 w-3" />
-                          <span>{format(new Date(correction.created_at), 'd MMM', { locale: it })}</span>
+                          <span>{formatDate(correction.created_at, 'd MMM')}</span>
                         </div>
                       </div>
                     </div>
