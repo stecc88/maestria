@@ -29,7 +29,6 @@ export default async function TeacherStudentsPage() {
     .from("students")
     .select("*, profiles(*)")
     .eq("teacher_id", user.id)
-    .order("created_at", { ascending: false })
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
