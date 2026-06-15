@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Header } from "@/components/layout/Header"
+import { getLevelFromXP } from "@/lib/utils/levels"
 
 export default async function DashboardLayout({
   children,
@@ -48,10 +49,11 @@ export default async function DashboardLayout({
 
   let studentData = null
   if (profile.role === 'student' && studentResult.data) {
+    const levelInfo = getLevelFromXP(studentResult.data.xp_points);
     studentData = {
       ...studentResult.data,
-      target_xp: 1000,
-      next_level_name: "Praticante",
+      target_xp: levelInfo.next?.minXp || levelInfo.current.minXp,
+      next_level_name: levelInfo.next?.name || "Massimo",
       pending_tasks: pendingTasksResult.count || 0
     }
   }

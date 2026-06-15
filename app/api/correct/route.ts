@@ -1,6 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-import { safeParseJson } from "@/lib/gemini/client"
+import { validateAiResponse } from "@/lib/gemini/client"
+import { correctionSchema } from "@/lib/validations/ai"
+import { calculateXpForCorrection } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
   try {
@@ -82,10 +84,10 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
 
     const geminiData = await geminiResponse.json()
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
-    const correction = safeParseJson(rawText)
+    const correction = await validateAiResponse(rawText, correctionSchema)
 
     if (!correction) {
-      return Response.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })
+      return Response.json({ error: "L'IA ha restituito un formato non valido o incompleto" }, { status: 500 })
     }
 
     // Obtener el usuario autenticado
@@ -115,7 +117,7 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
     }
 
     // Calcular XP
-    const xpEarned = 50 + Math.floor(correction.overall_score / 2)
+    const xpEarned = calculateXpForCorrection(correction.overall_score)
 
     // Guardar la corrección
     const { data: savedCorrection, error: correctionError } = await adminSupabase

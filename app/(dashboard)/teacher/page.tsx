@@ -41,11 +41,31 @@ export default async function TeacherDashboard() {
 
   const activeThisWeek = students?.filter(s => s.last_activity && new Date(s.last_activity) > subDays(new Date(), 7)).length || 0
 
-  const activityData = Array.from({ length: 14 }).map((_, i) => ({
-    date: subDays(new Date(), 13 - i).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
-    scritti: Math.floor(Math.random() * 5),
-    compiti: Math.floor(Math.random() * 3)
-  }))
+  // Fetch real statistics for the teacher
+  const [
+    { data: teacherWritings },
+    { data: teacherTasks }
+  ] = await Promise.all([
+    adminSupabase.from("writings").select("id, submitted_at, corrections(overall_score)").in("student_id", students?.map(s => s.id) || []),
+    adminSupabase.from("tasks").select("id, status, completed_at").eq("teacher_id", user.id)
+  ])
+
+  const writingsThisWeek = teacherWritings?.filter(w => new Date(w.submitted_at) > subDays(new Date(), 7)).length || 0
+  const tasksCompletedMonth = teacherTasks?.filter(t => t.status === 'completed' && t.completed_at && new Date(t.completed_at) > subDays(new Date(), 30)).length || 0
+
+  const scores = teacherWritings?.flatMap(w => w.corrections).map((c: any) => c.overall_score).filter(s => s !== undefined) || []
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0
+
+  const activityData = Array.from({ length: 14 }).map((_, i) => {
+    const date = subDays(new Date(), 13 - i)
+    const dateStr = date.toISOString().split('T')[0]
+
+    return {
+      date: date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
+      scritti: teacherWritings?.filter(w => w.submitted_at.startsWith(dateStr)).length || 0,
+      compiti: teacherTasks?.filter(t => t.completed_at?.startsWith(dateStr)).length || 0
+    }
+  })
 
   const profile = Array.isArray(teacher.profiles) ? teacher.profiles[0] : teacher.profiles;
   const teacherFirstName = profile?.full_name?.split(' ')[0] || "Professore";
@@ -68,9 +88,9 @@ export default async function TeacherDashboard() {
       <TeacherStats
         stats={{
           activeStudents: activeThisWeek,
-          writingsThisWeek: 12,
-          tasksCompletedMonth: 8,
-          avgScore: 74
+          writingsThisWeek: writingsThisWeek,
+          tasksCompletedMonth: tasksCompletedMonth,
+          avgScore: avgScore
         }}
         teacherCode={teacher.teacher_code}
       />
