@@ -54,11 +54,13 @@ export function Header({ user, studentData, teacherData, notifications }: Header
       {/* Mobile Toggle & Logo */}
       <div className="flex items-center gap-4 md:hidden">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <Menu className="h-5 w-5 text-gray-600" />
-            </Button>
-          </SheetTrigger>
+          <SheetTrigger
+            render={
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Menu className="h-5 w-5 text-gray-600" />
+              </Button>
+            }
+          />
           <SheetContent side="left" className="p-0 w-[280px] border-none shadow-2xl">
             <Sidebar
               user={user}
