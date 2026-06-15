@@ -85,6 +85,9 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
   }
 
   const handleSend = async () => {
+    const selectedWriting = recentWritings.find(w => w.id === selectedWritingId)
+    const correctionId = selectedWriting?.corrections?.[0]?.id
+
     try {
       const response = await fetch("/api/send-task", {
         method: "POST",
@@ -92,7 +95,7 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
         body: JSON.stringify({
           studentId: student.id,
           task: previewTask,
-          writingId: selectedWritingId,
+          correctionId: correctionId,
           exerciseType
         }),
       })

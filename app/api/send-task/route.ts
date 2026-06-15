@@ -6,19 +6,24 @@ export async function POST(request: Request) {
   const supabase = createClient()
   const adminSupabase = createAdminClient()
 
-  const { data: { user: teacherUser } } = await supabase.auth.getUser()
-  if (!teacherUser) {
-    return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", teacherUser.id)
-    .single()
-
   try {
-    const { studentId, task, writingId, exerciseType } = await request.json()
+    const body = await request.json()
+    const { studentId, task, correctionId, exerciseType } = body
+
+    if (!studentId || !task || !exerciseType) {
+      return NextResponse.json({ error: "Dati mancanti nel corpo della richiesta" }, { status: 400 })
+    }
+
+    const { data: { user: teacherUser } } = await supabase.auth.getUser()
+    if (!teacherUser) {
+      return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
+    }
+
+    const { data: profile } = await adminSupabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", teacherUser.id)
+      .single()
 
     // Map Italian UI types to database allowed values
     const typeMap: Record<string, string> = {
@@ -36,18 +41,20 @@ export async function POST(request: Request) {
       .insert({
         student_id: studentId,
         teacher_id: teacherUser.id,
-        correction_id: writingId || null,
-        title: task.title,
-        theory_explanation: task.theory_explanation,
-        exercise_instructions: task.exercise_instructions,
+        correction_id: correctionId || null,
+        title: task.title || "Nuovo Compito",
+        theory_explanation: task.theory_explanation || "",
+        exercise_instructions: task.exercise_instructions || "",
         exercise_type: dbType,
-        exercise_content: task.exercise_content,
+        exercise_content: task.exercise_content || {},
         status: 'pending'
       })
       .select()
       .single()
 
-    if (taskError) throw taskError
+    if (taskError) {
+      return NextResponse.json({ error: `Errore database: ${taskError.message}` }, { status: 500 })
+    }
 
     // 2. Notify Student
     await adminSupabase.from("notifications").insert({
@@ -61,6 +68,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, id: newTask.id })
 
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: error.message, details: error.toString() }, { status: 500 })
   }
 }

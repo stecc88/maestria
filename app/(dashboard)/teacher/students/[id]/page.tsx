@@ -20,6 +20,7 @@ import { ErrorAnalysis } from "@/components/teacher/ErrorAnalysis"
 import { StudentWritingHistory } from "@/components/teacher/StudentWritingHistory"
 import { GenerateTaskIA } from "@/components/teacher/GenerateTaskIA"
 import { formatDate, formatRelative } from "@/lib/utils/date"
+import { SafeRelativeTime } from "@/components/ui/safe-relative-time"
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
@@ -121,7 +122,7 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
            <div className="text-right">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ultima attività</p>
               <p className="text-xl font-bold text-gray-900 mt-1">
-                 {formatRelative(student.last_activity)}
+                 <SafeRelativeTime date={student.last_activity} placeholder="Nessuna attività" />
               </p>
            </div>
         </div>

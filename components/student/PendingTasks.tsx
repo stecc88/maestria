@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button"
 import { ClipboardList, Calendar, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils/date"
+import { useState, useEffect } from "react"
 
 interface PendingTasksProps {
   tasks: any[]
 }
 
 export function PendingTasks({ tasks }: PendingTasksProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <Card className="border-none shadow-sm bg-white overflow-hidden">
       <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
@@ -39,7 +46,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
                       </Badge>
                       <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
                         <Calendar className="h-3 w-3" />
-                        <span>{formatDate(task.due_date, 'd MMM')}</span>
+                        <span>{mounted ? formatDate(task.due_date, 'd MMM') : '...'}</span>
                       </div>
                     </div>
                   </div>

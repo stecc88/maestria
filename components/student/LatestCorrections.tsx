@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button"
 import { FileText, Calendar, Eye, Star } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils/date"
+import { useState, useEffect } from "react"
 
 interface LatestCorrectionsProps {
   corrections: any[]
 }
 
 export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <Card className="border-none shadow-sm bg-white overflow-hidden">
       <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
@@ -44,7 +51,7 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
                         </Badge>
                         <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
                           <Calendar className="h-3 w-3" />
-                          <span>{formatDate(correction.created_at, 'd MMM')}</span>
+                          <span>{mounted ? formatDate(correction.created_at, 'd MMM') : '...'}</span>
                         </div>
                       </div>
                     </div>
