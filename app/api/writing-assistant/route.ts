@@ -52,8 +52,11 @@ FORMATO DELLO SCHEMA FINALE (DEVE iniziare con questa riga):
 • ERRORI DA EVITARE: [2-3 avvertenze specifiche]
 • SUGGERIMENTO GRAMMATICALE: [Un punto grammaticale utile per questo testo al livello ${level}]`
 
+    // CORRECCIÓN: Se actualizó el endpoint a v1 y se utiliza el identificador de modelo correcto
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`
+
     const geminiResponse = await fetchGeminiWithRetry(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      url,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
