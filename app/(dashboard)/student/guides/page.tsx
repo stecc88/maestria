@@ -13,12 +13,11 @@ import { WritingAssistant } from "@/components/student/WritingAssistant"
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const
 const TYPES = [
-  { id: "email_formal", label: "Email formale" },
-  { id: "email_informal", label: "Email informale" },
+  { id: "descrittivo", label: "Descrittivo" },
   { id: "narrativo", label: "Narrativo" },
-  { id: "descriptivo", label: "Descrittivo" },
-  { id: "argumentativo", label: "Argomentativo" },
-  { id: "reclamo", label: "Richiesta/Reclamo" },
+  { id: "espositivo", label: "Espositivo" },
+  { id: "regolativo", label: "Regolativo" },
+  { id: "argomentativo", label: "Argomentativo" },
 ] as const
 
 export default function GuidesPage() {
@@ -27,7 +26,7 @@ export default function GuidesPage() {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([])
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [favorites, setFavorites] = useState<string[]>([])
-  const [assistantType, setAssistantType] = useState("email_formal")
+  const [assistantType, setAssistantType] = useState("narrativo")
   const [assistantLevel, setAssistantLevel] = useState("B1")
 
   // Load favorites from localStorage
@@ -83,7 +82,7 @@ export default function GuidesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tipo di testo</label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tipologia testuale</label>
               <div className="relative">
                 <select
                   value={assistantType}
@@ -150,7 +149,7 @@ export default function GuidesPage() {
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tipo di testo</label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tipologia testuale</label>
               <div className="space-y-2">
                 {TYPES.map(type => (
                   <button
@@ -189,7 +188,7 @@ export default function GuidesPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-display font-bold text-gray-900">Guide alla scrittura 📚</h1>
-                <p className="text-gray-500 mt-1">Impara a strutturare i testi in base al tipo e al livello</p>
+                <p className="text-gray-500 mt-1">Impara a produrre testi in base alla tipologia e al livello QCER</p>
               </div>
               <div className="relative w-full md:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

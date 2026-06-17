@@ -16,28 +16,43 @@ export async function POST(request: Request) {
       `${m.role === "ai" ? "Insegnante" : "Studente"}: ${m.text}`
     ).join("\n")
 
-    const prompt = `Sei un insegnante di italiano esperto e paziente. Aiuta uno studente di livello ${level} a sviluppare le idee per scrivere un testo di tipo "${textType}".
+    const prompt = `Sei un esperto di didattica dell'italiano L2. Aiuta uno studente di livello ${level} (QCER) a sviluppare la competenza testuale per la tipologia: "${textType}".
+
+OBIETTIVO PEDAGOGICO:
+Non limitarti a un formato, ma insegna a produrre un testo efficace per la tipologia "${textType}" al livello ${level}.
+
+FLUSSO DI LAVORO:
+1. Identifica lo scopo comunicativo dello studente.
+2. Spiega brevemente la struttura ideale per un testo "${textType}".
+3. Fornisce lessico e strutture grammaticali specifiche per il livello ${level}.
+4. Avverte su possibili errori frequenti relativi a questa tipologia.
+5. Aiuta a creare una scaletta/outline.
 
 Storico della conversazione:
 ${historyText}
 
 ${userInput === "start"
-  ? "Inizia la conversazione con una domanda semplice per capire di cosa vuole scrivere lo studente."
+  ? `Inizia salutando e chiedendo allo studente cosa vorrebbe scrivere (ad esempio, se ${textType} è narrativo, chiedi di un evento passato). Spiega brevemente lo scopo di un testo ${textType}.`
   : `Ultima risposta dello studente: "${userInput}"`
 }
 
-Regole:
-- Fai UNA sola domanda alla volta, semplice e adatta al livello ${level}
-- Dopo 3-4 risposte dello studente, genera uno SCHEMA con questo formato esatto:
-  📝 SCHEMA DEL TUO TESTO:
-  • Apertura: [idea concreta]
-  • Sviluppo: [idea concreta]
-  • Conclusione: [idea concreta]
-  💡 5 espressioni utili: [frase1], [frase2], [frase3], [frase4], [frase5]
-- Rispondi SOLO in italiano semplice adatto al livello ${level}`
+REGOLE DI RISPOSTA:
+- Rispondi SEMPRE e SOLO in italiano adatto al livello ${level}.
+- Fai UNA sola domanda alla volta per guidare lo studente.
+- Sii incoraggiante ma rigoroso dal punto di vista linguistico.
+- Quando hai abbastanza informazioni (dopo 4-5 scambi), genera lo schema finale.
+
+FORMATO DELLO SCHEMA FINALE (DEVE iniziare con questa riga):
+📝 SCHEMA DEL TUO TESTO:
+• SCOPO: [Spiega lo scopo comunicativo]
+• STRUTTURA: [Breve spiegazione della struttura]
+• SCALETTA: [Punti chiave da seguire]
+• LESSICO CHIAVE: [5-8 parole/espressioni di livello ${level}]
+• ERRORI DA EVITARE: [2-3 avvertenze specifiche]
+• SUGGERIMENTO GRAMMATICALE: [Un punto grammaticale utile per questo testo al livello ${level}]`
 
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
