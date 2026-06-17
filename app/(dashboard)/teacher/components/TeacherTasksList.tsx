@@ -18,6 +18,7 @@ import {
   ChevronRight,
   AlertCircle
 } from "lucide-react";
+import Link from "next/link";
 import { formatDate } from "@/lib/utils/date";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -220,13 +221,15 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                         </Button>
                       )}
 
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="w-full rounded-xl font-bold gap-2 h-10"
-                      >
-                        Vedi dettaglio <ChevronRight className="h-4 w-4" />
-                      </Button>
+                      <Link href={`/teacher/tasks/${task.id}`}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="w-full rounded-xl font-bold gap-2 h-10"
+                        >
+                          Vedi dettaglio <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
