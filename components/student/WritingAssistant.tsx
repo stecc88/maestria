@@ -99,7 +99,11 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
         <span className="font-bold text-primary text-sm flex items-center gap-2">
           <Sparkles className="h-4 w-4" /> Assistente alla scrittura
         </span>
-        <button onClick={() => setIsOpen(false)}>
+        <button
+          onClick={() => setIsOpen(false)}
+          aria-label="Chiudi"
+          title="Chiudi"
+        >
           <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
         </button>
       </div>
@@ -137,7 +141,10 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
       )}
 
       <div className="border-t border-gray-100 p-3 flex gap-2">
+        <label htmlFor="assistant-input" className="sr-only">Rispondi qui</label>
         <Textarea
+          id="assistant-input"
+          name="message"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Rispondi qui..."
@@ -153,6 +160,8 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
           onClick={sendMessage}
           disabled={isLoading || !input.trim()}
           className="bg-primary hover:bg-primary-dark shrink-0"
+          aria-label="Invia"
+          title="Invia"
         >
           <Send className="h-4 w-4" />
         </Button>
