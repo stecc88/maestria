@@ -14,7 +14,8 @@ import {
   MessageSquare,
   FileEdit,
   ClipboardList,
-  Mail
+  Mail,
+  Star
 } from "lucide-react"
 
 export interface GuideContent {
