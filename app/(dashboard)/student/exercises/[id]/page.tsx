@@ -115,6 +115,9 @@ export default function ExerciseDetailPage() {
               <span key={i} className="inline-block mx-1 relative group">
                 {blank.options ? (
                   <select
+                    id={`blank-${id}`}
+                    name={`blank-${id}`}
+                    aria-label={`Risposta ${id}`}
                     value={answers[id] || ""}
                     onChange={(e) => handleInputChange(id, e.target.value)}
                     disabled={!!result}
@@ -133,6 +136,9 @@ export default function ExerciseDetailPage() {
                 ) : (
                   <div className="inline-flex flex-col">
                     <input
+                      id={`blank-${id}`}
+                      name={`blank-${id}`}
+                      aria-label={`Risposta ${id}`}
                       type="text"
                       value={answers[id] || ""}
                       onChange={(e) => handleInputChange(id, e.target.value)}
