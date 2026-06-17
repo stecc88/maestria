@@ -84,9 +84,11 @@ export default function GuidesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tipologia testuale</label>
+              <label htmlFor="assistant-type" className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tipologia testuale</label>
               <div className="relative">
                 <select
+                  id="assistant-type"
+                  aria-label="Tipologia testuale"
                   value={assistantType}
                   onChange={(e) => setAssistantType(e.target.value)}
                   className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
@@ -97,9 +99,11 @@ export default function GuidesPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Livello</label>
+              <label htmlFor="assistant-level" className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Livello</label>
               <div className="relative">
                 <select
+                  id="assistant-level"
+                  aria-label="Livello"
                   value={assistantLevel}
                   onChange={(e) => setAssistantLevel(e.target.value)}
                   className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
@@ -194,7 +198,10 @@ export default function GuidesPage() {
               </div>
               <div className="relative w-full md:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <label htmlFor="search-guides" className="sr-only">Cerca guide</label>
                 <Input
+                  id="search-guides"
+                  name="search"
                   placeholder="Cerca guide..."
                   className="pl-10 bg-white border-gray-200 rounded-xl focus:ring-primary"
                   value={searchQuery}

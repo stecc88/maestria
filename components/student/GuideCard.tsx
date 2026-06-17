@@ -53,6 +53,8 @@ export function GuideCard({ guide, isFavorite, onToggleFavorite, featured }: Gui
                   "p-2 rounded-full transition-colors",
                   isFavorite ? "text-accent bg-accent/10" : "text-gray-300 hover:text-accent hover:bg-accent/5"
                 )}
+                aria-label={isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+                title={isFavorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
               >
                 <Star className={cn("h-4 w-4", isFavorite && "fill-accent")} />
               </button>
