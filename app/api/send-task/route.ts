@@ -8,9 +8,26 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { studentId, task, correctionId, exerciseType } = body
+    const {
+      studentId,
+      task,
+      correctionId,
+      exerciseType,
+      title,
+      theoryExplanation,
+      exerciseInstructions,
+      exerciseContent
+    } = body
 
-    if (!studentId || !task || !exerciseType) {
+    // Support both direct task object or flat parameters
+    const finalTask = task || {
+      title,
+      theory_explanation: theoryExplanation,
+      exercise_instructions: exerciseInstructions,
+      exercise_content: exerciseContent
+    }
+
+    if (!studentId || !finalTask || !exerciseType) {
       return NextResponse.json({ error: "Dati mancanti nel corpo della richiesta" }, { status: 400 })
     }
 
@@ -42,11 +59,11 @@ export async function POST(request: Request) {
         student_id: studentId,
         teacher_id: teacherUser.id,
         correction_id: correctionId || null,
-        title: task.title || "Nuovo Compito",
-        theory_explanation: task.theory_explanation || "",
-        exercise_instructions: task.exercise_instructions || "",
+        title: finalTask.title || "Nuovo Compito",
+        theory_explanation: finalTask.theory_explanation || "",
+        exercise_instructions: finalTask.exercise_instructions || "",
         exercise_type: dbType,
-        exercise_content: task.exercise_content || {},
+        exercise_content: finalTask.exercise_content || {},
         status: 'pending'
       })
       .select()
@@ -61,7 +78,7 @@ export async function POST(request: Request) {
       user_id: studentId,
       type: 'new_task',
       title: '📝 Nuovo compito dal tuo insegnante',
-      message: `Il Prof. ${profile?.full_name || teacherUser.user_metadata.full_name} ti ha inviato il compito "${task.title}". Al lavoro!`,
+      message: `Il Prof. ${profile?.full_name || teacherUser.user_metadata.full_name} ti ha inviato il compito "${finalTask.title}". Al lavoro!`,
       related_id: newTask.id
     })
 

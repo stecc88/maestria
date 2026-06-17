@@ -30,6 +30,8 @@ Analizza questi errori e crea:
 1. Una spiegazione teorica chiara e pedagogica della regola grammaticale principale (in italiano semplice, con esempi evidenziati in grassetto).
 2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel} che lavori specificamente su quell'errore.
 
+IMPORTANTE: Se stai generando un compito "simile" a uno precedente, genera un nuovo esercizio completamente diverso da quello precedente, ma che lavori sullo stesso errore grammaticale e usi lo stesso tipo di esercizio. Usa frasi, esempi e contesti DIVERSI dal compito originale.
+
 Genera il campo exercise_content seguendo SEMPRE questa struttura esatta in base al tipo richiesto:
 
 Se tipo è 'completamento':

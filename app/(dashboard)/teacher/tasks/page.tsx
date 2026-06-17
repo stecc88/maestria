@@ -11,17 +11,26 @@ export default async function TeacherTasksPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Fetch Tasks with Student profiles using admin client
+  // Fetch Tasks with Student profiles and Submissions using admin client
   const { data: tasks } = await adminSupabase
     .from("tasks")
     .select(`
       *,
       students (
         id,
+        target_level,
         profiles (
           full_name,
           avatar_url
         )
+      ),
+      task_submissions (
+        ai_score,
+        ai_feedback,
+        submitted_at
+      ),
+      corrections (
+        error_categories
       )
     `)
     .eq("teacher_id", user.id)
