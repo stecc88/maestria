@@ -6,10 +6,12 @@ import {
   User,
   Clock,
   CheckCircle2,
+  XCircle,
   Trophy,
   MessageSquare,
   FileText,
-  AlertCircle
+  AlertCircle,
+  Info
 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -18,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils/date"
 import { cn } from "@/lib/utils"
+import ReactMarkdown from 'react-markdown'
 
 export default async function TeacherTaskDetailPage({ params }: { params: { id: string } }) {
   const adminSupabase = createAdminClient()
@@ -61,6 +64,93 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
   const studentProfile = task.students?.profiles
   const isCompleted = task.status === 'completed'
 
+  const statusMap: Record<string, { label: string; color: string }> = {
+    pending: { label: 'In attesa', color: 'bg-gray-100 text-gray-700' },
+    started: { label: 'In corso', color: 'bg-blue-100 text-blue-700' },
+    in_progress: { label: 'In corso', color: 'bg-blue-100 text-blue-700' },
+    completed: { label: 'Completato', color: 'bg-green-100 text-green-700' },
+  }
+
+  const exerciseTypeMap: Record<string, string> = {
+    completar: 'Completamento',
+    transformacion: 'Trasformazione',
+    reescritura: 'Riscrittura',
+    escritura: 'Scrittura',
+  }
+
+  const renderStudentResponse = () => {
+    if (!submission) return null;
+
+    const type = task.exercise_type;
+    const content = submission.content;
+
+    try {
+      if (type === 'completar' || type === 'transformacion') {
+        const answers = typeof content === 'string' && content.startsWith('{') ? JSON.parse(content) : content;
+        const items = task.exercise_content?.items || [];
+
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {items.map((item: any) => {
+              const studentAns = answers[item.id.toString()]?.trim();
+              const isCorrect = studentAns?.toLowerCase() === item.correct_answer.trim().toLowerCase();
+
+              return (
+                <div key={item.id} className="p-4 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2 transition-all hover:shadow-md">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center justify-between">
+                    <span>Quesito {item.id}</span>
+                    {isCorrect ? (
+                      <Badge className="bg-green-100 text-green-700 border-none flex items-center gap-1 text-[10px] px-2 py-0">
+                        <CheckCircle2 className="h-3 w-3" /> Corretto
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-red-100 text-red-700 border-none flex items-center gap-1 text-[10px] px-2 py-0">
+                        <XCircle className="h-3 w-3" /> Errato
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex-grow">
+                    {type === 'completar' ? (
+                      <p className="text-gray-800 leading-snug">
+                        {item.sentence_before} <span className={cn("font-bold px-1 rounded", isCorrect ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700 underline decoration-2")}>{studentAns || '(vuoto)'}</span> {item.sentence_after}
+                      </p>
+                    ) : (
+                      <div className="space-y-1.5">
+                        <div className="flex items-start gap-2 bg-gray-50/50 p-2 rounded-lg border border-gray-100/50">
+                          <Info className="h-3 w-3 text-gray-400 mt-0.5 shrink-0" />
+                          <p className="text-xs text-gray-500 italic">{item.original_sentence}</p>
+                        </div>
+                        <p className="text-gray-800 font-medium pl-1">
+                          <span className={cn(isCorrect ? "text-green-600" : "text-red-600")}>{studentAns || '(vuoto)'}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {!isCorrect && (
+                    <div className="mt-1 pt-2 border-t border-gray-50">
+                      <p className="text-[10px] font-bold text-green-600 uppercase tracking-tighter mb-0.5">Risposta corretta:</p>
+                      <p className="text-sm font-bold text-green-700">{item.correct_answer}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+    } catch (e) {
+      console.error("Error parsing submission content", e);
+    }
+
+    return (
+      <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-lg leading-relaxed text-gray-800 italic prose prose-slate max-w-none font-body">
+         <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
       <header className="space-y-4">
@@ -86,12 +176,10 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                </div>
              )}
              <Badge className={cn(
-               "px-4 py-2 rounded-xl text-xs font-bold border-none capitalize",
-               task.status === 'completed' ? "bg-green-100 text-green-700" :
-               task.status === 'in_progress' ? "bg-blue-100 text-blue-700" :
-               "bg-gray-100 text-gray-700"
+               "px-4 py-2 rounded-xl text-xs font-bold border-none",
+               statusMap[task.status]?.color || "bg-gray-100 text-gray-700"
              )}>
-                {task.status}
+                {statusMap[task.status]?.label || task.status}
              </Badge>
           </div>
         </div>
@@ -107,8 +195,8 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                    Spiegazione Teorica Assegnata
                 </CardTitle>
              </CardHeader>
-             <CardContent className="p-8 prose prose-slate max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: task.theory_explanation.replace(/\n/g, '<br/>') }} />
+             <CardContent className="p-8 prose prose-slate max-w-none font-body">
+                <ReactMarkdown>{task.theory_explanation}</ReactMarkdown>
              </CardContent>
           </Card>
 
@@ -121,19 +209,25 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                      Risposta dello Studente
                   </CardTitle>
                </CardHeader>
-               <CardContent className="p-8 space-y-6">
-                  <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-lg leading-relaxed text-gray-800 italic">
-                     &ldquo;{submission.content}&rdquo;
+               <CardContent className="p-8 space-y-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                       <div className="flex items-center gap-2 text-primary/60">
+                          <FileText className="h-4 w-4" />
+                          <span className="text-xs font-black uppercase tracking-widest">Dettaglio Risposte</span>
+                       </div>
+                    </div>
+                    {renderStudentResponse()}
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4 pt-6 border-t border-gray-100">
                      <div className="flex items-center gap-2 text-primary">
                         <MessageSquare className="h-5 w-5" />
                         <h4 className="font-bold">Feedback dell&apos;IA</h4>
                      </div>
-                     <p className="text-gray-600 leading-relaxed bg-white p-6 rounded-2xl border border-gray-50 shadow-sm">
-                        {submission.ai_feedback}
-                     </p>
+                     <div className="text-gray-600 leading-relaxed bg-white p-6 rounded-2xl border border-gray-100 shadow-sm prose prose-slate max-w-none font-body">
+                        <ReactMarkdown>{submission.ai_feedback}</ReactMarkdown>
+                     </div>
                   </div>
                </CardContent>
             </Card>
@@ -171,7 +265,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                    </div>
                    <div>
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tipo di Esercizio</p>
-                      <Badge className="bg-secondary text-white border-none capitalize">{task.exercise_type}</Badge>
+                      <Badge className="bg-secondary text-white border-none">{exerciseTypeMap[task.exercise_type] || task.exercise_type}</Badge>
                    </div>
                    {task.corrections?.writings && (
                      <div>
