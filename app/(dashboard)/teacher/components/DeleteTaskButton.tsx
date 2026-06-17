@@ -5,13 +5,25 @@ import { useRouter } from "next/navigation"
 import { Trash2, Loader2, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast"
+import { cn } from "@/lib/utils"
 
 interface DeleteTaskButtonProps {
   taskId: string
   taskTitle: string
+  variant?: "outline" | "ghost" | "destructive" | "secondary"
+  size?: "default" | "sm" | "lg" | "icon"
+  className?: string
+  label?: string
 }
 
-export function DeleteTaskButton({ taskId, taskTitle }: DeleteTaskButtonProps) {
+export function DeleteTaskButton({
+  taskId,
+  taskTitle,
+  variant = "outline",
+  size = "default",
+  className,
+  label = "Elimina"
+}: DeleteTaskButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
@@ -96,11 +108,16 @@ export function DeleteTaskButton({ taskId, taskTitle }: DeleteTaskButtonProps) {
 
   return (
     <Button
-      variant="outline"
+      variant={variant}
+      size={size}
       onClick={() => setIsOpen(true)}
-      className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 gap-2 rounded-xl font-bold"
+      className={cn(
+        variant === "outline" && "border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700",
+        "gap-2 rounded-xl font-bold",
+        className
+      )}
     >
-      <Trash2 className="h-4 w-4" /> Elimina
+      <Trash2 className="h-4 w-4" /> {label}
     </Button>
   )
 }
