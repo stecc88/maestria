@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils/date";
+import { DeleteTaskButton } from "./DeleteTaskButton";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
@@ -230,6 +231,14 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                           Vedi dettaglio <ChevronRight className="h-4 w-4" />
                         </Button>
                       </Link>
+
+                      <DeleteTaskButton
+                        taskId={task.id}
+                        taskTitle={task.title}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-red-500 hover:text-red-700 hover:bg-red-50 h-10"
+                      />
                     </div>
                   </div>
                 </CardContent>
