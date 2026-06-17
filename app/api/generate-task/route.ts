@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
-import { safeParseJson } from "@/lib/gemini/client"
+import { validateAiResponse } from "@/lib/gemini/client"
+import { taskGenerationSchema } from "@/lib/validations/ai"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -51,7 +52,7 @@ Rispondi UNICAMENTE con un oggetto JSON valido senza markdown, esattamente con q
 
     const geminiData = await geminiResponse.json()
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
-    const geminiResult = safeParseJson(rawText)
+    const geminiResult = await validateAiResponse(rawText, taskGenerationSchema)
 
     if (!geminiResult) {
       return NextResponse.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })

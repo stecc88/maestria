@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
-import { safeParseJson } from "@/lib/gemini/client"
+import { validateAiResponse } from "@/lib/gemini/client"
+import { taskEvaluationSchema } from "@/lib/validations/ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
@@ -45,7 +46,7 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
 
     const geminiData = await geminiResponse.json()
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
-    const geminiResult = safeParseJson(rawText)
+    const geminiResult = await validateAiResponse(rawText, taskEvaluationSchema)
 
     if (!geminiResult) {
       return NextResponse.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })

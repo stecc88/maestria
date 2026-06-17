@@ -1,0 +1,23 @@
+
+> maestria@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.3
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.7s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1782ms (127 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 14.3s (1706 modules)
+ GET / 200 in 15722ms
+ ✓ Compiled in 1657ms (833 modules)
+ ○ Compiling /login ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled /login in 8.1s (1840 modules)
+ GET /login 200 in 8686ms
+ GET / 200 in 136ms
+ ✓ Compiled in 5.4s (916 modules)
+ ✓ Compiled in 6.1s (916 modules)
