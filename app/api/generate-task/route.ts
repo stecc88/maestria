@@ -30,12 +30,49 @@ Analizza questi errori e crea:
 1. Una spiegazione teorica chiara e pedagogica della regola grammaticale principale (in italiano semplice, con esempi evidenziati in grassetto).
 2. Un esercizio di tipo "${exerciseType}" appropriato per il livello ${studentLevel} che lavori specificamente su quell'errore.
 
+Genera il campo exercise_content seguendo SEMPRE questa struttura esatta in base al tipo richiesto:
+
+Se tipo è 'completamento':
+{
+  "type": "completamento",
+  "items": [
+    { "id": 1, "sentence_before": "testo prima dello spazio", "sentence_after": "testo dopo lo spazio", "correct_answer": "risposta corretta", "options": ["opzione1", "opzione2", "opzione3"] }
+  ]
+}
+DEVI generare ESATTAMENTE 8 items completi e reali. MAI lasciare items vuoti o generici.
+
+Se tipo è 'trasformazione':
+{
+  "type": "trasformazione",
+  "items": [
+    { "id": 1, "original_sentence": "frase originale", "instruction": "istruzione di trasformazione", "correct_answer": "risposta corretta" }
+  ]
+}
+DEVI generare ESATTAMENTE 6 items completi.
+
+Se tipo è 'riscrittura':
+{
+  "type": "riscrittura",
+  "original_text": "testo con errori reali",
+  "instruction": "istruzione di riscrittura"
+}
+
+Se tipo è 'scrittura':
+{
+  "type": "scrittura",
+  "prompt": "consegna specifica",
+  "min_words": 80,
+  "max_words": 120
+}
+
+REGOLA ASSOLUTA: exercise_content non può MAI essere vuoto, generico o solo testo descrittivo. Deve sempre contenere il contenuto completo e pronto per essere risolto dallo studente.
+
 Rispondi UNICAMENTE con un oggetto JSON valido senza markdown, esattamente con questa struttura:
 {
   "title": "Titolo accattivante in italiano",
   "theory_explanation": "Spiegazione teorica in formato markdown (usa il grassetto per gli esempi)",
   "exercise_instructions": "Istruzioni passo dopo passo per lo studente",
-  "exercise_content": "Oggetto o stringa con il contenuto dell'esercizio (es: testo con [___] o lista di frasi)",
+  "exercise_content": { ... },
   "error_focus": "Breve descrizione dell'errore principale su cui si focalizza il compito"
 }`
 
