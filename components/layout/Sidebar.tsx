@@ -10,6 +10,7 @@ import {
   FileText,
   BookOpen,
   ClipboardList,
+  GraduationCap,
   Trophy,
   Settings,
   LogOut,
@@ -50,6 +51,7 @@ const studentNavItems = [
   { label: "Scrittura", href: "/student/write", icon: PenLine },
   { label: "Correzioni", href: "/student/corrections", icon: FileText },
   { label: "Guide", href: "/student/guides", icon: BookOpen },
+  { label: "Esercizi CILS", href: "/student/exercises", icon: GraduationCap },
   { label: "Compiti", href: "/student/tasks", icon: ClipboardList, badge: true },
   { label: "Classifica", href: "/student/ranking", icon: Trophy },
 ]

@@ -240,3 +240,48 @@ BEGIN
   UPDATE students SET xp_points = xp_points + xp_amount WHERE id = student_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Tabla de ejercicios de estructura (CILS)
+CREATE TABLE structure_exercises (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  level TEXT NOT NULL CHECK (level IN ('A2', 'B1', 'B2', 'C1')),
+  exercise_type TEXT NOT NULL CHECK (exercise_type IN ('aggettivi_pronomi', 'verbi', 'scelta_multipla', 'situazionale')),
+  title TEXT NOT NULL,
+  theory TEXT NOT NULL,
+  content JSONB NOT NULL, -- Contenido para el frontend (sin respuestas)
+  solutions JSONB NOT NULL, -- Respuestas correctas y explicaciones
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla de intentos de ejercicios de estructura
+CREATE TABLE structure_exercise_attempts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  exercise_id UUID NOT NULL REFERENCES structure_exercises(id) ON DELETE CASCADE,
+  student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  answers JSONB NOT NULL,
+  score INTEGER NOT NULL CHECK (score BETWEEN 0 AND 100),
+  feedback JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Índices
+CREATE INDEX idx_structure_exercises_student ON structure_exercises(student_id);
+CREATE INDEX idx_structure_attempts_exercise ON structure_exercise_attempts(exercise_id);
+CREATE INDEX idx_structure_attempts_student ON structure_exercise_attempts(student_id);
+
+-- RLS
+ALTER TABLE structure_exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE structure_exercise_attempts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Students can view own structure exercises" ON structure_exercises
+  FOR SELECT USING (auth.uid() = student_id);
+
+CREATE POLICY "Students can insert own structure exercises" ON structure_exercises
+  FOR INSERT WITH CHECK (auth.uid() = student_id);
+
+CREATE POLICY "Students can view own structure attempts" ON structure_exercise_attempts
+  FOR SELECT USING (auth.uid() = student_id);
+
+CREATE POLICY "Students can insert own structure attempts" ON structure_exercise_attempts
+  FOR INSERT WITH CHECK (auth.uid() = student_id);
