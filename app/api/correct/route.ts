@@ -83,6 +83,12 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
     )
 
     const geminiData = await geminiResponse.json()
+
+    if (!geminiResponse.ok) {
+      console.error("Gemini Correction API Error Detail:", geminiData);
+      const errorMsg = geminiData.error?.message || `AI Service Error (${geminiResponse.status})`;
+      throw new Error(errorMsg);
+    }
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
     const correction = await validateAiResponse(rawText, correctionSchema)
 

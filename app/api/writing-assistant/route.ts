@@ -62,18 +62,21 @@ FORMATO DELLO SCHEMA FINALE (DEVE iniziare con questa riga):
       }
     )
 
-    if (!geminiResponse.ok) {
-      const errorData = await geminiResponse.json().catch(() => ({}));
-      console.error("Gemini API Error:", errorData);
-      throw new Error(`Gemini API returned ${geminiResponse.status}`);
-    }
-
     const geminiData = await geminiResponse.json()
-    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Mi dispiace, riprova."
+
+    if (!geminiResponse.ok) {
+      console.error("Gemini API Error Detail:", geminiData);
+      const errorMsg = geminiData.error?.message || `Gemini API returned ${geminiResponse.status}`;
+      throw new Error(errorMsg);
+    }
+    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Mi dispiace, l'IA non ha restituito una risposta valida."
 
     return NextResponse.json({ text })
   } catch (error: any) {
-    console.error("Writing Assistant Error:", error);
-    return NextResponse.json({ text: "Errore del server o dell'IA. Riprova tra qualche istante." }, { status: 500 })
+    console.error("Writing Assistant Error:", error)
+    return NextResponse.json({
+      text: "Errore del server o dell'IA. Per favore, riprova tra qualche istante.",
+      details: error.message
+    }, { status: 500 })
   }
 }

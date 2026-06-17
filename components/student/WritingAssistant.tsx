@@ -40,7 +40,10 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
       })
 
       const data = await response.json()
-      if (!response.ok) throw new Error(data.text || "Errore dell'IA")
+      if (!response.ok) {
+        console.error("AI Assistant Error Details:", data.details)
+        throw new Error(data.text || "Errore dell'IA")
+      }
 
       return data.text
     } catch (e: any) {
