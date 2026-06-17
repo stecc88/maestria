@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
-import { validateAiResponse } from "@/lib/gemini/client"
+import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { taskEvaluationSchema } from "@/lib/validations/ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
 
@@ -73,7 +73,7 @@ Fornisci:
 
 Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
-      const geminiResponse = await fetch(
+      const geminiResponse = await fetchGeminiWithRetry(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
           method: "POST",

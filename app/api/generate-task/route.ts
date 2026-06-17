@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
-import { validateAiResponse } from "@/lib/gemini/client"
+import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { taskGenerationSchema } from "@/lib/validations/ai"
 
 export async function POST(request: Request) {
@@ -78,7 +78,7 @@ Rispondi UNICAMENTE con un oggetto JSON valido senza markdown, esattamente con q
   "error_focus": "Breve descrizione dell'errore principale su cui si focalizza il compito"
 }`
 
-    const geminiResponse = await fetch(
+    const geminiResponse = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
