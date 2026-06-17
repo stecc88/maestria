@@ -32,28 +32,44 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
   }
 
   const askGemini = async (history: Message[], userInput: string) => {
-    const response = await fetch("/api/writing-assistant", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: history, textType, level, userInput })
-    })
-    const data = await response.json()
-    return data.text
+    try {
+      const response = await fetch("/api/writing-assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history, textType, level, userInput })
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.text || "Errore dell'IA")
+
+      return data.text
+    } catch (e: any) {
+      console.error("AI Assistant Fetch Error:", e)
+      return "Spiacenti, si è verificato un errore di connessione con l'insegnante virtuale. Per favore riprova tra poco."
+    }
   }
 
   const sendMessage = async () => {
-    if (!input.trim()) return
+    if (!input.trim() || isLoading) return
+
     const userMessage: Message = { role: "user", text: input }
     const newMessages = [...messages, userMessage]
     setMessages(newMessages)
     setInput("")
     setIsLoading(true)
-    const aiResponse = await askGemini(newMessages, input)
-    setMessages([...newMessages, { role: "ai", text: aiResponse }])
-    if (aiResponse.includes("SCHEMA DEL TUO TESTO")) {
-      setSchema(aiResponse)
+
+    try {
+      const aiResponse = await askGemini(newMessages, input)
+      setMessages([...newMessages, { role: "ai", text: aiResponse }])
+
+      if (aiResponse.includes("SCHEMA DEL TUO TESTO")) {
+        setSchema(aiResponse)
+      }
+    } catch (error) {
+      console.error("Error sending message:", error)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   if (!isOpen) {
