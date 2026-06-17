@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { Search, Filter, Star, BookOpen, X, Sparkles, ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
@@ -35,13 +35,15 @@ export default function GuidesPage() {
     if (saved) setFavorites(JSON.parse(saved))
   }, [])
 
-  const toggleFavorite = (id: string) => {
-    const newFavorites = favorites.includes(id)
-      ? favorites.filter(f => f !== id)
-      : [...favorites, id]
-    setFavorites(newFavorites)
-    localStorage.setItem("maestria_favorites", JSON.stringify(newFavorites))
-  }
+  const toggleFavorite = useCallback((id: string) => {
+    setFavorites(prev => {
+      const newFavorites = prev.includes(id)
+        ? prev.filter(f => f !== id)
+        : [...prev, id]
+      localStorage.setItem("maestria_favorites", JSON.stringify(newFavorites))
+      return newFavorites
+    })
+  }, [])
 
   const toggleLevel = (level: string) => {
     setSelectedLevels(prev =>
@@ -58,14 +60,14 @@ export default function GuidesPage() {
   const filteredGuides = useMemo(() => {
     return WRITING_GUIDES.filter(guide => {
       const matchesSearch = guide.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           guide.description.toLowerCase().includes(searchQuery.toLowerCase())
+                            guide.description.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesLevel = selectedLevels.length === 0 || selectedLevels.includes(guide.level)
       const matchesType = selectedTypes.length === 0 || selectedTypes.includes(guide.type)
       return matchesSearch && matchesLevel && matchesType
     })
   }, [searchQuery, selectedLevels, selectedTypes])
 
-  const recommendedGuides = WRITING_GUIDES.slice(0, 2)
+  const recommendedGuides = useMemo(() => WRITING_GUIDES.slice(0, 2), [])
 
   return (
     <div className="space-y-12">
