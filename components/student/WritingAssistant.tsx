@@ -41,14 +41,19 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
 
       const data = await response.json()
       if (!response.ok) {
-        console.error("AI Assistant Error Details:", data.details)
-        throw new Error(data.text || "Errore dell'IA")
+        // Use details if available, else text, else fallback
+        const errMsg = data.details || data.text || "Errore dell'IA"
+        console.error("AI Assistant Error Details:", errMsg)
+        throw new Error(errMsg)
       }
 
       return data.text
     } catch (e: any) {
       console.error("AI Assistant Fetch Error:", e)
-      return "Spiacenti, si è verificato un errore di connessione con l'insegnante virtuale. Per favore riprova tra poco."
+      const friendlyMsg = e.message?.includes("demand")
+        ? "Il servizio è molto richiesto al momento. Per favore, attendi un istante e riprova."
+        : "Spiacenti, si è verificato un errore di connessione. Per favore riprova tra poco."
+      return friendlyMsg
     }
   }
 

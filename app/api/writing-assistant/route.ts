@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
+import { fetchGeminiWithRetry } from "@/lib/gemini/client"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -51,7 +52,7 @@ FORMATO DELLO SCHEMA FINALE (DEVE iniziare con questa riga):
 • ERRORI DA EVITARE: [2-3 avvertenze specifiche]
 • SUGGERIMENTO GRAMMATICALE: [Un punto grammaticale utile per questo testo al livello ${level}]`
 
-    const geminiResponse = await fetch(
+    const geminiResponse = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
