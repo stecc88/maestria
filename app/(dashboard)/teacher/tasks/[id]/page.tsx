@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils/date"
 import { cn } from "@/lib/utils"
 import ReactMarkdown from 'react-markdown'
+import { DeleteTaskButton } from "../../components/DeleteTaskButton"
 
 export default async function TeacherTaskDetailPage({ params }: { params: { id: string } }) {
   const adminSupabase = createAdminClient()
@@ -169,6 +170,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
             </div>
           </div>
           <div className="flex items-center gap-3">
+             <DeleteTaskButton taskId={task.id} taskTitle={task.title} />
              {isCompleted && (
                <div className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20">
                   <Trophy className="h-5 w-5" />
