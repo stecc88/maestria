@@ -15,54 +15,99 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { taskId, content, error_categories, exercise_instructions } = await request.json()
+    const { taskId, content } = await request.json()
 
-    // 1. Evaluate with Gemini
-    const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
+    // 1. Get task details and exercise_content
+    const { data: task, error: taskError } = await adminSupabase
+      .from("tasks")
+      .select("*, students(profiles(full_name))")
+      .eq("id", taskId)
+      .single()
+
+    if (taskError || !task) throw new Error("Task non trovata")
+
+    const exerciseContent = task.exercise_content
+    const exerciseType = exerciseContent?.type || task.exercise_type
+
+    let finalScore = 0
+    let finalFeedback = ""
+    let errorOvercome = false
+
+    // 2. Evaluation Logic
+    if (exerciseType === "completamento" || exerciseType === "trasformazione") {
+      // Objective evaluation
+      const studentAnswers = typeof content === 'string' ? JSON.parse(content) : content
+      const items = exerciseContent.items || []
+      let correctCount = 0
+
+      items.forEach((item: any) => {
+        const studentAns = studentAnswers[item.id.toString()]?.trim().toLowerCase()
+        const correctAns = item.correct_answer.trim().toLowerCase()
+        if (studentAns === correctAns) {
+          correctCount++
+        }
+      })
+
+      finalScore = Math.round((correctCount / items.length) * 100)
+      errorOvercome = finalScore >= 80
+      finalFeedback = `Hai risposto correttamente a ${correctCount} su ${items.length} quesiti. ${finalScore >= 80 ? 'Ottimo lavoro!' : 'Continua a fare pratica.'}`
+    } else {
+      // Subjective evaluation with Gemini (riscrittura, scrittura)
+      const prompt = `IMPORTANTE: Rispondi SEMPRE e SOLO in italiano. Mai in spagnolo o altre lingue.
 
 Sei un insegnante di italiano esperto.
-Lo studente aveva i seguenti errori nello scritto originale: ${JSON.stringify(error_categories)}.
-Gli è stato assegnato questo esercizio per fare pratica: "${exercise_instructions}"
-La risposta dello studente è: "${content}"
+Esercizio assegnato: "${task.exercise_instructions}"
+Tipo di esercizio: "${exerciseType}"
+Contenuto originale/Consegna: ${JSON.stringify(exerciseContent)}
+Risposta dello studente: "${content}"
 
-Valuta se lo studente ha superato l'errore o se mostra un miglioramento significativo.
+Valuta la risposta dello studente considerando:
+1. Correttezza grammaticale.
+2. Rispetto della consegna.
+3. Superamento degli errori segnalati precedentemente: ${JSON.stringify(task.corrections?.error_categories || {})}.
+
 Fornisci:
 - Un punteggio da 0 a 100
 - Un commento motivatore e pedagogico di 2-3 frasi IN ITALIANO.
 - Un booleano che indica se ha superato l'errore principale (error_overcome).
 
-Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string (IN ITALIANO), "error_overcome": boolean }`
+Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        }
+      )
+
+      const geminiData = await geminiResponse.json()
+      const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
+      const geminiResult = await validateAiResponse(rawText, taskEvaluationSchema)
+
+      if (!geminiResult) {
+        throw new Error("Errore nella valutazione dell'IA")
       }
-    )
 
-    const geminiData = await geminiResponse.json()
-    const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
-    const geminiResult = await validateAiResponse(rawText, taskEvaluationSchema)
-
-    if (!geminiResult) {
-      return NextResponse.json({ error: "L'IA ha restituito un formato non valido" }, { status: 500 })
+      finalScore = geminiResult.score
+      finalFeedback = geminiResult.feedback
+      errorOvercome = geminiResult.error_overcome
     }
 
-    // 2. Save Submission
-    const xpEarned = calculateXpForTask(geminiResult.score)
+    // 3. Save Submission
+    const xpEarned = calculateXpForTask(finalScore)
 
     const { data: submission, error: subError } = await adminSupabase
       .from("task_submissions")
       .insert({
         task_id: taskId,
         student_id: user.id,
-        content,
-        ai_feedback: geminiResult.feedback,
-        ai_score: geminiResult.score,
+        content: typeof content === 'string' ? content : JSON.stringify(content),
+        ai_feedback: finalFeedback,
+        ai_score: finalScore,
         xp_earned: xpEarned
       })
       .select()
@@ -70,7 +115,7 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
 
     if (subError) throw subError
 
-    // 3. Update Task
+    // 4. Update Task status
     await adminSupabase
       .from("tasks")
       .update({
@@ -79,42 +124,34 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
       })
       .eq("id", taskId)
 
-    // 4. Update Student XP
-    const { error: rpcError } = await adminSupabase.rpc("increment_xp", {
+    // 5. Update Student XP
+    await adminSupabase.rpc("increment_xp", {
       student_id: user.id,
       xp_amount: xpEarned
     })
 
-    if (rpcError) {
-    }
+    // 6. Notify Teacher
+    const studentName = Array.isArray(task.students)
+      ? (task.students[0] as any).profiles.full_name
+      : (task.students as any).profiles.full_name
 
-    // 5. Notify Teacher
-    const { data: task } = await adminSupabase
-      .from("tasks")
-      .select("title, teacher_id, student_id, students(profiles(full_name))")
-      .eq("id", taskId)
-      .single()
-
-    if (task) {
-      const studentName = Array.isArray(task.students)
-        ? (task.students[0] as any).profiles.full_name
-        : (task.students as any).profiles.full_name
-
-      await adminSupabase.from("notifications").insert({
-        user_id: task.teacher_id,
-        type: 'task_completed',
-        title: '✅ Compito completato',
-        message: `${studentName} ha completato il compito "${task.title}" con un punteggio di ${geminiResult.score}/100`,
-        related_id: taskId
-      })
-    }
+    await adminSupabase.from("notifications").insert({
+      user_id: task.teacher_id,
+      type: 'task_completed',
+      title: '✅ Compito completato',
+      message: `${studentName} ha completato il compito "${task.title}" con un punteggio di ${finalScore}/100`,
+      related_id: taskId
+    })
 
     return NextResponse.json({
-      ...geminiResult,
+      score: finalScore,
+      feedback: finalFeedback,
+      error_overcome: errorOvercome,
       xp_earned: xpEarned
     })
 
   } catch (error: any) {
+    console.error("Task check error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
