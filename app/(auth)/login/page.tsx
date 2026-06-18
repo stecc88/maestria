@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Loader2 } from "lucide-react"
+import { Loader2, Sparkles, ArrowLeft, ShieldCheck } from "lucide-react"
+import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +16,6 @@ import { loginSchema, type LoginValues } from "@/lib/validations/auth"
 import { createClient } from "@/lib/supabase/client"
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const {
@@ -38,11 +38,11 @@ export default function LoginPage() {
 
       if (authError) {
         toast.error(authError.message)
+        setIsLoading(false)
         return
       }
 
       if (authData.user) {
-        // Fetch profile
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role, status')
@@ -51,12 +51,12 @@ export default function LoginPage() {
 
         if (profileError || !profile) {
           toast.error("Profilo utente non trovato. Contatta il supporto.")
+          setIsLoading(false)
           return
         }
 
         toast.success("Bentornato!")
 
-        // Redirection logic
         if (profile.status === 'pending') {
           window.location.href = '/pending-approval'
         } else if (profile.status === 'rejected') {
@@ -67,102 +67,143 @@ export default function LoginPage() {
       }
     } catch (error) {
       toast.error("Si è verificato un errore imprevisto")
-    } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left side - Desktop only */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col items-center justify-center p-12 text-white relative overflow-hidden">
-        <div className="absolute top-10 left-10">
-           <Link href="/" className="flex items-center gap-1">
-              <span className="text-4xl font-display font-bold text-white">M✦</span>
-              <span className="text-2xl font-display font-bold">Maestria</span>
+    <div className="flex min-h-screen bg-white">
+      {/* Left side - Decorative */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gray-900 flex-col items-center justify-center p-12 text-white relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-[80%] h-[80%] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[100px]" />
+
+        <div className="absolute top-12 left-12">
+           <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-primary/20 transition-transform group-hover:rotate-12">
+                M
+              </div>
+              <span className="text-3xl font-black tracking-tighter">Maestria</span>
             </Link>
         </div>
 
-        <div className="z-10 text-center max-w-md">
-          <div className="text-8xl mb-8">🇮🇹</div>
-          <h2 className="text-4xl font-display font-bold mb-6 italic">
-            &quot;La lingua è lo specchio della mente.&quot;
-          </h2>
-          <p className="font-body text-white/80">
-            Accedi per continuare il tuo viaggio verso la padronanza dell&apos;italiano.
-          </p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="z-10 text-center max-w-lg space-y-12"
+        >
+          <div className="space-y-6">
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4 }}
+              className="text-9xl drop-shadow-2xl"
+            >
+              🇮🇹
+            </motion.div>
+            <h2 className="text-5xl font-black leading-tight tracking-tight italic">
+              &quot;La lingua è lo specchio della mente.&quot;
+            </h2>
+            <div className="h-1.5 w-24 bg-primary mx-auto rounded-full" />
+          </div>
 
-        {/* Abstract decoration */}
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
+          <p className="text-xl font-bold text-gray-400 max-w-md mx-auto leading-relaxed">
+            Accedi per continuare el tuo percorso verso la padronanza dell&apos;italiano.
+          </p>
+
+          <div className="grid grid-cols-3 gap-4 pt-12 opacity-50">
+             {[1,2,3].map(i => (
+               <div key={i} className="h-1 bg-white/20 rounded-full" />
+             ))}
+          </div>
+        </motion.div>
+
+        {/* Decorative corner element */}
+        <div className="absolute -bottom-20 -right-20 opacity-10">
+           <Sparkles className="h-96 w-96 text-primary" />
+        </div>
       </div>
 
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-cream">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center lg:text-left">
-            <h1 className="text-3xl font-display font-bold">Accedi</h1>
-            <p className="text-muted-foreground font-body">Benvenuto su Maestria</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 bg-white relative">
+        <div className="absolute top-8 left-8 lg:hidden">
+           <Link href="/">
+             <Button variant="ghost" size="icon" className="rounded-xl h-12 w-12">
+               <ArrowLeft className="h-6 w-6" />
+             </Button>
+           </Link>
+        </div>
+
+        <div className="w-full max-w-md space-y-10">
+          <div className="text-center lg:text-left space-y-3">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest mb-2">
+              <ShieldCheck className="h-3.5 w-3.5" /> Accesso Protetto
+            </div>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Accedi ora</h1>
+            <p className="text-gray-500 font-bold text-lg">Benvenuto su <span className="text-primary">Maestria</span>, el futuro dell&apos;italiano.</p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium font-body" htmlFor="email">
-                Indirizzo email
+              <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1" htmlFor="email">
+                Indirizzo Email
               </label>
               <Input
                 id="email"
                 placeholder="tuo@email.com"
                 type="email"
                 disabled={isLoading}
+                className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 px-6 font-bold focus:bg-white focus:ring-primary/10 transition-all"
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-secondary">{errors.email.message}</p>
+                <p className="text-xs text-secondary font-bold mt-1 ml-1">{errors.email.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium font-body" htmlFor="password">
+              <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1" htmlFor="password">
                 Password
               </label>
               <PasswordInput
                 id="password"
                 disabled={isLoading}
+                className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 px-6 font-bold focus:bg-white transition-all"
                 {...register("password")}
               />
               {errors.password && (
-                <p className="text-sm text-secondary">{errors.password.message}</p>
+                <p className="text-xs text-secondary font-bold mt-1 ml-1">{errors.password.message}</p>
               )}
             </div>
 
             <Button
-              className="w-full bg-primary hover:bg-primary-dark h-11 text-lg font-body font-bold"
+              className="w-full bg-gray-900 hover:bg-black h-16 rounded-2xl text-lg font-black uppercase tracking-widest shadow-2xl shadow-gray-200 transition-all active:scale-95 group relative overflow-hidden border-none"
               disabled={isLoading}
               type="submit"
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Accedi
+              <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <span className="relative z-10 flex items-center gap-2 justify-center">
+                {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : "ENTRA NEL SISTEMA"}
+              </span>
             </Button>
           </form>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-gray-100" />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-cream px-2 text-muted-foreground font-body">oppure</span>
+            <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.3em]">
+              <span className="bg-white px-4 text-gray-300 italic tracking-widest font-black uppercase">oppure</span>
             </div>
           </div>
 
           <Button
             variant="outline"
-            className="w-full border-primary/20 hover:bg-primary/5 h-11 font-body"
+            className="w-full border-gray-100 hover:border-primary/20 hover:bg-primary/5 h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all"
             disabled={isLoading}
-            onClick={() => {}} // Handle Google OAuth
+            onClick={() => {}}
           >
-            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+            <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"
@@ -183,9 +224,9 @@ export default function LoginPage() {
             Continua con Google
           </Button>
 
-          <p className="text-center text-sm font-body text-muted-foreground">
-            Non hai un account?{" "}
-            <Link href="/register" className="text-primary font-bold hover:underline">
+          <p className="text-center text-sm font-bold text-gray-400">
+            Non hai ancora un account? <br className="md:hidden" />
+            <Link href="/register" className="text-primary font-black uppercase tracking-widest hover:underline ml-1">
               Registrati gratis &rarr;
             </Link>
           </p>

@@ -13,7 +13,11 @@ import {
   GraduationCap,
   Check,
   CheckCircle2,
-  XCircle
+  XCircle,
+  ArrowLeft,
+  Sparkles,
+  ShieldCheck,
+  ChevronRight
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -25,12 +29,12 @@ import { signUp, validateTeacherCode } from "@/app/actions/auth"
 import { cn } from "@/lib/utils"
 
 const levels = [
-  { id: "A1", label: "A1", color: "bg-gray-100 border-gray-200 text-gray-600", desc: "Principiante" },
-  { id: "A2", label: "A2", color: "bg-green-100 border-green-200 text-green-700", desc: "Elementare" },
-  { id: "B1", label: "B1", color: "bg-blue-100 border-blue-200 text-blue-700", desc: "Intermedio" },
-  { id: "B2", label: "B2", color: "bg-orange-100 border-orange-200 text-orange-700", desc: "Intermedio superiore" },
-  { id: "C1", label: "C1", color: "bg-purple-100 border-purple-200 text-purple-700", desc: "Avanzato" },
-  { id: "C2", label: "C2", color: "bg-yellow-100 border-yellow-200 text-yellow-700", desc: "Padronanza" },
+  { id: "A1", label: "A1", gradient: "from-gray-400 to-gray-600", bg: "bg-gray-50", desc: "Principiante" },
+  { id: "A2", label: "A2", gradient: "from-emerald-400 to-emerald-600", bg: "bg-emerald-50", desc: "Elementare" },
+  { id: "B1", label: "B1", gradient: "from-blue-400 to-blue-600", bg: "bg-blue-50", desc: "Intermedio" },
+  { id: "B2", label: "B2", gradient: "from-purple-400 to-purple-600", bg: "bg-purple-50", desc: "Intermedio superiore" },
+  { id: "C1", label: "C1", gradient: "from-orange-400 to-orange-600", bg: "bg-orange-50", desc: "Avanzato" },
+  { id: "C2", label: "C2", gradient: "from-red-400 to-red-600", bg: "bg-red-50", desc: "Padronanza" },
 ] as const
 
 export default function RegisterPage() {
@@ -58,7 +62,6 @@ export default function RegisterPage() {
   const password = watch("password") || ""
   const teacherCode = watch("teacher_code")
 
-  // Password strength indicator
   const getPasswordStrength = React.useCallback((pwd: string) => {
     if (!pwd) return 0
     let strength = 0
@@ -72,7 +75,6 @@ export default function RegisterPage() {
   const strength = React.useMemo(() => getPasswordStrength(password), [password, getPasswordStrength])
   const strengthColor = strength <= 25 ? "bg-secondary" : strength <= 75 ? "bg-accent" : "bg-primary"
 
-  // Teacher code debounce check
   React.useEffect(() => {
     if (role !== 'student' || !teacherCode || teacherCode.length < 5) {
       setTeacherStatus({})
@@ -91,104 +93,84 @@ export default function RegisterPage() {
     setIsLoading(true)
     try {
       const result = await signUp(data)
-
-      if (!result) {
-        toast.error("Nessuna risposta ricevuta dal server")
-        return
-      }
-
-      if (result.error) {
-        if (result.error.includes("already registered") || result.error.includes("ya está registrado")) {
-          form.setError("email", { message: "Questa email è già registrata. Prova ad accedere." })
-        } else {
-          toast.error("Errore: " + result.error)
-        }
-        return
-      }
-
-      if (result.success) {
-        if (data.role === 'teacher') {
-          toast.success("Account creato! Un amministratore lo revisionerà presto. Ti avviseremo via email.", { duration: 6000 })
-        } else if (data.teacher_code) {
-          toast.success("Account creato! Controlla la tua email per confermare il tuo account.", { duration: 6000 })
-        } else {
-          toast.success("Account creato! Un amministratore assegnerà il tuo account a un insegnante.", { duration: 6000 })
-        }
-
+      if (result?.success) {
         window.location.href = '/pending-approval'
-      } else {
-        toast.error("Risposta imprevista dal server")
+      } else if (result?.error) {
+        toast.error(result.error)
       }
     } catch (error: any) {
-      toast.error("Errore imprevisto: " + error.message)
+      toast.error("Errore imprevisto")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const nextStep = () => setStep(prev => prev + 1)
-  const prevStep = () => setStep(prev => prev - 1)
-
-  const onError = React.useCallback((errors: any) => {
-    const errorMessages = Object.entries(errors)
-      .map(([field, error]: any) => `${field}: ${error.message}`)
-      .join(', ')
-    toast.error("Campi non validi: " + errorMessages)
-  }, [])
-
   return (
-    <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl p-8 md:p-12">
-        <div className="mb-10 text-center">
-           <Link href="/" className="flex items-center justify-center gap-1 mb-6">
-              <span className="text-4xl font-display font-bold text-primary">M✦</span>
-              <span className="text-2xl font-display font-bold text-foreground">Maestria</span>
-            </Link>
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative Background */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-accent/5 rounded-full blur-[100px]" />
+      </div>
+
+      <div className="w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-16 border border-gray-50 relative">
+        <div className="absolute top-10 right-10">
+           <Link href="/">
+             <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-black hover:scale-110 transition-transform">
+               M
+             </div>
+           </Link>
+        </div>
+
+        <div className="mb-12 text-center space-y-6">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mx-auto">
+              <Sparkles className="h-3.5 w-3.5" /> Registrazione Premium
+            </div>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Crea el tuo account</h1>
             <AuthProgress currentStep={step} totalSteps={3} />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
                 key="step1"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
               >
-                <h2 className="text-2xl font-display font-bold text-center">Come vuoi usare Maestria?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <button
                     type="button"
-                    onClick={() => { setValue("role", "student"); nextStep(); }}
+                    onClick={() => { setValue("role", "student"); setStep(2); }}
                     className={cn(
-                      "flex flex-col items-center p-8 rounded-2xl border-2 transition-all hover:border-primary",
-                      role === "student" ? "border-primary bg-primary/5" : "border-muted"
+                      "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                      role === "student" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-gray-100 hover:border-primary/20"
                     )}
                   >
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                      <GraduationCap className="w-8 h-8 text-primary" />
+                    <div className="p-4 bg-primary/10 rounded-2xl mb-4 group-hover:rotate-12 transition-transform">
+                      <GraduationCap className="h-8 w-8 text-primary" />
                     </div>
-                    <span className="text-xl font-display font-bold">Studente</span>
-                    <p className="text-sm text-muted-foreground text-center mt-2">Per migliorare l&apos;italiano e ricevere correzioni.</p>
-                    {role === "student" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4"><CheckCircle2 className="text-primary" /></motion.div>}
+                    <span className="text-xl font-black text-gray-900">Studente</span>
+                    <p className="text-xs text-gray-400 text-center mt-2 font-bold leading-relaxed">Impara l&apos;italiano con l&apos;analisi IA.</p>
+                    {role === "student" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4 p-1 bg-primary rounded-full"><Check className="text-white h-4 w-4" /></motion.div>}
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => { setValue("role", "teacher"); nextStep(); }}
+                    onClick={() => { setValue("role", "teacher"); setStep(2); }}
                     className={cn(
-                      "flex flex-col items-center p-8 rounded-2xl border-2 transition-all hover:border-primary",
-                      role === "teacher" ? "border-primary bg-primary/5" : "border-muted"
+                      "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                      role === "teacher" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-gray-100 hover:border-primary/20"
                     )}
                   >
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                      <User className="w-8 h-8 text-primary" />
+                    <div className="p-4 bg-blue-100 rounded-2xl mb-4 group-hover:rotate-12 transition-transform">
+                      <User className="h-8 w-8 text-blue-600" />
                     </div>
-                    <span className="text-xl font-display font-bold">Insegnante</span>
-                    <p className="text-sm text-muted-foreground text-center mt-2">Per gestire gli studenti e generare compiti.</p>
-                    {role === "teacher" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4"><CheckCircle2 className="text-primary" /></motion.div>}
+                    <span className="text-xl font-black text-gray-900">Docente</span>
+                    <p className="text-xs text-gray-400 text-center mt-2 font-bold leading-relaxed">Gestisci classi e genera compiti.</p>
+                    {role === "teacher" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4 p-1 bg-primary rounded-full"><Check className="text-white h-4 w-4" /></motion.div>}
                   </button>
                 </div>
               </motion.div>
@@ -197,108 +179,78 @@ export default function RegisterPage() {
             {step === 2 && (
               <motion.div
                 key="step2"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Nome completo</label>
-                    <Input {...register("full_name")} placeholder="Il tuo nome" />
-                    {errors.full_name && <p className="text-xs text-secondary">{errors.full_name.message}</p>}
+                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Nome Completo</label>
+                    <Input {...register("full_name")} placeholder="Mario Rossi" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-bold focus:bg-white" />
+                    {errors.full_name && <p className="text-xs text-secondary font-bold">{errors.full_name.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Indirizzo email</label>
-                    <Input {...register("email")} type="email" placeholder="tuo@email.com" />
-                    {errors.email && <p className="text-xs text-secondary">{errors.email.message}</p>}
+                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Email</label>
+                    <Input {...register("email")} type="email" placeholder="mario@email.it" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-bold focus:bg-white" />
+                    {errors.email && <p className="text-xs text-secondary font-bold">{errors.email.message}</p>}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Password</label>
-                    <PasswordInput {...register("password")} />
-                    <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
+                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Password</label>
+                    <PasswordInput {...register("password")} className="h-12 rounded-xl bg-gray-50/50 border-gray-100 focus:bg-white" />
+                    <div className="h-1 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
                       <div className={cn("h-full transition-all duration-500", strengthColor)} style={{ width: `${strength}%` }} />
                     </div>
-                    {errors.password && <p className="text-xs text-secondary">{errors.password.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Conferma password</label>
-                    <PasswordInput {...register("confirm_password")} />
-                    {errors.confirm_password && <p className="text-xs text-secondary">{errors.confirm_password.message}</p>}
+                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Conferma</label>
+                    <PasswordInput {...register("confirm_password")} className="h-12 rounded-xl bg-gray-50/50 border-gray-100 focus:bg-white" />
                   </div>
                 </div>
 
                 {role === "student" && (
-                  <div className="space-y-6 pt-4 border-t">
+                  <div className="space-y-8 pt-6 border-t border-gray-50">
                     <div className="space-y-4">
-                      <label className="text-sm font-medium">Livello obiettivo</label>
-                      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+                      <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Obiettivo QCER</label>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                         {levels.map((lvl) => (
                           <button
                             key={lvl.id}
                             type="button"
                             onClick={() => setValue("target_level", lvl.id)}
-                            title={lvl.desc}
                             className={cn(
-                              "h-12 rounded-lg border-2 flex items-center justify-center font-bold transition-all",
-                              lvl.color,
-                              watch("target_level") === lvl.id ? "ring-2 ring-primary ring-offset-2" : ""
+                              "h-12 rounded-xl border-2 flex items-center justify-center font-black transition-all text-sm",
+                              watch("target_level") === lvl.id
+                                ? "border-primary bg-primary text-white shadow-lg shadow-primary/20 scale-105"
+                                : "border-gray-100 bg-gray-50/50 text-gray-400 hover:border-primary/20"
                             )}
                           >
                             {lvl.label}
                           </button>
                         ))}
                       </div>
-                      {errors.target_level && <p className="text-xs text-secondary">{errors.target_level.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Codice dell&apos;insegnante (opzionale)</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Codice Docente <span className="opacity-50">(Opzionale)</span></label>
                       <div className="relative">
-                        <Input {...register("teacher_code")} placeholder="Es: HER2025482" />
-                        <div className="absolute right-3 top-2.5">
-                          {teacherStatus.exists === true && <Check className="text-primary w-5 h-5" />}
-                          {teacherStatus.exists === false && <XCircle className="text-secondary w-5 h-5" />}
+                        <Input {...register("teacher_code")} placeholder="Es: ITA2025" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-black uppercase tracking-widest focus:bg-white" />
+                        <div className="absolute right-3 top-3">
+                          {teacherStatus.exists === true && <CheckCircle2 className="text-primary w-6 h-6" />}
+                          {teacherStatus.exists === false && <XCircle className="text-secondary w-6 h-6" />}
                         </div>
                       </div>
-                      {teacherStatus.exists === true && (
-                        <p className="text-xs text-primary font-bold">✅ Insegnante: {teacherStatus.name}</p>
-                      )}
-                      {teacherStatus.exists === false && (
-                        <p className="text-xs text-secondary font-bold">❌ Codice non trovato</p>
-                      )}
-                      <p className="text-xs text-muted-foreground">Chiedilo al tuo insegnante. Se non ne hai uno, puoi registrarti comunque.</p>
+                      {teacherStatus.name && <p className="text-xs text-primary font-black uppercase tracking-widest mt-2 ml-1">Docente: {teacherStatus.name}</p>}
                     </div>
                   </div>
                 )}
 
-                {role === "teacher" && (
-                  <div className="space-y-4 pt-4 border-t">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Istituzione o scuola</label>
-                      <Input {...register("institution")} placeholder="Nome della scuola" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Breve descrizione</label>
-                      <textarea
-                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        {...register("bio")}
-                        placeholder="Parlaci di te..."
-                      />
-                      {errors.bio && <p className="text-xs text-secondary">{errors.bio.message}</p>}
-                    </div>
-                    <p className="text-xs p-3 bg-accent/10 text-accent-foreground rounded-lg border border-accent/20">
-                      ⚠️ L&apos;account sarà revisionato e approvato da un amministratore nelle prossime 24 ore.
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex justify-between gap-4 pt-4">
-                  <Button type="button" variant="ghost" onClick={prevStep}>Indietro</Button>
-                  <Button type="button" className="flex-grow" onClick={nextStep}>Continua</Button>
+                <div className="flex gap-4 pt-6">
+                  <Button type="button" variant="ghost" className="h-14 px-8 rounded-xl font-black uppercase text-xs tracking-widest" onClick={() => setStep(1)}>Indietro</Button>
+                  <Button type="button" className="flex-grow h-14 bg-gray-900 hover:bg-black rounded-xl font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 transition-all" onClick={() => setStep(3)}>Prossimo Passo <ChevronRight className="ml-2 h-4 w-4" /></Button>
                 </div>
               </motion.div>
             )}
@@ -306,53 +258,68 @@ export default function RegisterPage() {
             {step === 3 && (
               <motion.div
                 key="step3"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
               >
-                <div className="bg-muted/30 p-6 rounded-2xl space-y-4">
-                  <h3 className="font-bold border-b pb-2">Riepilogo registrazione</h3>
-                  <div className="grid grid-cols-2 gap-y-2 text-sm">
-                    <span className="text-muted-foreground">Nome:</span>
-                    <span className="font-medium text-right">{watch("full_name")}</span>
-                    <span className="text-muted-foreground">Email:</span>
-                    <span className="font-medium text-right">{watch("email")}</span>
-                    <span className="text-muted-foreground">Ruolo:</span>
-                    <span className="font-medium text-right text-primary capitalize">{role === 'student' ? 'Studente 👨‍🎓' : 'Insegnante 👨‍🏫'}</span>
+                <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 space-y-6">
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 border-b border-gray-200 pb-4">Conferma Dati</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nome</span>
+                      <span className="font-black text-gray-900">{watch("full_name")}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ruolo</span>
+                      <span className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest">{role}</span>
+                    </div>
                     {role === 'student' && (
-                      <>
-                        <span className="text-muted-foreground">Livello:</span>
-                        <span className="font-medium text-right">{watch("target_level")}</span>
-                      </>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Livello</span>
+                        <span className="font-black text-gray-900">{watch("target_level")}</span>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 border rounded-xl hover:bg-muted/20 transition-colors">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    className="mt-1 w-4 h-4 rounded border-muted text-primary focus:ring-primary"
-                    {...register("accept_terms")}
-                  />
-                  <label htmlFor="terms" className="text-sm cursor-pointer">
-                    Accetto i <span className="text-primary underline">termini e le condizioni</span> e l&apos;informativa sulla privacy.
+                <div className="flex items-start gap-4 p-6 border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 transition-colors cursor-pointer group">
+                  <div className="relative h-6 w-6 shrink-0 mt-1">
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      className="peer absolute inset-0 opacity-0 cursor-pointer z-10"
+                      {...register("accept_terms")}
+                    />
+                    <div className="absolute inset-0 border-2 border-gray-200 rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                       <Check className="h-4 w-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                  <label htmlFor="terms" className="text-sm font-bold text-gray-500 leading-relaxed cursor-pointer select-none">
+                    Accetto i <span className="text-primary font-black underline">termini di servizio</span> e confermo di aver letto l&apos;informativa sulla privacy.
                   </label>
                 </div>
-                {errors.accept_terms && <p className="text-xs text-secondary">{errors.accept_terms.message}</p>}
 
-                <div className="flex justify-between gap-4 pt-4">
-                  <Button type="button" variant="ghost" disabled={isLoading} onClick={prevStep}>Indietro</Button>
-                  <Button type="submit" className="flex-grow bg-primary hover:bg-primary-dark" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Crea account ✨
+                <div className="flex gap-4 pt-6">
+                  <Button type="button" variant="ghost" className="h-14 px-8 rounded-xl font-black uppercase text-xs tracking-widest" onClick={() => setStep(2)}>Indietro</Button>
+                  <Button type="submit" disabled={isLoading} className="flex-grow h-14 bg-gray-900 hover:bg-black rounded-xl font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 relative group overflow-hidden border-none">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <span className="relative z-10 flex items-center justify-center gap-3">
+                       {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <>CREA IL MIO ACCOUNT <Sparkles className="h-4 w-4" /></>}
+                    </span>
                   </Button>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </form>
+
+        <p className="mt-12 text-center text-sm font-bold text-gray-400">
+           Hai già un account?
+           <Link href="/login" className="text-primary font-black uppercase tracking-widest hover:underline ml-2">
+             Accedi &rarr;
+           </Link>
+        </p>
       </div>
     </div>
   )
