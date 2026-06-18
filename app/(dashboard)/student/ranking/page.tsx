@@ -3,8 +3,10 @@ import { redirect } from "next/navigation"
 import { RankingHeader } from "@/components/student/RankingHeader"
 import { Podium } from "@/components/student/Podium"
 import { RankingTable } from "@/components/student/RankingTable"
-import { Users } from "lucide-react"
+import { Users, Trophy, Sparkles, Medal } from "lucide-react"
 import { AchievementsGrid } from "@/components/student/AchievementsGrid"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { ClassRanking } from "@/components/student/ClassRanking"
 import { WeeklyChallenges } from "@/components/student/WeeklyChallenges"
@@ -40,53 +42,88 @@ export default async function RankingPage() {
   const teacherName = (classStudents?.[0]?.teachers as any)?.profiles?.full_name || "il tuo insegnante"
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F] -m-4 md:-m-8 p-4 md:p-8 text-white space-y-12 pb-20 overflow-x-hidden">
-      <header className="space-y-4 max-w-5xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-display font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
-          Hall of Fame
-        </h1>
-        <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Competi con studenti da tutto il mondo 🇮🇹</p>
-      </header>
+    <div className="relative min-h-screen">
+      {/* Background Decorations */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-primary/10 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[150px]" />
+      </div>
 
-      <div className="max-w-5xl mx-auto space-y-16">
-        <RankingHeader
-          rank={myRank}
-          xp={me?.xp_points || 0}
-          xpToNext={xpToNext}
-        />
+      <div className="max-w-7xl mx-auto space-y-12 py-10 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 pb-32">
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-4 text-left">
+            <div className="inline-flex items-center gap-3 bg-accent/10 text-accent px-4 py-2 rounded-2xl border border-accent/20">
+              <Trophy className="h-5 w-5" />
+              <span className="text-xs font-black uppercase tracking-[0.2em]">Hall of Fame</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-tight">
+              Classifiche <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">& Premi</span> 🏆
+            </h1>
+            <p className="text-gray-500 font-bold text-lg max-w-2xl leading-relaxed">
+              Scala la vetta, sblocca obiettivi unici e competi con studenti da tutto il mondo. 🇮🇹
+            </p>
+          </div>
+        </header>
 
-        <div className="grid grid-cols-1 gap-12">
-           <WeeklyChallenges />
+        <div className="space-y-16">
+          <RankingHeader
+            rank={myRank}
+            xp={me?.xp_points || 0}
+            xpToNext={xpToNext}
+          />
 
-           {myTeacherId ? (
-             <ClassRanking
-               students={classStudents || []}
-               teacherName={teacherName}
-               userId={user.id}
-             />
-           ) : (
-             <Card className="bg-gray-900 border-gray-800 text-white p-12 flex flex-col items-center justify-center text-center space-y-4 rounded-[2rem]">
-                <div className="h-20 w-20 bg-white/5 rounded-full flex items-center justify-center">
-                   <Users className="h-10 w-10 text-gray-500" />
-                </div>
-                <h3 className="text-2xl font-bold">Nessuna classe attiva</h3>
-                <p className="text-gray-400 max-w-sm">Unisciti a una classe inserendo il codice del tuo docente nel profilo per competere con i tuoi compagni.</p>
-             </Card>
-           )}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+             <div className="lg:col-span-8 space-y-12">
+               <WeeklyChallenges />
+
+               <section className="space-y-8 pt-8">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-gray-900 rounded-2xl shadow-xl shadow-gray-900/20">
+                      <Medal className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-black text-gray-900 tracking-tight">Classifica Globale</h2>
+                      <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Aggiornato in tempo reale • 🇮🇹 Global</p>
+                    </div>
+                  </div>
+
+                  <Podium topStudents={students.slice(0, 3)} />
+                  <RankingTable students={students.slice(0, 20)} userId={user.id} />
+               </section>
+             </div>
+
+             <aside className="lg:col-span-4 space-y-12">
+               {myTeacherId ? (
+                 <ClassRanking
+                   students={classStudents || []}
+                   teacherName={teacherName}
+                   userId={user.id}
+                 />
+               ) : (
+                 <Card className="bg-white border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-[2.5rem] relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10" />
+                    <div className="h-20 w-20 bg-gray-100 rounded-[1.5rem] flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
+                       <Users className="h-10 w-10 text-gray-300" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-gray-900 mb-2">Nessuna classe attiva</h3>
+                      <p className="text-gray-400 text-sm font-bold leading-relaxed">
+                        Unisciti a una classe inserendo el codice del tuo docente nel profilo per sfidare i tuoi compagni.
+                      </p>
+                    </div>
+                    <Link href="/student/profile" className="w-full">
+                      <Button className="w-full bg-primary hover:bg-primary-dark font-black rounded-2xl py-6 shadow-lg shadow-primary/20">
+                        VAI AL PROFILO
+                      </Button>
+                    </Link>
+                 </Card>
+               )}
+
+               <AchievementsGrid unlockedIds={me?.achievements || []} />
+             </aside>
+          </div>
         </div>
-
-        <AchievementsGrid unlockedIds={me?.achievements || []} />
-
-        <section className="pt-16 space-y-12">
-           <div className="text-center space-y-3">
-              <h2 className="text-3xl md:text-5xl font-display font-black tracking-tighter">Classifica Globale</h2>
-              <div className="h-1 w-20 bg-primary mx-auto rounded-full" />
-              <p className="text-gray-500 uppercase tracking-[0.2em] text-[10px] font-black">Aggiornato ogni minuto</p>
-           </div>
-
-           <Podium topStudents={students.slice(0, 3)} />
-           <RankingTable students={students.slice(0, 20)} userId={user.id} />
-        </section>
       </div>
     </div>
   )

@@ -3,13 +3,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ClipboardList, Calendar, ArrowRight } from "lucide-react"
+import { ClipboardList, Calendar, ArrowRight, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils/date"
 import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 interface PendingTasksProps {
   tasks: any[]
+}
+
+const TYPE_COLORS: Record<string, string> = {
+  "escritura": "bg-emerald-50 text-emerald-600 border-emerald-100",
+  "completar": "bg-blue-50 text-blue-600 border-blue-100",
+  "transformacion": "bg-purple-50 text-purple-600 border-purple-100",
+  "reescritura": "bg-orange-50 text-orange-600 border-orange-100",
 }
 
 export function PendingTasks({ tasks }: PendingTasksProps) {
@@ -20,51 +29,76 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
   }, [])
 
   return (
-    <Card className="border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
-        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
-          <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-white overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500">
+      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2.5">
+          <div className="p-1.5 bg-blue-500/10 rounded-lg group-hover:rotate-12 transition-transform">
+            <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
+          </div>
           <span>Compiti Sospesi</span>
         </CardTitle>
-        <Link href="/student/tasks" className="text-[10px] font-bold text-primary hover:underline">
-          TUTTI →
+        <Link
+          href="/student/tasks"
+          className="text-[10px] font-black text-primary transition-colors bg-primary/5 px-3 py-1 rounded-full border border-primary/10 shadow-sm"
+        >
+          TUTTI
         </Link>
       </CardHeader>
       <CardContent className="p-0">
         {tasks.length > 0 ? (
           <div className="divide-y divide-gray-50">
-            {tasks.map((task) => (
-              <div key={task.id} className="p-4 hover:bg-gray-50/50 transition-colors group">
+            {tasks.map((task, i) => (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-5 hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-white transition-all group/item relative"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-bold text-gray-900 leading-snug mb-1 group-hover:text-primary transition-colors">
+                    <h4 className="text-sm font-black text-gray-900 leading-snug mb-2 group-hover/item:text-blue-600 transition-colors flex items-center gap-2">
                       {task.title}
+                      {i === 0 && <Sparkles className="h-3 w-3 text-accent animate-pulse" />}
                     </h4>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-widest px-1.5 py-0 border-none">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className={cn(
+                        "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border shadow-sm",
+                        TYPE_COLORS[task.exercise_type] || "bg-gray-50 text-gray-500 border-gray-100"
+                      )}>
                         {task.exercise_type}
                       </Badge>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
-                        <Calendar className="h-3 w-3" />
+                      <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400">
+                        <div className="p-1 bg-gray-100 rounded-md">
+                          <Calendar className="h-2.5 w-2.5" />
+                        </div>
                         <span>{mounted ? formatDate(task.due_date, 'd MMM') : '...'}</span>
                       </div>
                     </div>
                   </div>
                   <Link href={`/student/tasks/${task.id}`}>
-                    <Button size="icon-sm" variant="ghost" className="rounded-full hover:bg-primary/10 hover:text-primary h-8 w-8">
-                      <ArrowRight className="h-4 w-4" />
+                    <Button
+                      size="icon"
+                      className="rounded-xl bg-gray-50 hover:bg-blue-600 text-gray-400 hover:text-white h-10 w-10 transition-all shadow-sm group-hover/item:shadow-lg group-hover/item:-translate-y-1"
+                    >
+                      <ArrowRight className="h-5 w-5" />
                     </Button>
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center">
-            <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <ClipboardList className="h-5 w-5 text-gray-300" />
-            </div>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nessun compito</p>
+          <div className="p-12 text-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="h-16 w-16 bg-gray-50 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-gray-100"
+            >
+              <ClipboardList className="h-8 w-8 text-gray-200" />
+            </motion.div>
+            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Sei in pari! 🚀</p>
+            <p className="text-[10px] text-gray-300 font-bold mt-1">Nessun compito in scadenza</p>
           </div>
         )}
       </CardContent>
