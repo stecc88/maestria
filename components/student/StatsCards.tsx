@@ -45,27 +45,28 @@ function StatCard({ label, value, icon: Icon, color, gradient, suffix = "", dela
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ scale: 1.05, y: -5 }}
+      className="h-full"
     >
-      <Card className="border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white overflow-hidden group relative">
+      <Card className="h-full border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white overflow-hidden group relative">
         <div className={cn("absolute top-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", gradient)} />
 
-        <CardContent className="p-6 flex items-center gap-5 relative z-10">
+        <CardContent className="h-full p-6 flex flex-col items-center justify-center text-center gap-4 relative z-10">
           <div className={cn(
             "p-4 rounded-2xl shrink-0 transition-all duration-500 group-hover:rotate-6 shadow-sm",
             color.replace('bg-', 'bg-opacity-10 '),
             gradient
           )}>
-            <Icon className={cn("h-6 w-6 text-white", color.replace('bg-', 'text-'))} />
+            <Icon className={cn("h-7 w-7 text-white")} />
           </div>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center justify-center gap-2">
               <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] leading-none group-hover:text-gray-600 transition-colors">
                 {label}
               </p>
               <TrendingUp className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <p className="text-3xl font-black text-gray-900 leading-none tracking-tight">
+            <p className="text-4xl font-black text-gray-900 leading-none tracking-tight">
               {count}{suffix}
             </p>
           </div>
@@ -120,7 +121,7 @@ export function StatsCards({ writings, avgScore, completedTasks, streak }: Stats
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 items-stretch">
       {stats.map((stat, i) => (
         <StatCard key={stat.label} {...stat} delay={i * 0.1} />
       ))}

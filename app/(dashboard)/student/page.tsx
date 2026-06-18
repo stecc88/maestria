@@ -74,7 +74,7 @@ export default async function StudentDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto space-y-10 py-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-stretch">
           <div className="xl:col-span-8 space-y-10">
             <WelcomeCard
               name={student.profiles.full_name}
@@ -91,19 +91,25 @@ export default async function StudentDashboard() {
               streak={student.streak_days}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <EvolutionChart data={evolutionData || []} />
-              <RadarChart data={radarData} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+              <div className="h-full">
+                <EvolutionChart data={evolutionData || []} />
+              </div>
+              <div className="h-full">
+                <RadarChart data={radarData} />
+              </div>
             </div>
           </div>
 
-          <aside className="xl:col-span-4 space-y-10">
-            <MiniRanking
-              topStudents={topStudents || []}
-              userRank={userRank}
-            />
-            <PendingTasks tasks={pendingTasks || []} />
-            <LatestCorrections corrections={latestCorrections || []} />
+          <aside className="xl:col-span-4 space-y-10 h-full">
+            <div className="h-full flex flex-col gap-10">
+              <MiniRanking
+                topStudents={topStudents || []}
+                userRank={userRank}
+              />
+              <PendingTasks tasks={pendingTasks || []} />
+              <LatestCorrections corrections={latestCorrections || []} />
+            </div>
           </aside>
         </div>
       </div>

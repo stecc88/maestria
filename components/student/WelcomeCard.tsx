@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Flame, Sparkles, Target, Zap, GraduationCap } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { getLevelFromXP } from "@/lib/utils/levels"
 
 interface WelcomeCardProps {
   name: string
@@ -25,8 +26,10 @@ const LEVEL_COLORS: Record<string, string> = {
 }
 
 export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp }: WelcomeCardProps) {
-  const nextLevelXp = 1000
-  const progress = Math.min((xp / nextLevelXp) * 100, 100)
+  const levelInfo = getLevelFromXP(xp)
+  const currentLevelXp = levelInfo.current.minXp
+  const nextLevelXp = levelInfo.next ? levelInfo.next.minXp : currentLevelXp
+  const progress = levelInfo.progress
 
   return (
     <Card className="overflow-hidden border-none bg-gradient-to-br from-primary/5 via-white to-accent/5 premium-shadow relative group">
@@ -101,7 +104,7 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
               <div className="flex items-center justify-between">
                  <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-accent animate-pulse" />
-                    <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Progresso Livello</span>
+                    <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{levelInfo.next?.name || "Prossimo Livello"}</span>
                  </div>
                  <span className="text-sm font-black text-gray-900">{xp} <span className="text-gray-300">/</span> {nextLevelXp} XP</span>
               </div>
@@ -126,10 +129,10 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
                 </div>
                 <div className="flex justify-between items-center px-1">
                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                     Mancano {nextLevelXp - xp} XP
+                     {levelInfo.next ? `Mancano ${nextLevelXp - xp} XP` : "Livello Massimo"}
                    </p>
                    <p className="text-[10px] text-primary font-black uppercase tracking-widest">
-                     LV. {Math.floor(xp / 1000) + 1}
+                     {levelInfo.current.name}
                    </p>
                 </div>
               </div>
