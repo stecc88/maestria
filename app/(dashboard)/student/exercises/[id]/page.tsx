@@ -85,6 +85,8 @@ export default function ExerciseDetailPage() {
 
       setResult(data)
       setShowTheory(false)
+      toast.success("Esercizio corretto!")
+      router.refresh()
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch (error: any) {
       toast.error(error.message)
@@ -104,15 +106,21 @@ export default function ExerciseDetailPage() {
 
   // Render text with placeholders
   const renderTextWithPlaceholders = () => {
-    const parts = exercise.content.text_with_placeholders.split(/(\{\{\d+\}\})/)
+    if (!exercise?.content?.text_with_placeholders) return null;
+
+    // Flexible regex for placeholders like {{1}}, {{ 1 }}, etc.
+    const parts = exercise.content.text_with_placeholders.split(/(\{\{\s*\d+\s*\}\})/)
+
     return (
       <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm leading-[3] text-lg text-gray-800 font-body">
         {parts.map((part: string, i: number) => {
-          const match = part.match(/\{\{(\d+)\}\}/)
+          const match = part.match(/\{\{\s*(\d+)\s*\}\}/)
           if (match) {
             const id = match[1]
-            const blank = exercise.content.blanks.find((b: any) => b.id.toString() === id)
+            const blank = exercise.content.blanks?.find((b: any) => b.id.toString() === id)
             const isCorrected = result?.blank_feedback?.find((f: any) => f.id.toString() === id)
+
+            if (!blank) return <span key={i} className="text-red-400">[{id}]</span>
 
             return (
               <span key={i} className="inline-block mx-1 relative group">
@@ -156,7 +164,7 @@ export default function ExerciseDetailPage() {
                     />
                   </div>
                 )}
-                {result && !isCorrected?.isCorrect && (
+                {result && isCorrected && !isCorrected.isCorrect && (
                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">
                      Corretto: {isCorrected.correctAnswer}
                    </span>
@@ -194,9 +202,13 @@ export default function ExerciseDetailPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-9">
-                  {Object.entries(item.options).map(([key, val]) => (
+                  {Object.entries(item.options).map(([key, val]: [string, any]) => (
                     <button
                       key={key}
+                      id={`item-${item.id}-opt-${key}`}
+                      name={`item-${item.id}`}
+                      aria-label={`Opzione ${key}: ${val}`}
+                      type="button"
                       disabled={!!result}
                       onClick={() => handleInputChange(item.id.toString(), key)}
                       className={cn(
@@ -213,7 +225,7 @@ export default function ExerciseDetailPage() {
                   ))}
                 </div>
 
-                {result && (
+                {result && isCorrected && (
                   <div className={cn(
                     "mt-4 p-3 rounded-lg text-xs flex gap-2 items-start",
                     isCorrected.isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"

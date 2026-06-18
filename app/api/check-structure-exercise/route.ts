@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { NextResponse } from "next/server"
+import { calculateXpForTask } from "@/lib/utils/xp"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -9,7 +10,13 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Non autorizzato" }, { status: 401 })
 
   try {
-    const { exerciseId, answers } = await request.json()
+    const body = await request.json()
+    const { exerciseId, answers } = body
+
+    if (!exerciseId) {
+      return NextResponse.json({ error: "ID esercizio mancante" }, { status: 400 })
+    }
+
     const adminSupabase = createAdminClient()
 
     // 1. Fetch exercise and solutions
@@ -19,18 +26,37 @@ export async function POST(request: Request) {
       .eq("id", exerciseId)
       .single()
 
-    if (fetchError || !exercise) throw new Error("Esercizio non trovato")
+    if (fetchError || !exercise) {
+      console.error("Fetch Exercise Error:", fetchError)
+      return NextResponse.json({ error: "Esercizio non trovato nel database" }, { status: 404 })
+    }
 
     // 2. Compare answers
     const blankFeedback: any[] = []
     let correctCount = 0
-    const solutionsSource = exercise.exercise_type === "situazionale" ? exercise.solutions.items : exercise.solutions.blanks
+
+    if (!exercise.solutions) {
+      return NextResponse.json({ error: "Soluzioni non trovate per questo esercizio" }, { status: 500 })
+    }
+
+    const solutionsSource = exercise.exercise_type === "situazionale"
+      ? exercise.solutions.items
+      : exercise.solutions.blanks
+
+    if (!Array.isArray(solutionsSource)) {
+      console.error("Invalid solutions format:", exercise.solutions)
+      return NextResponse.json({ error: "Formato soluzioni non valido" }, { status: 500 })
+    }
+
     const total = solutionsSource.length
+    if (total === 0) {
+      return NextResponse.json({ error: "L'esercizio non contiene domande" }, { status: 500 })
+    }
 
     solutionsSource.forEach((sol: any) => {
       const studentVal = answers[sol.id.toString()] || ""
       const studentAns = studentVal.toString().trim().toLowerCase()
-      const correctAns = sol.correct_answer.toString().trim().toLowerCase()
+      const correctAns = (sol.correct_answer || "").toString().trim().toLowerCase()
       const isCorrect = studentAns === correctAns
 
       if (isCorrect) correctCount++
@@ -40,7 +66,7 @@ export async function POST(request: Request) {
         isCorrect,
         studentAnswer: studentVal,
         correctAnswer: sol.correct_answer,
-        explanation: sol.explanation
+        explanation: sol.explanation || "Nessuna spiegazione disponibile."
       })
     })
 
@@ -62,19 +88,28 @@ export async function POST(request: Request) {
 
     Rispondi SOLO con il testo del feedback, senza JSON, senza markdown.`
 
-    const geminiResponse = await fetchGeminiWithRetry(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      }
-    )
+    let generalFeedback = "Ottimo lavoro con l'esercizio!";
+    try {
+      const geminiResponse = await fetchGeminiWithRetry(
+        `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        }
+      )
 
-    const geminiData = await geminiResponse.json()
-    const generalFeedback = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Ottimo lavoro con l'esercizio!"
+      const geminiData = await geminiResponse.json()
+      if (geminiResponse.ok && geminiData.candidates?.[0]?.content?.parts?.[0]?.text) {
+        generalFeedback = geminiData.candidates[0].content.parts[0].text;
+      } else {
+        console.error("Gemini Correction Feedback Error:", geminiData);
+      }
+    } catch (e) {
+      console.error("Gemini Correction Feedback Fetch Error:", e);
+    }
 
     // 4. Save attempt
     const { error: attemptError } = await adminSupabase
@@ -92,13 +127,15 @@ export async function POST(request: Request) {
 
     if (attemptError) throw attemptError
 
-    // 5. Update student XP (Optional but recommended)
-    const xpEarned = Math.floor(score / 2) // Simple logic: 50 XP max
-    if (xpEarned > 0) {
+    // 5. Update student XP
+    const xpEarned = calculateXpForTask(score)
+    try {
       await adminSupabase.rpc("increment_xp", {
         student_id: user.id,
         xp_amount: xpEarned
       })
+    } catch (xpError) {
+      console.error("XP Increment Error:", xpError)
     }
 
     return NextResponse.json({
