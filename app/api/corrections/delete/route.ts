@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     const adminSupabase = createAdminClient()
 
-    // Verificar que la corrección pertenece al alumno autenticado antes de borrar
+    // 1. Fetch correction and associated writing to verify ownership
     const { data: correction, error: fetchError } = await adminSupabase
       .from("corrections")
       .select("id, writing_id, writings(student_id)")
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
       .single()
 
     if (fetchError || !correction) {
+      console.error("Fetch error or correction not found:", fetchError)
       return NextResponse.json({ error: "Correzione non trovata" }, { status: 404 })
     }
 
@@ -30,12 +31,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Non autorizzato a eliminare questa correzione" }, { status: 403 })
     }
 
-    // Borrar la corrección y el writing asociado
-    const { error: deleteCorrError } = await adminSupabase.from("corrections").delete().eq("id", correctionId)
-    if (deleteCorrError) throw deleteCorrError
+    // 2. Clear any foreign key references in the tasks table
+    // Some tasks might point to this correction_id. Set them to null before deleting.
+    const { error: updateTasksError } = await adminSupabase
+      .from("tasks")
+      .update({ correction_id: null })
+      .eq("correction_id", correctionId)
 
-    const { error: deleteWritingError } = await adminSupabase.from("writings").delete().eq("id", correction.writing_id)
-    if (deleteWritingError) throw deleteWritingError
+    if (updateTasksError) {
+      console.error("Error clearing task references:", updateTasksError)
+      // We continue as this might not be critical or the table might be empty
+    }
+
+    // 3. Delete the writing (which will cascade-delete the correction)
+    // In our schema, corrections has ON DELETE CASCADE from writings
+    const { error: deleteWritingError } = await adminSupabase
+      .from("writings")
+      .delete()
+      .eq("id", correction.writing_id)
+
+    if (deleteWritingError) {
+      console.error("Error deleting writing:", deleteWritingError)
+      throw deleteWritingError
+    }
+
+    // Double check: if cascade didn't work for some reason, delete correction explicitly
+    await adminSupabase.from("corrections").delete().eq("id", correctionId)
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
