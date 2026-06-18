@@ -12,19 +12,19 @@ const config: Config = {
 	extend: {
 		colors: {
 			primary: {
-				DEFAULT: '#009246',
-				dark: '#007A3A',
+				DEFAULT: 'hsl(var(--primary))',
+				dark: 'hsl(var(--primary) / 0.8)',
 				foreground: 'hsl(var(--primary-foreground))'
 			},
 			secondary: {
-				DEFAULT: '#CE2B37',
+				DEFAULT: 'hsl(var(--secondary))',
 				foreground: 'hsl(var(--secondary-foreground))'
 			},
 			accent: {
-				DEFAULT: '#F5A623',
+				DEFAULT: 'hsl(var(--accent))',
 				foreground: 'hsl(var(--accent-foreground))'
 			},
-			cream: '#FAFAF8',
+			cream: '#FFF8F0',
 			background: 'hsl(var(--background))',
 			foreground: 'hsl(var(--foreground))',
 			card: {

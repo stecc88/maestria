@@ -29,8 +29,8 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
   }, [])
 
   return (
-    <Card className="border-none shadow-xl shadow-gray-200/50 bg-white overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500">
-      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-white overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500 flex flex-col">
+      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50 shrink-0">
         <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2.5">
           <div className="p-1.5 bg-blue-500/10 rounded-lg group-hover:rotate-12 transition-transform">
             <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
@@ -44,7 +44,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
           TUTTI
         </Link>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="p-0 flex-1 overflow-y-auto">
         {tasks.length > 0 ? (
           <div className="divide-y divide-gray-50">
             {tasks.map((task, i) => (
@@ -89,7 +89,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
             ))}
           </div>
         ) : (
-          <div className="p-12 text-center">
+          <div className="p-12 text-center flex flex-col items-center justify-center h-full">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
