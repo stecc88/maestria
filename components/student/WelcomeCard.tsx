@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Flame, Sparkles, Target, Zap, GraduationCap } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 interface WelcomeCardProps {
   name: string
@@ -55,7 +56,7 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
                 Ciao, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{name.split(' ')[0]}</span>! 👋
               </h1>
               <p className="text-gray-500 font-bold text-lg leading-relaxed max-w-xl">
-                Il tuo viaggio verso l&apos;italiano perfetto continua. Quale sarà la tua prossima sfida oggi?
+                Il tuo viaggio verso l&apos;italiano perfetto continua. Quale sarà la tua próxima sfida oggi?
               </p>
             </motion.div>
 
@@ -133,16 +134,18 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
                 </div>
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full relative overflow-hidden bg-gray-900 text-white font-black py-4 rounded-[1.25rem] transition-all shadow-xl shadow-gray-900/20 text-sm group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  INIZIA A SCRIVERE ORA <Sparkles className="h-4 w-4" />
-                </span>
-              </motion.button>
+              <Link href="/student/write" className="block w-full">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full relative overflow-hidden bg-gray-900 text-white font-black py-4 rounded-[1.25rem] transition-all shadow-xl shadow-gray-900/20 text-sm group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    INIZIA A SCRIVERE ORA <Sparkles className="h-4 w-4" />
+                  </span>
+                </motion.button>
+              </Link>
             </div>
           </div>
         </div>
