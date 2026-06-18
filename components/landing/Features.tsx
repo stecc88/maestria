@@ -7,59 +7,77 @@ import {
   BookOpen,
   Users,
   Trophy,
-  LineChart
+  LineChart,
+  Sparkles
 } from "lucide-react"
 
 const features = [
   {
-    title: "Correzione intelligente",
-    description: "L'IA valuta il tuo scritto secondo i più esigenti standard internazionali di italiano",
-    icon: GraduationCap
+    title: "Correzione Intelligente",
+    description: "L'IA valuta i tuoi testi secondo i più esigenti standard internazionali (CILS/CELI).",
+    icon: GraduationCap,
+    color: "text-emerald-500",
+    bg: "bg-emerald-50"
   },
   {
-    title: "Il tuo livello esatto",
-    description: "Dopo ogni scritto saprai esattamente a che livello sei: A1, A2, B1, B2, C1 o C2",
-    icon: BarChart3
+    title: "Livello QCER Esatto",
+    description: "Saprai esattamente se il tuo scritto è A1, B2 o C2 grazie al nostro motore neurale.",
+    icon: BarChart3,
+    color: "text-blue-500",
+    bg: "bg-blue-50"
   },
   {
-    title: "Guide alla scrittura",
-    description: "Impara a strutturare email, narrazioni e testi argomentativi in base al tuo livello",
-    icon: BookOpen
+    title: "Guide ai Generi",
+    description: "Impara a scrivere email formali, saggi e narrazioni con modelli pronti all'uso.",
+    icon: BookOpen,
+    color: "text-purple-500",
+    bg: "bg-purple-50"
   },
   {
-    title: "Compiti dell'insegnante",
-    description: "Il tuo insegnante genera esercizi personalizzati basati sui TUOI errori specifici",
-    icon: Users
+    title: "Supporto Docenti",
+    description: "Ricevi compiti mirati dal tuo insegnante per superare le tue lacune specifiche.",
+    icon: Users,
+    color: "text-orange-500",
+    bg: "bg-orange-50"
   },
   {
-    title: "Classifica e sfide",
-    description: "Competi con i tuoi compagni, guadagna punti e scala la classifica settimanale",
-    icon: Trophy
+    title: "Gamification",
+    description: "Scala la Hall of Fame, guadagna XP e sblocca trofei mentre impari l'italiano.",
+    icon: Trophy,
+    color: "text-accent",
+    bg: "bg-accent/10"
   },
   {
-    title: "Segui il tuo progresso",
-    description: "Grafici visivi che mostrano come migliori ogni settimana",
-    icon: LineChart
+    title: "Analytics Avanzate",
+    description: "Monitora i tuoi progressi nel tempo con grafici dettagliati sulla tua evoluzione.",
+    icon: LineChart,
+    color: "text-primary",
+    bg: "bg-primary/10"
   }
 ]
 
 export default function Features() {
   return (
-    <section id="features" className="py-24 bg-cream">
+    <section id="features" className="py-32 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-24 space-y-4"
         >
-          <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-            Tutto ciò di cui hai bisogno per progredire
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em]">
+            <Sparkles className="h-4 w-4" /> Innovazione Didattica
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">
+            Tutto per la tua <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Eccellenza</span>
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full" />
+          <p className="text-gray-500 font-bold text-lg max-w-2xl mx-auto">
+            Abbiamo unito la potenza dell&apos;intelligenza artificiale con la pedagogia italiana per offrirti un&apos;esperienza di apprendimento senza precedenti.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {features.map((feature, i) => (
             <motion.div
               key={i}
@@ -67,21 +85,31 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -5, scale: 1.03 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-primary/5 hover:shadow-xl transition-all"
+              whileHover={{ y: -10 }}
+              className="group bg-white p-10 rounded-[2.5rem] shadow-xl shadow-gray-100/50 border border-gray-50 hover:shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden"
             >
-              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                <feature.icon className="w-6 h-6 text-primary" />
+              <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
+                 <feature.icon className="h-32 w-32" />
               </div>
-              <h3 className="text-xl font-display font-bold mb-3 text-foreground">
+
+              <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-6 transition-transform shadow-inner`}>
+                <feature.icon className={`w-8 h-8 ${feature.color}`} />
+              </div>
+              <h3 className="text-2xl font-black mb-4 text-gray-900 tracking-tight">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground font-body leading-relaxed">
+              <p className="text-gray-500 font-medium leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>
           ))}
         </div>
+      </div>
+
+      {/* Decorative Blur */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none -z-10 opacity-30">
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
       </div>
     </section>
   )

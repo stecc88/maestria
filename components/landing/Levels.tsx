@@ -1,97 +1,105 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
+import { Sparkles } from "lucide-react"
 
 const levels = [
   {
     id: "A1",
     name: "Principiante",
-    description: "Prime parole e frasi elementari",
-    color: "bg-gray-100",
-    textColor: "text-gray-600",
-    borderColor: "border-gray-200"
+    description: "Prime parole e frasi elementari per iniziare el tuo viaggio.",
+    gradient: "from-gray-400 to-gray-600",
+    bg: "bg-gray-50"
   },
   {
     id: "A2",
     name: "Elementare",
-    description: "Messaggi brevi e conversazioni semplici",
-    color: "bg-green-100",
-    textColor: "text-green-700",
-    borderColor: "border-green-200"
+    description: "Messaggi brevi e conversazioni semplici di vita quotidiana.",
+    gradient: "from-emerald-400 to-emerald-600",
+    bg: "bg-emerald-50/50"
   },
   {
     id: "B1",
     name: "Intermedio",
-    description: "Gestione di situazioni quotidiane",
-    color: "bg-blue-100",
-    textColor: "text-blue-700",
-    borderColor: "border-blue-200"
+    description: "Gestione autonoma di situazioni comuni e viaggi in Italia.",
+    gradient: "from-blue-400 to-blue-600",
+    bg: "bg-blue-50/50"
   },
   {
     id: "B2",
-    name: "Intermedio superiore",
-    description: "Testi complessi e discussioni",
-    color: "bg-orange-100",
-    textColor: "text-orange-700",
-    borderColor: "border-orange-200"
+    name: "Intermedio Superiore",
+    description: "Testi complessi e discussioni su temi astratti o tecnici.",
+    gradient: "from-purple-400 to-purple-600",
+    bg: "bg-purple-50/50"
   },
   {
     id: "C1",
     name: "Avanzato",
-    description: "Quasi madrelingua, espressione precisa",
-    color: "bg-purple-100",
-    textColor: "text-purple-700",
-    borderColor: "border-purple-200"
+    description: "Espressione fluida, precisa e naturale in contesti sociali o professionali.",
+    gradient: "from-orange-400 to-orange-600",
+    bg: "bg-orange-50/50"
   },
   {
     id: "C2",
     name: "Padronanza",
-    description: "Dominio totale della lingua",
-    color: "bg-yellow-100",
-    textColor: "text-yellow-700",
-    borderColor: "border-yellow-200"
+    description: "Dominio totale della lingua, comprendendo sfumature e registri elevati.",
+    gradient: "from-red-400 to-red-600",
+    bg: "bg-red-50/50"
   }
 ]
 
 export default function Levels() {
   return (
-    <section id="levels" className="py-24 bg-white overflow-hidden">
+    <section id="levels" className="py-32 bg-white overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="text-center mb-24 space-y-4"
         >
-          <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-            A che livello sei?
+          <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em]">
+            <Sparkles className="h-4 w-4" /> Quadro Comune Europeo
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">
+            Percorso <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Personalizzato</span>
           </h2>
-          <div className="w-24 h-1 bg-accent rounded-full" />
+          <p className="text-gray-500 font-bold text-lg max-w-2xl mx-auto">
+            La nostra IA analizza i tuoi testi per determinare el tuo livello QCER esatto e aiutarti a salire verso la padronanza.
+          </p>
         </motion.div>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {levels.map((level, i) => (
             <motion.div
               key={level.id}
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
-              className={`flex flex-col md:flex-row items-center p-6 rounded-2xl border ${level.borderColor} ${level.color} transition-all hover:scale-[1.01] hover:shadow-md`}
+              transition={{ delay: i * 0.05 }}
+              whileHover={{ y: -8 }}
+              className={cn(
+                "group relative p-8 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-100/50 overflow-hidden transition-all duration-500",
+                level.bg
+              )}
             >
-              <div className="flex-shrink-0 w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm mb-4 md:mb-0 md:mr-8">
-                <span className={`text-2xl font-display font-bold ${level.textColor}`}>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))`, ...({ '--tw-gradient-from': level.gradient.split(' ')[0].replace('from-', ''), '--tw-gradient-to': level.gradient.split(' ')[1].replace('to-', '') } as any) }} />
+
+              <div className="flex items-center justify-between mb-8">
+                <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-lg bg-gradient-to-br", level.gradient)}>
                   {level.id}
-                </span>
+                </div>
+                <div className="h-px flex-1 mx-6 bg-gray-200 group-hover:bg-primary/20 transition-colors" />
+                <Sparkles className="h-5 w-5 text-gray-200 group-hover:text-accent transition-colors" />
               </div>
-              <div className="text-center md:text-left flex-grow">
-                <h3 className={`text-xl font-display font-bold mb-1 ${level.textColor}`}>
-                  {level.name}
-                </h3>
-                <p className="font-body text-foreground/80">
-                  {level.description}
-                </p>
-              </div>
+
+              <h3 className="text-2xl font-black text-gray-900 mb-3 tracking-tight">
+                {level.name}
+              </h3>
+              <p className="text-gray-500 font-medium leading-relaxed">
+                {level.description}
+              </p>
             </motion.div>
           ))}
         </div>
