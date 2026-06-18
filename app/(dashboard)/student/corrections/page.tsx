@@ -1,15 +1,25 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { FileText, Search, Loader2 } from "lucide-react"
+import { FileText, Search, Loader2, AlertTriangle, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { CorrectionCard } from "@/components/student/CorrectionCard"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import toast from "react-hot-toast"
 
 export default function CorrectionsPage() {
   const [corrections, setCorrections] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [correctionToDelete, setCorrectionToDelete] = useState<any>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -32,8 +42,28 @@ export default function CorrectionsPage() {
     fetchCorrections()
   }, [supabase])
 
-  const handleDelete = (id: string) => {
-    setCorrections(prev => prev.filter(c => c.id !== id))
+  const handleDelete = async () => {
+    if (!correctionToDelete) return
+
+    setIsDeleting(true)
+    try {
+      const response = await fetch("/api/corrections/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correctionId: correctionToDelete.id })
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Errore durante l'eliminazione")
+
+      toast.success("Correzione eliminata")
+      setCorrections(prev => prev.filter(c => c.id !== correctionToDelete.id))
+      setCorrectionToDelete(null)
+    } catch (error: any) {
+      toast.error(error.message)
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   if (isLoading) {
@@ -65,7 +95,7 @@ export default function CorrectionsPage() {
             <CorrectionCard
               key={correction.id}
               correction={correction}
-              onDelete={handleDelete}
+              onDeleteClick={setCorrectionToDelete}
             />
           ))}
         </div>
@@ -85,6 +115,50 @@ export default function CorrectionsPage() {
           </Link>
         </div>
       )}
+
+      {/* Shared Confirmation Modal */}
+      <Sheet open={!!correctionToDelete} onOpenChange={(open) => !open && setCorrectionToDelete(null)}>
+        <SheetContent side="bottom" className="rounded-t-[2rem] p-8 max-w-lg mx-auto border-none shadow-2xl">
+          <SheetHeader className="space-y-4">
+            <div className="h-16 w-16 bg-red-100 rounded-3xl flex items-center justify-center mx-auto">
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+            <SheetTitle className="text-2xl font-black text-center text-gray-900">Sei sicuro?</SheetTitle>
+            <SheetDescription className="text-center text-gray-500 font-medium text-lg leading-relaxed">
+              Stai per eliminare: <span className="text-gray-900 font-black italic">&quot;{correctionToDelete?.writings?.title || 'Senza titolo'}&quot;</span>.
+              Questa azione non può essere annullata.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="grid grid-cols-2 gap-4 mt-10">
+            <Button
+              variant="outline"
+              onClick={() => setCorrectionToDelete(null)}
+              disabled={isDeleting}
+              className="py-6 rounded-2xl font-bold border-gray-100 hover:bg-gray-50"
+            >
+              Annulla
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="py-6 rounded-2xl font-black shadow-lg shadow-red-200 gap-2"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-5 w-5" />
+                  Elimina
+                </>
+              )}
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
