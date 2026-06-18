@@ -14,7 +14,9 @@ import {
   Calendar,
   ChevronRight,
   User,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  ArrowRight
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -37,165 +39,203 @@ export default async function StudentTasksPage() {
     .eq("student_id", user.id)
     .order("created_at", { ascending: false })
 
-  if (error) {
-  }
-
   const pendingTasks = tasks?.filter(t => t.status === 'pending') || []
   const inProgressTasks = tasks?.filter(t => t.status === 'started' || t.status === 'in_progress') || []
   const completedTasks = tasks?.filter(t => t.status === 'completed') || []
 
   const TaskIcon = ({ type }: { type: string }) => {
     switch (type) {
-      case 'escritura': return <PenLine className="h-5 w-5" />
-      case 'completar': return <ClipboardList className="h-5 w-5" />
-      case 'transformacion': return <RefreshCw className="h-5 w-5" />
-      case 'reescritura': return <FileText className="h-5 w-5" />
-      default: return <ClipboardList className="h-5 w-5" />
+      case 'escritura': return <PenLine className="h-6 w-6" />
+      case 'completar': return <ClipboardList className="h-6 w-6" />
+      case 'transformacion': return <RefreshCw className="h-6 w-6" />
+      case 'reescritura': return <FileText className="h-6 w-6" />
+      default: return <ClipboardList className="h-6 w-6" />
     }
   }
 
-  const TaskCard = ({ task }: { task: any }) => (
-    <Card className="hover:shadow-lg transition-all duration-300 border-gray-100 overflow-hidden group">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className={cn(
-            "p-3 rounded-2xl",
-            task.status === 'completed' ? "bg-primary/10 text-primary" : "bg-accent/10 text-accent"
-          )}>
-            <TaskIcon type={task.exercise_type} />
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <Badge variant="outline" className="capitalize text-[10px] tracking-widest font-bold bg-gray-50">
-              {task.exercise_type}
-            </Badge>
-            {task.due_date && (
-              <span className="text-[10px] text-gray-400 flex items-center gap-1 font-medium">
-                <Clock className="h-3 w-3" />
-                Scadenza: {formatDate(task.due_date, 'd MMM')}
-              </span>
-            )}
-          </div>
-        </div>
+  const TYPE_CONFIG: Record<string, { color: string, gradient: string }> = {
+    "escritura": { color: "text-emerald-500", gradient: "from-emerald-400 to-emerald-600" },
+    "completar": { color: "text-blue-500", gradient: "from-blue-400 to-blue-600" },
+    "transformacion": { color: "text-purple-500", gradient: "from-purple-400 to-purple-600" },
+    "reescritura": { color: "text-orange-500", gradient: "from-orange-400 to-orange-600" },
+  }
 
-        <div className="space-y-4">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
-              {task.title}
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-              <User className="h-3 w-3" />
-              Creata da {task.teachers?.profiles?.full_name} · {formatDate(task.created_at)}
-            </p>
-          </div>
+  const TaskCard = ({ task }: { task: any }) => {
+    const config = TYPE_CONFIG[task.exercise_type] || TYPE_CONFIG["escritura"]
 
-          {task.corrections && (
-            <div className="p-3 bg-cream rounded-xl border border-primary/5 flex items-center justify-between">
-               <span className="text-[10px] font-bold text-primary/60 uppercase">Basata sul tuo testo</span>
-               <Link href={`/student/corrections/${task.correction_id}`} className="text-[10px] text-primary hover:underline flex items-center gap-1 font-bold">
-                 Vedi correzione <ExternalLink className="h-3 w-3" />
-               </Link>
+    return (
+      <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-white rounded-[2rem] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+        <div className={cn("absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", config.gradient)} />
+
+        <CardContent className="p-8">
+          <div className="flex items-start justify-between mb-6">
+            <div className={cn(
+              "p-4 rounded-2xl transition-all duration-500 group-hover:rotate-6 shadow-sm bg-white border border-gray-100",
+              config.color
+            )}>
+              <TaskIcon type={task.exercise_type} />
             </div>
-          )}
-
-          <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-               {task.status === 'completed' ? (
-                 <Badge className="bg-primary text-white border-none gap-1 py-1">
-                   <CheckCircle2 className="h-3 w-3" /> Completata
-                 </Badge>
-               ) : task.status === 'pending' ? (
-                 <Badge variant="outline" className="text-gray-400 border-gray-200">In sospeso</Badge>
-               ) : (
-                 <Badge className="bg-accent text-white border-none">In corso</Badge>
-               )}
-            </div>
-
-            <Link href={task.status === 'completed' ? `/student/tasks/${task.id}` : `/student/tasks/${task.id}`}>
-              <Button size="sm" className={cn(
-                "rounded-xl font-bold gap-2",
-                task.status === 'completed' ? "bg-gray-100 text-gray-600 hover:bg-gray-200" : "bg-primary text-white"
+            <div className="flex flex-col items-end gap-2">
+              <Badge variant="outline" className={cn(
+                "capitalize text-[10px] tracking-[0.2em] font-black border shadow-sm px-3 py-1 rounded-full",
+                task.status === 'completed' ? "bg-primary/5 text-primary border-primary/10" : "bg-gray-50 text-gray-500 border-gray-200"
               )}>
-                {task.status === 'completed' ? 'Vedi risultato' : task.status === 'pending' ? 'Inizia' : 'Continua'}
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
+                {task.exercise_type}
+              </Badge>
+              {task.due_date && (
+                <span className="text-[10px] text-gray-400 flex items-center gap-1.5 font-black uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
+                  <Clock className="h-3 w-3" />
+                  {formatDate(task.due_date, 'd MMM')}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
+
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-2xl font-black text-gray-900 leading-tight tracking-tight group-hover:text-primary transition-colors">
+                {task.title}
+              </h3>
+              <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-2 flex items-center gap-1.5">
+                <User className="h-3 w-3" />
+                {task.teachers?.profiles?.full_name} · {formatDate(task.created_at)}
+              </p>
+            </div>
+
+            {task.corrections && (
+              <div className="p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex items-center justify-between group/basis">
+                 <div className="flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Basata sul tuo testo</span>
+                 </div>
+                 <Link href={`/student/corrections/${task.correction_id}`} className="text-[10px] text-primary hover:text-primary-dark flex items-center gap-1 font-black uppercase tracking-widest">
+                   VEDI <ExternalLink className="h-3 w-3" />
+                 </Link>
+              </div>
+            )}
+
+            <div className="pt-6 border-t border-gray-50 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                 {task.status === 'completed' ? (
+                   <div className="flex items-center gap-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/20">
+                     <CheckCircle2 className="h-3.5 w-3.5" /> Fatto
+                   </div>
+                 ) : (
+                   <div className={cn(
+                     "flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border shadow-sm",
+                     task.status === 'pending' ? "bg-secondary/10 text-secondary border-secondary/20" : "bg-accent/10 text-accent border-accent/20"
+                   )}>
+                     <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", task.status === 'pending' ? "bg-secondary" : "bg-accent")} />
+                     {task.status === 'pending' ? 'In sospeso' : 'In corso'}
+                   </div>
+                 )}
+              </div>
+
+              <Link href={`/student/tasks/${task.id}`} className="flex-1">
+                <Button className={cn(
+                  "w-full rounded-2xl font-black gap-2 transition-all shadow-lg text-xs tracking-widest uppercase py-6",
+                  task.status === 'completed' ? "bg-gray-100 text-gray-600 hover:bg-gray-200 shadow-none border-2 border-gray-200/50" : "bg-gray-900 text-white hover:shadow-xl hover:shadow-primary/20 group-hover:bg-primary"
+                )}>
+                  {task.status === 'completed' ? 'RISULTATO' : task.status === 'pending' ? 'INIZIA' : 'CONTINUA'}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const EmptyState = () => (
-    <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
-      <div className="bg-cream w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-        <ClipboardList className="h-10 w-10 text-gray-300" />
+    <div className="text-center py-20 bg-white rounded-[3rem] border-4 border-dashed border-gray-100 shadow-inner">
+      <div className="bg-gray-50 w-28 h-28 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
+        <ClipboardList className="h-12 w-12 text-gray-200" />
       </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">Nessun compito in sospeso</h3>
-      <p className="text-gray-500 max-w-sm mx-auto">
-        Il tuo insegnante non ha ancora generato compiti per te. Continua a inviare testi così potrà vedere i tuoi errori e creare esercizi.
+      <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Tutto tranquillo qui! 🏝️</h3>
+      <p className="text-gray-400 font-bold max-w-sm mx-auto leading-relaxed">
+        Non hai compiti in sospeso. Ottimo lavoro! Se vuoi nuove sfide, invia un testo libero al tuo insegnante.
       </p>
-      <Link href="/student/write" className="inline-block mt-8">
-        <Button className="bg-primary hover:bg-primary-dark font-bold px-8">
-          Invia nuovo testo ✍️
+      <Link href="/student/write" className="inline-block mt-10">
+        <Button className="bg-primary hover:bg-primary-dark font-black px-12 py-8 rounded-[1.5rem] text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95 gap-3">
+          SCRIVI ORA <PenLine className="h-6 w-6" />
         </Button>
       </Link>
     </div>
   )
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20 animate-in fade-in duration-700">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-gray-900">Attività 📝</h1>
-        <p className="text-gray-500 mt-1">Esercizi personalizzati creati dal tuo insegnante per migliorare i tuoi punti deboli.</p>
+    <div className="max-w-7xl mx-auto space-y-12 py-8 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-4">
+          <div className="inline-flex items-center gap-3 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-xs font-black uppercase tracking-[0.2em]">Learning Hub</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">Le Tue Attività 🎯</h1>
+          <p className="text-gray-500 font-bold text-lg max-w-2xl">
+            Esercizi su misura basati sui tuoi progressi. Completa i compiti per guadagnare XP e salire di livello.
+          </p>
+        </div>
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
-        <TabsList className="bg-white border border-gray-100 p-1 h-14 rounded-2xl w-full md:w-fit justify-start gap-2 px-2">
-          <TabsTrigger value="pending" className="rounded-xl data-[state=active]:bg-secondary/5 data-[state=active]:text-secondary font-bold gap-2 px-6">
-            In sospeso
-            <Badge variant="destructive" className={cn("h-5 min-w-[20px] px-1", pendingTasks.length === 0 && "opacity-20")}>
+        <TabsList className="bg-white/50 backdrop-blur border border-gray-200 p-2 h-16 rounded-[1.5rem] w-full md:w-fit justify-start gap-3 px-3 shadow-sm">
+          <TabsTrigger value="pending" className="rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:text-white font-black text-xs tracking-widest uppercase gap-3 px-8 transition-all">
+            IN SOSPESO
+            <Badge className={cn("bg-secondary text-white font-black h-6 min-w-[24px] px-1.5 rounded-lg border-none shadow-lg shadow-secondary/20", pendingTasks.length === 0 && "opacity-50")}>
               {pendingTasks.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="in_progress" className="rounded-xl data-[state=active]:bg-accent/5 data-[state=active]:text-accent font-bold gap-2 px-6">
-            In corso
-            <Badge className={cn("bg-accent text-white h-5 min-w-[20px] px-1", inProgressTasks.length === 0 && "opacity-20")}>
+          <TabsTrigger value="in_progress" className="rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:text-white font-black text-xs tracking-widest uppercase gap-3 px-8 transition-all">
+            IN CORSO
+            <Badge className={cn("bg-accent text-white font-black h-6 min-w-[24px] px-1.5 rounded-lg border-none shadow-lg shadow-accent/20", inProgressTasks.length === 0 && "opacity-50")}>
               {inProgressTasks.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="completed" className="rounded-xl data-[state=active]:bg-primary/5 data-[state=active]:text-primary font-bold gap-2 px-6">
-            Completate
-            <Badge className={cn("bg-primary text-white h-5 min-w-[20px] px-1", completedTasks.length === 0 && "opacity-20")}>
+          <TabsTrigger value="completed" className="rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:text-white font-black text-xs tracking-widest uppercase gap-3 px-8 transition-all">
+            COMPLETATE
+            <Badge className={cn("bg-primary text-white font-black h-6 min-w-[24px] px-1.5 rounded-lg border-none shadow-lg shadow-primary/20", completedTasks.length === 0 && "opacity-50")}>
               {completedTasks.length}
             </Badge>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="pending" className="mt-8">
+        <TabsContent value="pending" className="mt-10 outline-none">
           {pendingTasks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {pendingTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : <EmptyState />}
         </TabsContent>
 
-        <TabsContent value="in_progress" className="mt-8">
+        <TabsContent value="in_progress" className="mt-10 outline-none">
           {inProgressTasks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {inProgressTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-20 text-gray-400 italic">Non hai compiti avviati attualmente.</div>
+            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-gray-100 rounded-[3rem]">
+              <div className="bg-accent/10 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+                <Clock className="h-10 w-10 text-accent" />
+              </div>
+              <p className="text-gray-400 font-black uppercase tracking-widest">Nessun compito avviato</p>
+            </div>
           )}
         </TabsContent>
 
-        <TabsContent value="completed" className="mt-8">
+        <TabsContent value="completed" className="mt-10 outline-none">
           {completedTasks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {completedTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-20 text-gray-400 italic">Non hai ancora completato nessun compito. Forza! 💪</div>
+            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-gray-100 rounded-[3rem]">
+              <div className="bg-primary/10 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 className="h-10 w-10 text-primary" />
+              </div>
+              <p className="text-gray-400 font-black uppercase tracking-widest">Inizia a studiare!</p>
+            </div>
           )}
         </TabsContent>
       </Tabs>

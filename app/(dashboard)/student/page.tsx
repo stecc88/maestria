@@ -65,37 +65,46 @@ export default async function StudentDashboard() {
   const userRank = rankError ? { rank: 0, diff: 0 } : (rankData || { rank: 0, diff: 0 })
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <WelcomeCard
-            name={student.profiles.full_name}
-            targetLevel={student.target_level}
-            currentLevel={student.current_level}
-            streak={student.streak_days}
-            xp={student.xp_points}
-          />
+    <div className="relative min-h-screen">
+      {/* Background Decorations */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[150px]" />
+      </div>
 
-          <StatsCards
-            writings={writingsCount || 0}
-            avgScore={avgScore}
-            completedTasks={completedTasks || 0}
-            streak={student.streak_days}
-          />
+      <div className="max-w-7xl mx-auto space-y-10 py-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+          <div className="xl:col-span-8 space-y-10">
+            <WelcomeCard
+              name={student.profiles.full_name}
+              targetLevel={student.target_level}
+              currentLevel={student.current_level}
+              streak={student.streak_days}
+              xp={student.xp_points}
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <EvolutionChart data={evolutionData || []} />
-            <RadarChart data={radarData} />
+            <StatsCards
+              writings={writingsCount || 0}
+              avgScore={avgScore}
+              completedTasks={completedTasks || 0}
+              streak={student.streak_days}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <EvolutionChart data={evolutionData || []} />
+              <RadarChart data={radarData} />
+            </div>
           </div>
-        </div>
 
-        <div className="space-y-8">
-          <MiniRanking
-            topStudents={topStudents || []}
-            userRank={userRank}
-          />
-          <PendingTasks tasks={pendingTasks || []} />
-          <LatestCorrections corrections={latestCorrections || []} />
+          <aside className="xl:col-span-4 space-y-10">
+            <MiniRanking
+              topStudents={topStudents || []}
+              userRank={userRank}
+            />
+            <PendingTasks tasks={pendingTasks || []} />
+            <LatestCorrections corrections={latestCorrections || []} />
+          </aside>
         </div>
       </div>
     </div>

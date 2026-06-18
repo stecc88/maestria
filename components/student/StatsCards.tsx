@@ -2,18 +2,21 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { PenLine, Star, CheckCircle2, Flame } from "lucide-react"
+import { PenLine, Star, CheckCircle2, Flame, TrendingUp } from "lucide-react"
 import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
 
 interface StatCardProps {
   label: string
   value: number
   icon: any
   color: string
+  gradient: string
   suffix?: string
+  delay?: number
 }
 
-function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProps) {
+function StatCard({ label, value, icon: Icon, color, gradient, suffix = "", delay = 0 }: StatCardProps) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -24,7 +27,7 @@ function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProp
       return
     }
 
-    let totalMiliseconds = 800
+    let totalMiliseconds = 1000
     let incrementTime = Math.max((totalMiliseconds / (end || 1)), 20)
 
     let timer = setInterval(() => {
@@ -37,21 +40,41 @@ function StatCard({ label, value, icon: Icon, color, suffix = "" }: StatCardProp
   }, [value])
 
   return (
-    <Card className="border-none shadow-sm bg-white overflow-hidden group hover:shadow-md transition-all duration-300">
-      <CardContent className="p-5 flex items-center gap-4">
-        <div className={`p-3 rounded-2xl ${color.replace('bg-', 'bg-opacity-10 ')} shrink-0`}>
-          <Icon className={`h-5 w-5 ${color.replace('bg-', 'text-')}`} />
-        </div>
-        <div className="min-w-0">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1 group-hover:text-gray-500 transition-colors">
-            {label}
-          </p>
-          <p className="text-2xl font-display font-bold text-gray-900 leading-none">
-            {count}{suffix}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ scale: 1.05, y: -5 }}
+    >
+      <Card className="border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white overflow-hidden group relative">
+        <div className={cn("absolute top-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", gradient)} />
+
+        <CardContent className="p-6 flex items-center gap-5 relative z-10">
+          <div className={cn(
+            "p-4 rounded-2xl shrink-0 transition-all duration-500 group-hover:rotate-6 shadow-sm",
+            color.replace('bg-', 'bg-opacity-10 '),
+            gradient
+          )}>
+            <Icon className={cn("h-6 w-6 text-white", color.replace('bg-', 'text-'))} />
+          </div>
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] leading-none group-hover:text-gray-600 transition-colors">
+                {label}
+              </p>
+              <TrendingUp className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <p className="text-3xl font-black text-gray-900 leading-none tracking-tight">
+              {count}{suffix}
+            </p>
+          </div>
+        </CardContent>
+
+        {/* Decorative corner element */}
+        <div className={cn("absolute -bottom-4 -right-4 w-12 h-12 rounded-full opacity-[0.05] group-hover:scale-150 transition-transform", color)} />
+      </Card>
+    </motion.div>
   )
 }
 
@@ -64,23 +87,42 @@ interface StatsCardsProps {
 
 export function StatsCards({ writings, avgScore, completedTasks, streak }: StatsCardsProps) {
   const stats = [
-    { label: "Scritti", value: writings, icon: PenLine, color: "bg-primary" },
-    { label: "Punteggio", value: avgScore, icon: Star, color: "bg-accent", suffix: "" },
-    { label: "Compiti", value: completedTasks, icon: CheckCircle2, color: "bg-blue-500" },
-    { label: "Streak", value: streak, icon: Flame, color: "bg-secondary" },
+    {
+      label: "Testi Scritti",
+      value: writings,
+      icon: PenLine,
+      color: "bg-emerald-500",
+      gradient: "from-emerald-400 to-emerald-600"
+    },
+    {
+      label: "Media Voti",
+      value: avgScore,
+      icon: Star,
+      color: "bg-accent",
+      gradient: "from-orange-400 to-orange-600",
+      suffix: "%"
+    },
+    {
+      label: "Task Completate",
+      value: completedTasks,
+      icon: CheckCircle2,
+      color: "bg-blue-500",
+      gradient: "from-blue-400 to-blue-600"
+    },
+    {
+      label: "Serie Attuale",
+      value: streak,
+      icon: Flame,
+      color: "bg-secondary",
+      gradient: "from-red-400 to-red-600",
+      suffix: " d"
+    },
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
       {stats.map((stat, i) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: i * 0.05 }}
-        >
-          <StatCard {...stat} />
-        </motion.div>
+        <StatCard key={stat.label} {...stat} delay={i * 0.1} />
       ))}
     </div>
   )
