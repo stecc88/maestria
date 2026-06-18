@@ -28,8 +28,9 @@ export async function POST(request: Request) {
     const total = solutionsSource.length
 
     solutionsSource.forEach((sol: any) => {
-      const studentAns = (answers[sol.id.toString()] || "").trim().toLowerCase()
-      const correctAns = sol.correct_answer.trim().toLowerCase()
+      const studentVal = answers[sol.id.toString()] || ""
+      const studentAns = studentVal.toString().trim().toLowerCase()
+      const correctAns = sol.correct_answer.toString().trim().toLowerCase()
       const isCorrect = studentAns === correctAns
 
       if (isCorrect) correctCount++
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       blankFeedback.push({
         id: sol.id,
         isCorrect,
-        studentAnswer: answers[sol.id.toString()],
+        studentAnswer: studentVal,
         correctAnswer: sol.correct_answer,
         explanation: sol.explanation
       })

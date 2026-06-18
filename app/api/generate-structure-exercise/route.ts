@@ -65,7 +65,18 @@ Rispondi SOLO con JSON valido:
 
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
     const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim()
-    const exerciseData = JSON.parse(cleanJson)
+
+    let exerciseData;
+    try {
+      exerciseData = JSON.parse(cleanJson)
+    } catch (e) {
+      console.error("JSON Parse Error:", e, "Raw text:", rawText)
+      return NextResponse.json({ error: "L'IA ha generato un formato non valido. Riprova." }, { status: 500 })
+    }
+
+    if (!exerciseData || (!exerciseData.blanks && !exerciseData.items)) {
+      return NextResponse.json({ error: "Dati dell'esercizio incompleti." }, { status: 500 })
+    }
 
     // Prepare content for frontend (remove answers)
     const frontendContent = { ...exerciseData }

@@ -1,9 +1,8 @@
 "use client"
 
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { TheoryCard } from "@/components/student/TheoryCard"
 import {
   Loader2,
   CheckCircle2,
@@ -60,12 +59,16 @@ export default function ExerciseDetailPage() {
 
   const handleSubmit = async () => {
     // Check if all fields are filled
-    const totalItems = exercise.exercise_type === "situazionale"
-      ? exercise.content.items.length
-      : exercise.content.blanks.length
+    if (!exercise || !exercise.content) return
 
-    if (Object.keys(answers).length < totalItems) {
-      toast.error("Per favore, rispondi a tutte le domande prima di correggere.")
+    const totalItems = exercise.exercise_type === "situazionale"
+      ? exercise.content.items?.length || 0
+      : exercise.content.blanks?.length || 0
+
+    const answeredCount = Object.keys(answers).filter(k => answers[k] !== undefined && answers[k] !== "").length
+
+    if (answeredCount < totalItems) {
+      toast.error(`Per favore, rispondi a tutte le domande (${answeredCount}/${totalItems}) prima di correggere.`)
       return
     }
 
