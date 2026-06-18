@@ -68,6 +68,7 @@ export default function ExercisesSelectionPage() {
       if (!response.ok) throw new Error(data.error || "Errore nella generazione")
 
       toast.success("Esercizio generato con successo!")
+      router.refresh()
       router.push(`/student/exercises/${data.exerciseId}`)
     } catch (error: any) {
       toast.error(error.message)

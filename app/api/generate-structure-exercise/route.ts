@@ -64,14 +64,22 @@ Rispondi SOLO con JSON valido:
     if (!geminiResponse.ok) throw new Error(geminiData.error?.message || "Errore Gemini")
 
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
-    const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim()
+
+    // Attempt to extract JSON if Gemini returned extra text
+    let cleanJson = rawText;
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanJson = jsonMatch[0];
+    } else {
+      cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+    }
 
     let exerciseData;
     try {
       exerciseData = JSON.parse(cleanJson)
     } catch (e) {
       console.error("JSON Parse Error:", e, "Raw text:", rawText)
-      return NextResponse.json({ error: "L'IA ha generato un formato non valido. Riprova." }, { status: 500 })
+      return NextResponse.json({ error: "L'IA ha generato un formato non valido. Prova a rigenerare." }, { status: 500 })
     }
 
     if (!exerciseData || (!exerciseData.blanks && !exerciseData.items)) {
