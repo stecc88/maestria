@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import {
@@ -11,15 +11,18 @@ import {
   GraduationCap,
   Sparkles,
   BookOpen,
-  ArrowRight
+  ChevronDown,
+  Star,
+  RotateCcw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import toast from "react-hot-toast"
 import { motion, AnimatePresence } from "framer-motion"
 import ReactMarkdown from "react-markdown"
 import { cn } from "@/lib/utils"
+import confetti from "canvas-confetti"
 
 export default function ExerciseDetailPage() {
   const params = useParams()
@@ -53,20 +56,27 @@ export default function ExerciseDetailPage() {
     fetchExercise()
   }, [params.id, router, supabase])
 
+  const totalItems = useMemo(() => {
+    if (!exercise?.content) return 0
+    return exercise.exercise_type === "situazionale"
+      ? exercise.content.items?.length || 0
+      : exercise.content.blanks?.length || 0
+  }, [exercise])
+
+  const answeredCount = useMemo(() => {
+    return Object.keys(answers).filter(k => answers[k] !== undefined && answers[k].trim() !== "").length
+  }, [answers])
+
+  const progressPercentage = useMemo(() => {
+    if (totalItems === 0) return 0
+    return (answeredCount / totalItems) * 100
+  }, [answeredCount, totalItems])
+
   const handleInputChange = (id: string, value: string) => {
     setAnswers(prev => ({ ...prev, [id]: value }))
   }
 
   const handleSubmit = async () => {
-    // Check if all fields are filled
-    if (!exercise || !exercise.content) return
-
-    const totalItems = exercise.exercise_type === "situazionale"
-      ? exercise.content.items?.length || 0
-      : exercise.content.blanks?.length || 0
-
-    const answeredCount = Object.keys(answers).filter(k => answers[k] !== undefined && answers[k] !== "").length
-
     if (answeredCount < totalItems) {
       toast.error(`Per favore, rispondi a tutte le domande (${answeredCount}/${totalItems}) prima di correggere.`)
       return
@@ -86,7 +96,16 @@ export default function ExerciseDetailPage() {
       setResult(data)
       setShowTheory(false)
       toast.success("Esercizio corretto!")
-      router.refresh()
+
+      if (data.score >= 80) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#22c55e", "#eab308", "#ef4444"]
+        })
+      }
+
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch (error: any) {
       toast.error(error.message)
@@ -97,46 +116,55 @@ export default function ExerciseDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="h-10 w-10 text-primary animate-spin" />
-        <p className="text-gray-500 font-medium font-display">Caricamento esercizio...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <div className="relative">
+          <Loader2 className="h-16 w-16 text-primary animate-spin" />
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: [0, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Sparkles className="h-6 w-6 text-accent" />
+          </motion.div>
+        </div>
+        <p className="text-gray-500 font-bold text-xl animate-pulse">Caricamento esercizio...</p>
       </div>
     )
   }
 
-  // Render text with placeholders
   const renderTextWithPlaceholders = () => {
-    if (!exercise?.content?.text_with_placeholders) return null;
+    if (!exercise?.content?.text_with_placeholders) return null
 
-    // Flexible regex for placeholders like {{1}}, {{ 1 }}, etc.
     const parts = exercise.content.text_with_placeholders.split(/(\{\{\s*\d+\s*\}\})/)
 
     return (
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm leading-[3] text-lg text-gray-800 font-body">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white p-6 md:p-10 rounded-[2rem] border-2 border-gray-100 shadow-xl shadow-gray-200/50 leading-[3] text-lg md:text-xl text-gray-800 font-medium"
+      >
         {parts.map((part: string, i: number) => {
           const match = part.match(/\{\{\s*(\d+)\s*\}\}/)
           if (match) {
             const id = match[1]
             const blank = exercise.content.blanks?.find((b: any) => b.id.toString() === id)
-            const isCorrected = result?.blank_feedback?.find((f: any) => f.id.toString() === id)
+            const feedback = result?.blank_feedback?.find((f: any) => f.id.toString() === id)
 
             if (!blank) return <span key={i} className="text-red-400">[{id}]</span>
 
             return (
-              <span key={i} className="inline-block mx-1 relative group">
+              <span key={i} className="inline-block mx-1 relative group align-middle">
                 {blank.options ? (
                   <select
-                    id={`blank-${id}`}
-                    name={`blank-${id}`}
-                    aria-label={`Risposta ${id}`}
                     value={answers[id] || ""}
                     onChange={(e) => handleInputChange(id, e.target.value)}
                     disabled={!!result}
                     className={cn(
-                      "min-w-[120px] px-3 py-1 rounded-lg border-2 text-sm font-bold appearance-none cursor-pointer transition-all outline-none",
+                      "min-w-[140px] h-10 px-4 rounded-xl border-2 text-base font-bold appearance-none cursor-pointer transition-all outline-none",
                       !result && "border-primary/20 bg-primary/5 hover:border-primary/40 focus:border-primary focus:ring-4 focus:ring-primary/10",
-                      result && isCorrected?.isCorrect && "border-green-500 bg-green-50 text-green-700",
-                      result && !isCorrected?.isCorrect && "border-red-500 bg-red-50 text-red-700"
+                      result && feedback?.isCorrect && "border-green-500 bg-green-50 text-green-700",
+                      result && !feedback?.isCorrect && "border-red-500 bg-red-50 text-red-700"
                     )}
                   >
                     <option value="">...</option>
@@ -145,97 +173,125 @@ export default function ExerciseDetailPage() {
                     ))}
                   </select>
                 ) : (
-                  <div className="inline-flex flex-col">
-                    <input
-                      id={`blank-${id}`}
-                      name={`blank-${id}`}
-                      aria-label={`Risposta ${id}`}
-                      type="text"
-                      value={answers[id] || ""}
-                      onChange={(e) => handleInputChange(id, e.target.value)}
-                      disabled={!!result}
-                      placeholder={blank.hint || "..."}
-                      className={cn(
-                        "w-32 px-3 py-1 rounded-lg border-2 text-sm font-bold text-center transition-all outline-none",
-                        !result && "border-primary/20 bg-primary/5 hover:border-primary/40 focus:border-primary focus:ring-4 focus:ring-primary/10",
-                        result && isCorrected?.isCorrect && "border-green-500 bg-green-50 text-green-700",
-                        result && !isCorrected?.isCorrect && "border-red-500 bg-red-50 text-red-700"
-                      )}
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={answers[id] || ""}
+                    onChange={(e) => handleInputChange(id, e.target.value)}
+                    disabled={!!result}
+                    placeholder={blank.hint || "..."}
+                    className={cn(
+                      "w-36 h-10 px-4 rounded-xl border-2 text-base font-bold text-center transition-all outline-none",
+                      !result && "border-primary/20 bg-primary/5 hover:border-primary/40 focus:border-primary focus:ring-4 focus:ring-primary/10",
+                      result && feedback?.isCorrect && "border-green-500 bg-green-50 text-green-700",
+                      result && !feedback?.isCorrect && "border-red-500 bg-red-50 text-red-700"
+                    )}
+                  />
                 )}
-                {result && isCorrected && !isCorrected.isCorrect && (
-                   <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap z-10">
-                     Corretto: {isCorrected.correctAnswer}
-                   </span>
-                )}
+                <AnimatePresence>
+                  {result && feedback && !feedback.isCorrect && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap z-20 shadow-xl"
+                    >
+                      Corretto: {feedback.correctAnswer}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </span>
             )
           }
           return <span key={i}>{part}</span>
         })}
-      </div>
+      </motion.div>
     )
   }
 
-  // Render situational items
   const renderSituationalItems = () => {
     return (
       <div className="space-y-6">
-        {exercise.content.items.map((item: any) => {
-          const isCorrected = result?.blank_feedback?.find((f: any) => f.id.toString() === item.id.toString())
+        {exercise.content.items.map((item: any, idx: number) => {
+          const feedback = result?.blank_feedback?.find((f: any) => f.id.toString() === item.id.toString())
           return (
-            <Card key={item.id} className={cn(
-              "overflow-hidden border-2 transition-all",
-              !result && "border-gray-100",
-              result && isCorrected?.isCorrect && "border-green-500 bg-green-50/30",
-              result && !isCorrected?.isCorrect && "border-red-500 bg-red-50/30"
-            )}>
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-start gap-3">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-500 text-xs font-bold shrink-0 mt-1">
-                    {item.id}
-                  </span>
-                  <p className="text-lg font-medium text-gray-900 leading-relaxed italic">
-                    &quot;{item.statement}&quot;
-                  </p>
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.1 }}
+            >
+              <Card className={cn(
+                "relative overflow-hidden border-4 transition-all duration-300",
+                !result && "border-gray-100 hover:border-primary/20 hover:shadow-xl shadow-gray-200/50",
+                result && feedback?.isCorrect && "border-green-500 bg-green-50/30",
+                result && !feedback?.isCorrect && "border-red-500 bg-red-50/30"
+              )}>
+                <div className="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-gray-50 rounded-full flex items-end justify-start p-6 text-4xl font-black text-gray-100 -z-0">
+                  {item.id}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-9">
-                  {Object.entries(item.options).map(([key, val]: [string, any]) => (
-                    <button
-                      key={key}
-                      id={`item-${item.id}-opt-${key}`}
-                      name={`item-${item.id}`}
-                      aria-label={`Opzione ${key}: ${val}`}
-                      type="button"
-                      disabled={!!result}
-                      onClick={() => handleInputChange(item.id.toString(), key)}
-                      className={cn(
-                        "text-left p-3 rounded-xl border-2 text-sm transition-all",
-                        answers[item.id.toString()] === key
-                          ? "border-primary bg-primary text-white font-bold"
-                          : "border-gray-50 bg-gray-50/50 text-gray-600 hover:border-primary/20",
-                        result && key === isCorrected?.correctAnswer && "border-green-500 bg-green-500 text-white shadow-sm",
-                        result && answers[item.id.toString()] === key && key !== isCorrected?.correctAnswer && "border-red-500 bg-red-500 text-white"
-                      )}
-                    >
-                      <span className="mr-2 uppercase opacity-60">{key}.</span> {val as string}
-                    </button>
-                  ))}
-                </div>
-
-                {result && isCorrected && (
-                  <div className={cn(
-                    "mt-4 p-3 rounded-lg text-xs flex gap-2 items-start",
-                    isCorrected.isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                  )}>
-                    {isCorrected.isCorrect ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
-                    <p>{isCorrected.explanation}</p>
+                <CardContent className="p-6 md:p-8 space-y-6 relative z-10">
+                  <div className="flex items-start gap-4">
+                    <p className="text-xl md:text-2xl font-black text-gray-900 leading-tight italic">
+                      &quot;{item.statement}&quot;
+                    </p>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(item.options).map(([key, val]: [string, any]) => {
+                      const isSelected = answers[item.id.toString()] === key
+                      const isCorrect = key === feedback?.correctAnswer
+                      const isWrong = isSelected && !isCorrect && !!result
+
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          disabled={!!result}
+                          onClick={() => handleInputChange(item.id.toString(), key)}
+                          className={cn(
+                            "group relative flex items-center p-5 rounded-2xl border-2 transition-all text-left font-bold",
+                            !result && isSelected && "border-primary bg-primary text-white shadow-lg shadow-primary/20",
+                            !result && !isSelected && "border-gray-100 bg-gray-50/50 text-gray-600 hover:border-primary/30 hover:bg-white",
+                            result && isCorrect && "border-green-500 bg-green-500 text-white shadow-lg",
+                            result && isWrong && "border-red-500 bg-red-500 text-white shadow-lg",
+                            result && !isCorrect && !isWrong && "border-gray-100 bg-gray-50 opacity-50"
+                          )}
+                        >
+                          <span className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-lg mr-4 text-sm font-black transition-colors",
+                            isSelected || (result && isCorrect) ? "bg-white/20 text-white" : "bg-gray-200 text-gray-500 group-hover:bg-primary/10 group-hover:text-primary"
+                          )}>
+                            {key.toUpperCase()}
+                          </span>
+                          <span className="flex-1">{val as string}</span>
+                          {isSelected && !result && (
+                            <motion.div layoutId={`check-${item.id}`} className="ml-2">
+                              <CheckCircle2 className="h-6 w-6 text-white" />
+                            </motion.div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  <AnimatePresence>
+                    {result && feedback && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        className={cn(
+                          "p-5 rounded-2xl text-sm font-bold flex gap-3 items-start",
+                          feedback.isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        )}
+                      >
+                        {feedback.isCorrect ? <CheckCircle2 className="h-5 w-5 shrink-0" /> : <AlertCircle className="h-5 w-5 shrink-0" />}
+                        <p>{feedback.explanation}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </CardContent>
+              </Card>
+            </motion.div>
           )
         })}
       </div>
@@ -243,67 +299,161 @@ export default function ExerciseDetailPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-20 animate-in fade-in duration-500">
-      <header className="space-y-4">
-        <Link href="/student/exercises">
-          <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
-            <ChevronLeft className="h-4 w-4" /> Altri esercizi
-          </Button>
-        </Link>
+    <div className="max-w-4xl mx-auto space-y-8 pb-32">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 -mx-4 px-4 py-4 md:rounded-b-[2rem] md:mx-0 shadow-sm">
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <Link href="/student/exercises">
+            <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 font-bold">
+              <ChevronLeft className="h-4 w-4" /> Esci
+            </Button>
+          </Link>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-widest">
-              <GraduationCap className="h-3 w-3" /> CILS {exercise.level} — {exercise.exercise_type.replace('_', ' ')}
-            </div>
-            <h1 className="text-3xl font-display font-bold text-gray-900">{exercise.title}</h1>
+          <div className="flex-1 text-center truncate px-4">
+            <h1 className="text-lg md:text-xl font-black text-gray-900 truncate">{exercise.title}</h1>
           </div>
-          {result && (
-            <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl border-2 border-primary shadow-sm">
-               <div className="text-center">
-                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Punteggio</p>
-                 <p className="text-2xl font-display font-bold text-primary">{result.score}%</p>
-               </div>
-            </div>
-          )}
+
+          <div className={cn(
+            "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-white shadow-lg",
+            exercise.level === "A2" ? "bg-emerald-500" :
+            exercise.level === "B1" ? "bg-blue-500" :
+            exercise.level === "B2" ? "bg-purple-500" : "bg-orange-500"
+          )}>
+            {exercise.level}
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="relative h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${result ? 100 : progressPercentage}%` }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+            className={cn(
+              "h-full rounded-full transition-colors",
+              result ? "bg-green-500" : "bg-primary"
+            )}
+          />
         </div>
       </header>
 
-      {result && (
-        <Card className="bg-primary border-none text-white shadow-xl shadow-primary/20 overflow-hidden relative">
-          <div className="absolute -right-4 -bottom-4 opacity-10">
-            <Sparkles className="h-32 w-32" />
-          </div>
-          <CardContent className="p-8 space-y-4 relative z-10">
-            <h2 className="text-xl font-display font-bold flex items-center gap-2">
-              <CheckCircle2 className="h-6 w-6" /> Feedback dell&apos;insegnante
-            </h2>
-            <p className="text-lg leading-relaxed font-medium">
-              {result.general_feedback}
-            </p>
-            <Button
-               variant="secondary"
-               className="bg-white text-primary hover:bg-gray-100 font-bold"
-               onClick={() => router.push("/student/exercises")}
-            >
-              Genera un altro esercizio
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+      {/* Result Screen */}
+      <AnimatePresence>
+        {result && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="space-y-8"
+          >
+            <Card className="bg-gray-900 border-none text-white shadow-2xl overflow-hidden relative">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute -right-20 -bottom-20 opacity-10"
+              >
+                <Star className="h-64 w-64 fill-white" />
+              </motion.div>
 
-      <div className="space-y-8">
+              <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 relative z-10">
+                {/* SVG Progress Circle */}
+                <div className="relative w-40 h-40 shrink-0">
+                  <svg className="w-full h-full" viewBox="0 0 100 100">
+                    <circle
+                      className="text-white/10 stroke-current"
+                      strokeWidth="10"
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="transparent"
+                    />
+                    <motion.circle
+                      className={cn(
+                        "stroke-current transition-colors duration-1000",
+                        result.score >= 80 ? "text-green-400" : result.score >= 60 ? "text-yellow-400" : "text-red-400"
+                      )}
+                      strokeWidth="10"
+                      strokeLinecap="round"
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="transparent"
+                      initial={{ strokeDasharray: "0 251" }}
+                      animate={{ strokeDasharray: `${(result.score * 251) / 100} 251` }}
+                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      style={{ transform: "rotate(-90deg)", transformOrigin: "50% 50%" }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1 }}
+                      className="text-4xl font-black"
+                    >
+                      {result.score}%
+                    </motion.span>
+                  </div>
+                </div>
+
+                <div className="flex-1 space-y-4 text-center md:text-left">
+                  <motion.h2
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-3xl md:text-4xl font-black"
+                  >
+                    {result.score >= 80 ? "Eccellente! 🎉" : result.score >= 60 ? "Buon lavoro! 💪" : "Continua a esercitarti! 📚"}
+                  </motion.h2>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    className="text-gray-300 text-lg leading-relaxed font-medium"
+                  >
+                    {result.general_feedback}
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2 }}
+                  >
+                    <Link href="/student/exercises">
+                      <Button className="bg-white text-gray-900 hover:bg-gray-100 font-black px-8 py-6 rounded-2xl gap-2 text-lg shadow-xl shadow-white/10 group">
+                        <RotateCcw className="h-6 w-6 group-hover:rotate-180 transition-transform duration-500" />
+                        PROVA UN ALTRO ESERCIZIO
+                      </Button>
+                    </Link>
+                  </motion.div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="space-y-8 px-1 md:px-0">
         {/* Theory Section */}
-        <Card className="border-accent/20 bg-accent/5 overflow-hidden">
+        <Card className="border-2 border-accent/20 bg-accent/5 rounded-[2rem] overflow-hidden">
            <button
              onClick={() => setShowTheory(!showTheory)}
-             className="w-full flex items-center justify-between p-6 hover:bg-accent/10 transition-colors"
+             className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-accent/10 transition-colors"
            >
-             <div className="flex items-center gap-3">
-                <BookOpen className="h-5 w-5 text-accent" />
-                <h2 className="text-lg font-bold text-gray-900 font-display">📖 Prima di iniziare: Ripasso grammaticale</h2>
+             <div className="flex items-center gap-4">
+                <div className="p-3 bg-accent/20 rounded-2xl">
+                  <BookOpen className="h-6 w-6 text-accent" />
+                </div>
+                <div className="text-left">
+                  <h2 className="text-xl font-black text-gray-900">Prima di iniziare</h2>
+                  <p className="text-sm text-gray-500 font-bold uppercase tracking-wider">Ripasso grammaticale</p>
+                </div>
              </div>
-             {showTheory ? "Nascondi" : "Mostra"}
+             <motion.div
+               animate={{ rotate: showTheory ? 0 : 180 }}
+               className="p-2 bg-white rounded-full shadow-sm"
+             >
+               <ChevronDown className="h-6 w-6 text-accent" />
+             </motion.div>
            </button>
            <AnimatePresence>
              {showTheory && (
@@ -313,8 +463,8 @@ export default function ExerciseDetailPage() {
                  exit={{ height: 0, opacity: 0 }}
                  className="overflow-hidden"
                >
-                 <CardContent className="p-8 pt-0 border-t border-accent/10">
-                   <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed font-body mt-6">
+                 <CardContent className="p-8 pt-0 border-t border-accent/10 bg-white/50">
+                   <div className="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed font-medium mt-6 prose-p:mb-4 prose-strong:text-accent prose-headings:text-gray-900 prose-headings:font-black">
                      <ReactMarkdown>{exercise.theory}</ReactMarkdown>
                    </div>
                  </CardContent>
@@ -325,9 +475,19 @@ export default function ExerciseDetailPage() {
 
         {/* Exercise Body */}
         <section className="space-y-6">
-          <h2 className="text-sm font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
-             <PenTool className="h-4 w-4" /> Esercizio
-          </h2>
+          <div className="flex items-center justify-between mb-4 px-2">
+            <h2 className="text-xl font-black text-gray-900 flex items-center gap-3">
+               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                 <Sparkles className="h-6 w-6 text-primary" />
+               </div>
+               Esercizio
+            </h2>
+            {!result && (
+              <span className="text-sm font-black text-gray-400 uppercase tracking-widest">
+                {answeredCount}/{totalItems} completati
+              </span>
+            )}
+          </div>
 
           {exercise.exercise_type === "situazionale"
             ? renderSituationalItems()
@@ -336,72 +496,78 @@ export default function ExerciseDetailPage() {
 
           {/* Detailed explanations for fill-in-the-blanks */}
           {result && exercise.exercise_type !== "situazionale" && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 font-display mt-10">Analisi degli errori</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <h3 className="text-2xl font-black text-gray-900 mt-12 mb-6 px-2">Analisi degli errori 🧐</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {result.blank_feedback.map((f: any) => (
-                  <div key={f.id} className={cn(
-                    "p-4 rounded-xl border-l-4 text-sm flex gap-3",
-                    f.isCorrect ? "bg-green-50 border-green-500" : "bg-red-50 border-red-500"
-                  )}>
-                    <span className="font-bold shrink-0">{f.id}.</span>
-                    <div className="space-y-1">
-                      <p className="font-bold text-gray-900">
-                        {f.isCorrect ? "Corretto! ✅" : `Sbagliato. Corretto: ${f.correctAnswer} ❌`}
-                      </p>
-                      <p className="text-gray-600 leading-relaxed text-xs">{f.explanation}</p>
+                {result.blank_feedback.map((f: any, idx: number) => (
+                  <motion.div
+                    key={f.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className={cn(
+                      "p-6 rounded-3xl border-2 shadow-sm flex gap-4",
+                      f.isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl shrink-0 flex items-center justify-center font-black text-white shadow-lg",
+                      f.isCorrect ? "bg-green-500" : "bg-red-500"
+                    )}>
+                      {f.id}
                     </div>
-                  </div>
+                    <div className="space-y-2">
+                      <p className="font-black text-gray-900 text-lg">
+                        {f.isCorrect ? "Ottimo! ✅" : `Risposta: ${f.correctAnswer} ❌`}
+                      </p>
+                      <p className="text-gray-600 leading-relaxed font-medium text-sm italic">
+                        &quot;{f.explanation}&quot;
+                      </p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
         </section>
 
         {!result && (
-          <footer className="pt-10 flex justify-center">
+          <footer className={cn(
+            "pt-10 flex flex-col items-center gap-4",
+            "fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 z-40 md:relative md:bg-transparent md:border-none md:p-0"
+          )}>
             <Button
               size="lg"
               onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="h-16 px-12 rounded-2xl text-lg font-bold gap-3 shadow-xl shadow-primary/20 hover:scale-105 transition-transform"
+              disabled={isSubmitting || answeredCount < totalItems}
+              className={cn(
+                "w-full md:w-auto h-16 md:h-20 px-12 md:px-16 rounded-2xl md:rounded-3xl text-xl font-black gap-3 shadow-2xl transition-all",
+                answeredCount === totalItems
+                  ? "bg-primary hover:scale-105 active:scale-95 shadow-primary/30"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              )}
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-6 w-6 animate-spin" />
-                  Correzione in corso...
+                  CORREZIONE...
                 </>
               ) : (
                 <>
-                  Correggi esercizio ✅
+                  CORREGGI ORA ✅
                 </>
               )}
             </Button>
+            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-[0.2em] hidden md:block">
+               Verifica le tue risposte prima di procedere
+            </p>
           </footer>
         )}
       </div>
     </div>
-  )
-}
-
-function PenTool({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M12 19l7-7 3 3-7 7-3-3z" />
-      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-      <path d="M2 2l1.5 1.5" />
-      <circle cx="11" cy="11" r="2" />
-    </svg>
   )
 }
