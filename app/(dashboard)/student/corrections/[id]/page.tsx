@@ -236,7 +236,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                 </Button>
               </Link>
               <Link href="/student/tasks">
-                <Button variant="outline" className="w-full border-white/20 hover:bg-white/10 text-white font-bold rounded-xl h-11 text-xs transition-all active:scale-[0.98]">
+                <Button variant="outline" className="w-full bg-transparent border-white/20 hover:bg-white/10 text-white font-bold rounded-xl h-11 text-xs transition-all active:scale-[0.98]">
                   Compiti
                 </Button>
               </Link>
