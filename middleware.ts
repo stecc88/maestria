@@ -55,10 +55,10 @@ export async function middleware(request: NextRequest) {
 
     if (profile) {
       // Verificar status
-      if (profile.status === 'pending' && !url.pathname.startsWith('/pending-approval')) {
+      if (profile.status === 'pending' && !url.pathname.startsWith('/pending-approval') && !isRootPath) {
         return NextResponse.redirect(new URL('/pending-approval', request.url))
       }
-      if (profile.status === 'rejected' && !url.pathname.startsWith('/rejected')) {
+      if (profile.status === 'rejected' && !url.pathname.startsWith('/rejected') && !isRootPath) {
         return NextResponse.redirect(new URL('/rejected', request.url))
       }
 
