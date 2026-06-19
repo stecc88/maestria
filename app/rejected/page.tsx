@@ -5,6 +5,7 @@ import { XCircle, LogOut, MessageSquare, AlertCircle, ArrowLeft } from "lucide-r
 import { Button } from "@/components/ui/button"
 import { signOut } from "@/app/actions/auth"
 import Link from "next/link"
+import * as React from "react"
 
 export default function RejectedPage() {
   const reason = "Impossibile verificare l'istituzione educativa fornita o el codice docente non è valido."
@@ -67,16 +68,18 @@ export default function RejectedPage() {
         </motion.div>
 
         <div className="space-y-4">
-          <Button className="w-full h-16 rounded-2xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 transition-all gap-3">
-            <MessageSquare className="w-5 h-5" />
-            CONTATTA IL SUPPORTO
-          </Button>
+          <Link href="mailto:supporto@maestria.it" className="block w-full">
+            <Button className="w-full h-16 rounded-2xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 transition-all gap-3">
+              <MessageSquare className="w-5 h-5" />
+              CONTATTA IL SUPPORTO
+            </Button>
+          </Link>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Button
               variant="outline"
               className="h-14 rounded-2xl border-gray-100 font-black uppercase text-xs tracking-widest text-gray-400 hover:bg-gray-50 transition-all"
-              onClick={() => signOut()}
+              onClick={() => React.startTransition(() => { signOut() })}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Disconnetti

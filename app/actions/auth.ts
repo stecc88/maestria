@@ -175,3 +175,20 @@ export async function validateTeacherCode(code: string) {
     teacherName: profile?.full_name || "Insegnante"
   }
 }
+
+export async function resendVerificationEmail(email: string) {
+  const supabase = createClient()
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/login`
+    }
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true }
+}

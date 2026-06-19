@@ -1,26 +1,59 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Clock, LogOut, ShieldCheck, Mail, ArrowLeft } from "lucide-react"
+import { Clock, LogOut, ShieldCheck, Mail, ArrowLeft, RefreshCcw, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { signOut } from "@/app/actions/auth"
+import { signOut, resendVerificationEmail } from "@/app/actions/auth"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import * as React from "react"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast"
 
 export default function PendingApprovalPage() {
   const [isEmailConfirmed, setIsEmailConfirmed] = React.useState(true)
+  const [userEmail, setUserEmail] = React.useState<string | null>(null)
+  const [isResending, setIsResending] = React.useState(false)
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
+
   const supabase = createClient()
+  const router = useRouter()
 
   React.useEffect(() => {
     async function checkUser() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user && !user.email_confirmed_at) {
-        setIsEmailConfirmed(false)
+      if (user) {
+        setUserEmail(user.email || null)
+        if (!user.email_confirmed_at) {
+          setIsEmailConfirmed(false)
+        }
       }
     }
     checkUser()
   }, [supabase])
+
+  const handleResendEmail = async () => {
+    if (!userEmail) return
+    setIsResending(true)
+    const result = await resendVerificationEmail(userEmail)
+    if (result.success) {
+      toast.success("Email di conferma inviata!")
+    } else {
+      toast.error(result.error || "Errore durante l'invio")
+    }
+    setIsResending(false)
+  }
+
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    router.refresh()
+    // Small timeout to give visual feedback and allow middleware to run
+    setTimeout(() => {
+      setIsRefreshing(false)
+      toast.success("Stato aggiornato")
+    }, 1000)
+  }
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
@@ -72,20 +105,43 @@ export default function PendingApprovalPage() {
               <div className="p-3 bg-secondary/20 rounded-xl group-hover:rotate-12 transition-transform">
                 <Mail className="h-6 w-6 text-secondary fill-secondary/20" />
               </div>
-              <div>
+              <div className="flex-grow">
                 <p className="font-black text-secondary uppercase tracking-widest text-xs mb-1">Azione Richiesta</p>
-                <p className="text-secondary-dark font-bold text-sm leading-relaxed">
+                <p className="text-secondary-dark font-bold text-sm leading-relaxed mb-3">
                    Controlla la tua casella email e clicca sul link di conferma per attivare el tuo profilo.
                 </p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-9 rounded-xl border-secondary/20 text-secondary hover:bg-secondary/10 font-bold text-[10px] uppercase tracking-widest"
+                  onClick={handleResendEmail}
+                  disabled={isResending}
+                >
+                  {isResending ? "Invio in corso..." : (
+                    <>
+                      <Send className="w-3 h-3 mr-2" />
+                      Reinvia Email
+                    </>
+                  )}
+                </Button>
               </div>
             </motion.div>
           )}
+
+          <Button
+            className="w-full h-16 rounded-2xl bg-primary hover:bg-primary-dark font-black uppercase text-xs tracking-[0.2em] text-white shadow-xl shadow-primary/20 transition-all gap-3"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCcw className={cn("w-5 h-5", isRefreshing && "animate-spin")} />
+            {isRefreshing ? "VERIFICA IN CORSO..." : "VERIFICA STATO ACCOUNT"}
+          </Button>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Button
               variant="outline"
               className="h-14 rounded-2xl border-gray-100 font-black uppercase text-xs tracking-widest text-gray-400 hover:text-secondary hover:bg-secondary/5 hover:border-secondary/20 transition-all"
-              onClick={() => signOut()}
+              onClick={() => React.startTransition(() => { signOut() })}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Disconnetti
