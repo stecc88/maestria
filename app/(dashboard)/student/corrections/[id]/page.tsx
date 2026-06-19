@@ -273,7 +273,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-white">
             <CardContent className="p-6 md:p-9">
               <AnnotatedText
                 originalText={correction.writings.content}
