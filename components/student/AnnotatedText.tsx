@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { FileText, History } from "lucide-react"
+import { FileText, History, X } from "lucide-react"
 
 interface InlineCorrection {
   original: string
   corrected: string
   explanation: string
-  error_type: 'grammatica' | 'lessico' | 'ortografia' | 'registro' | string
+  error_type: string
 }
 
 interface AnnotatedTextProps {
@@ -19,74 +19,92 @@ interface AnnotatedTextProps {
   corrections: InlineCorrection[]
 }
 
+const getCategoryStyle = (type: string) => {
+  const t = (type || "").toLowerCase()
+  if (t.includes("gramm")) return { text: "text-secondary", underline: "border-secondary/40", dot: "bg-secondary", label: "Grammatica" }
+  if (t.includes("lessic")) return { text: "text-accent-dark", underline: "border-accent/40", dot: "bg-accent", label: "Lessico" }
+  if (t.includes("ortograf")) return { text: "text-blue-600", underline: "border-blue-400/40", dot: "bg-blue-400", label: "Ortografia" }
+  if (t.includes("registro")) return { text: "text-purple-600", underline: "border-purple-400/40", dot: "bg-purple-400", label: "Registro" }
+  return { text: "text-gray-600", underline: "border-gray-300", dot: "bg-gray-400", label: type || "Altro" }
+}
+
 export function AnnotatedText({ originalText, correctedText, corrections }: AnnotatedTextProps) {
   const [showOriginal, setShowOriginal] = useState(false)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
-  const renderAnnotatedText = () => {
-    if (showOriginal) {
-      return (
-        <div className="font-mono text-lg leading-[2.2] text-gray-700 whitespace-pre-wrap">
-          {originalText}
-        </div>
-      )
-    }
+  const usedCategories = Array.from(new Set(corrections.map(c => c.error_type))).filter(Boolean)
 
-    // Sort corrections by length (descending) to minimize overlapping issues during replacement
-    const sortedCorrections = [...corrections].sort((a, b) => b.corrected.length - a.corrected.length)
+  const buildParts = (sourceText: string, mode: "corrected" | "original") => {
+    const sorted = corrections
+      .map((c, i) => ({ ...c, _i: i }))
+      .sort((a, b) => (mode === "corrected" ? b.corrected.length - a.corrected.length : b.original.length - a.original.length))
 
-    // Build the text parts
-    let parts: (string | React.ReactNode)[] = [correctedText]
+    let parts: (string | React.ReactNode)[] = [sourceText]
 
-    sortedCorrections.forEach((corr) => {
+    sorted.forEach((corr) => {
+      const target = mode === "corrected" ? corr.corrected : corr.original
+      if (!target) return
+
       const newParts: (string | React.ReactNode)[] = []
 
       parts.forEach((part) => {
-        if (typeof part !== 'string') {
+        if (typeof part !== "string") {
           newParts.push(part)
           return
         }
 
-        const segments = part.split(corr.corrected)
-        segments.forEach((segment, index) => {
+        const segments = part.split(target)
+        segments.forEach((segment, segIndex) => {
           newParts.push(segment)
-          if (index < segments.length - 1) {
-            const isGrammar = corr.error_type === 'grammatica' || corr.error_type === 'grammatica'
-            const isVocabulary = corr.error_type === 'lessico' || corr.error_type === 'lessico'
-            const isSpelling = corr.error_type === 'ortografia'
-
-            const underlineColor =
-              isGrammar ? 'border-secondary/40 decoration-secondary/50' :
-              isVocabulary ? 'border-accent/40 decoration-accent/50' :
-              isSpelling ? 'border-blue-400/40 decoration-blue-400/50' :
-              'border-purple-400/40 decoration-purple-400/50'
-
-            const textColor =
-              isGrammar ? 'text-secondary' :
-              isVocabulary ? 'text-accent-dark' :
-              isSpelling ? 'text-blue-600' :
-              'text-purple-600'
+          if (segIndex < segments.length - 1) {
+            const style = getCategoryStyle(corr.error_type)
+            const isOpen = activeIndex === corr._i
 
             newParts.push(
-              <Tooltip key={`${corr.corrected}-${index}`}>
-                <TooltipTrigger>
-                   <span className={cn(
-                    "cursor-help border-b-2 font-bold transition-all hover:bg-gray-50 px-0.5 rounded-sm",
-                    underlineColor,
-                    textColor
-                  )}>
-                    {corr.corrected}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="p-4 max-w-xs space-y-3 bg-gray-900 border-none text-white rounded-2xl shadow-2xl z-50">
-                  <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                      {corr.error_type}
-                    </span>
-                    <span className="text-xs font-bold text-secondary line-through">{corr.original}</span>
-                  </div>
-                  <p className="text-sm leading-relaxed">{corr.explanation}</p>
-                </TooltipContent>
-              </Tooltip>
+              <span key={`${corr._i}-${segIndex}-${mode}`} className="relative inline">
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(isOpen ? null : corr._i)}
+                  className={cn(
+                    "cursor-pointer font-bold transition-all px-0.5 rounded-sm border-b-2 hover:bg-gray-50 outline-none",
+                    style.underline,
+                    style.text,
+                    mode === "original" && "line-through opacity-70"
+                  )}
+                >
+                  {target}
+                </button>
+
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 top-full mt-2 z-50 w-72 bg-gray-900 text-white rounded-2xl shadow-2xl p-4 space-y-2.5 not-italic font-normal"
+                    >
+                      <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={cn("w-2 h-2 rounded-full", style.dot)} />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                            {style.label}
+                          </span>
+                        </div>
+                        <button onClick={() => setActiveIndex(null)} className="text-gray-500 hover:text-white">
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="line-through text-gray-500">{corr.original}</span>
+                        <span className="text-gray-400">→</span>
+                        <span className="font-bold text-white">{corr.corrected}</span>
+                      </div>
+                      <p className="text-[13px] leading-relaxed text-gray-300">{corr.explanation}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </span>
             )
           }
         })
@@ -94,44 +112,62 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
       parts = newParts
     })
 
-    return (
-      <div className="font-mono text-lg leading-[2.2] text-gray-800 whitespace-pre-wrap">
-        {parts}
-      </div>
-    )
+    return parts
   }
 
+  const parts = buildParts(showOriginal ? originalText : correctedText, showOriginal ? "original" : "corrected")
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-1 rounded-2xl w-fit">
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-            !showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
-          )}
-          onClick={() => setShowOriginal(false)}
-        >
-          <FileText className="h-3.5 w-3.5" />
-          Testo corretto
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-            showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
-          )}
-          onClick={() => setShowOriginal(true)}
-        >
-          <History className="h-3.5 w-3.5" />
-          Testo originale
-        </Button>
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-1 rounded-2xl w-fit">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
+              !showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
+            )}
+            onClick={() => { setShowOriginal(false); setActiveIndex(null) }}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            Testo corretto
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
+              showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
+            )}
+            onClick={() => { setShowOriginal(true); setActiveIndex(null) }}
+          >
+            <History className="h-3.5 w-3.5" />
+            Testo originale
+          </Button>
+        </div>
+
+        {usedCategories.length > 0 && (
+          <div className="flex items-center gap-3 flex-wrap text-[11px] text-gray-500">
+            {usedCategories.map((cat) => {
+              const style = getCategoryStyle(cat)
+              return (
+                <div key={cat} className="flex items-center gap-1.5">
+                  <span className={cn("w-2 h-2 rounded-full", style.dot)} />
+                  <span className="font-semibold">{style.label}</span>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
 
-      <div className="relative">
-        {renderAnnotatedText()}
+      <p className="text-[11px] text-gray-400 italic px-1">
+        💡 Tocca una parola sottolineata per vedere la spiegazione
+      </p>
+
+      <div className="relative font-mono text-base md:text-lg leading-[2.1] text-gray-800 whitespace-pre-wrap">
+        {parts}
       </div>
     </div>
   )
