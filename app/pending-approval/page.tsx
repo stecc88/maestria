@@ -45,13 +45,35 @@ export default function PendingApprovalPage() {
     setIsResending(false)
   }
 
-  const handleRefresh = () => {
+  const checkEmailConfirmation = React.useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.email_confirmed_at) {
+      setIsEmailConfirmed(true)
+      return true
+    }
+    return false
+  }, [supabase])
+
+  const handleRefresh = async () => {
     setIsRefreshing(true)
+
+    // Check email confirmation status explicitly on client
+    const confirmed = await checkEmailConfirmation()
+
     router.refresh()
+
     // Small timeout to give visual feedback and allow middleware to run
     setTimeout(() => {
       setIsRefreshing(false)
-      toast.success("Stato aggiornato")
+      if (confirmed) {
+        toast.success("Email confermata! Reindirizzamento...")
+        // Wait a bit more for middleware to potentially redirect
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      } else {
+        toast.success("Stato aggiornato")
+      }
     }, 1000)
   }
 

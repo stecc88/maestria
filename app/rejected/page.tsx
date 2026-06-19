@@ -68,11 +68,12 @@ export default function RejectedPage() {
         </motion.div>
 
         <div className="space-y-4">
-          <Link href="mailto:supporto@maestria.it" className="block w-full">
-            <Button className="w-full h-16 rounded-2xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 transition-all gap-3">
-              <MessageSquare className="w-5 h-5" />
-              CONTATTA IL SUPPORTO
-            </Button>
+          <Link
+            href="mailto:supporto@maestria.it"
+            className="w-full h-16 rounded-2xl bg-gray-900 hover:bg-black font-black uppercase text-xs tracking-widest text-white shadow-xl shadow-gray-200 transition-all flex items-center justify-center gap-3"
+          >
+            <MessageSquare className="w-5 h-5" />
+            CONTATTA IL SUPPORTO
           </Link>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

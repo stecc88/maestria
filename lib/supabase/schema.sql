@@ -24,10 +24,19 @@ CREATE TABLE teachers (
   approved_at TIMESTAMPTZ
 );
 
+-- Tabla de cursos
+CREATE TABLE courses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  teacher_id UUID NOT NULL REFERENCES teachers(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Tabla de alumnos
 CREATE TABLE students (
   id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
   teacher_id UUID REFERENCES teachers(id),
+  course_id UUID REFERENCES courses(id) ON DELETE SET NULL,
   teacher_code_used TEXT,
   target_level TEXT NOT NULL CHECK (target_level IN ('A1','A2','B1','B2','C1','C2')),
   current_level TEXT CHECK (current_level IN ('A1','A2','B1','B2','C1','C2')),
@@ -131,11 +140,14 @@ CREATE INDEX idx_corrections_writing ON corrections(writing_id);
 CREATE INDEX idx_tasks_student ON tasks(student_id, status);
 CREATE INDEX idx_notifications_user ON notifications(user_id, read);
 CREATE INDEX idx_students_xp ON students(xp_points DESC);
+CREATE INDEX idx_courses_teacher ON courses(teacher_id);
+CREATE INDEX idx_students_course ON students(course_id);
 CREATE INDEX idx_progress_student ON progress_history(student_id, date);
 
 -- ROW LEVEL SECURITY
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE writings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE corrections ENABLE ROW LEVEL SECURITY;
@@ -145,6 +157,9 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE progress_history ENABLE ROW LEVEL SECURITY;
 
 -- POLÍTICAS RLS
+
+-- Courses: profesor ve los suyos
+CREATE POLICY "Teachers can manage own courses" ON courses FOR ALL USING (auth.uid() = teacher_id);
 
 -- Profiles: cada uno ve el suyo, admin ve todos
 CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
