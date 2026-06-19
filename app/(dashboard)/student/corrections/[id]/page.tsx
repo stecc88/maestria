@@ -40,6 +40,32 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
   const nextSteps = correction.next_steps || []
   const inlineCorrections = correction.inline_corrections || []
 
+  const groupedErrors = inlineCorrections.reduce((acc: any, c: any) => {
+    const key = c.error_type || "altro"
+    if (!acc[key]) acc[key] = []
+    acc[key].push(c)
+    return acc
+  }, {})
+  const errorCategories = Object.keys(groupedErrors)
+
+  const getCategoryDot = (cat: string) => cn(
+    "w-1.5 h-1.5 rounded-full",
+    cat.toLowerCase().includes('gramm') ? 'bg-secondary' :
+    cat.toLowerCase().includes('lessic') ? 'bg-accent' :
+    cat.toLowerCase().includes('ortograf') ? 'bg-blue-400' :
+    cat.toLowerCase().includes('registro') ? 'bg-purple-400' :
+    'bg-gray-400'
+  )
+
+  const getCategoryChip = (cat: string) => cn(
+    "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold",
+    cat.toLowerCase().includes('gramm') ? 'bg-secondary/10 text-secondary' :
+    cat.toLowerCase().includes('lessic') ? 'bg-accent/10 text-accent-dark' :
+    cat.toLowerCase().includes('ortograf') ? 'bg-blue-50 text-blue-600' :
+    cat.toLowerCase().includes('registro') ? 'bg-purple-50 text-purple-600' :
+    'bg-gray-100 text-gray-600'
+  )
+
   return (
     <div className="max-w-6xl mx-auto space-y-10 pb-24 animate-in fade-in duration-700 px-4 md:px-0">
 
@@ -227,13 +253,24 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </div>
             <div>
               <h3 className="text-lg font-display font-bold text-gray-900">Analisi del Testo</h3>
-              <p className="text-gray-400 text-xs">Revisione e correzioni suggerite</p>
+              <p className="text-gray-400 text-xs">Dove hai sbagliato e come migliorare</p>
             </div>
           </div>
           <Badge className="bg-primary/5 text-primary border-primary/10 font-bold px-4 py-1.5 rounded-full">
             {inlineCorrections.length} correzioni
           </Badge>
         </div>
+
+        {errorCategories.length > 0 && (
+          <div className="flex flex-wrap gap-2 px-1">
+            {errorCategories.map((cat) => (
+              <div key={cat} className={getCategoryChip(cat)}>
+                <span className={getCategoryDot(cat)} />
+                {cat} × {groupedErrors[cat].length}
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-white overflow-hidden">
@@ -247,8 +284,8 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
           </Card>
 
           <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-white">
-            <CardContent className="p-6 space-y-3 h-full">
-              <h4 className="font-bold text-gray-900 text-sm px-1">Dettaglio errori</h4>
+            <CardContent className="p-6 space-y-4 h-full">
+              <h4 className="font-bold text-gray-900 text-sm px-1">Correzioni nel dettaglio</h4>
 
               {inlineCorrections.length === 0 ? (
                 <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
@@ -257,23 +294,30 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                   <p className="text-[11px] text-primary/60 mt-1">Testo grammaticalmente perfetto.</p>
                 </div>
               ) : (
-                <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
                   {inlineCorrections.map((c: any, i: number) => (
-                    <div key={i} className="relative flex gap-3 p-4 rounded-xl bg-gray-50/60 border border-gray-100">
-                      <div className={cn(
-                        "shrink-0 w-1 rounded-full mt-0.5 self-stretch",
-                        c.error_type?.toLowerCase().includes('gramm') ? 'bg-secondary' :
-                        c.error_type?.toLowerCase().includes('lessic') ? 'bg-accent' :
-                        c.error_type?.toLowerCase().includes('ortograf') ? 'bg-blue-400' :
-                        'bg-purple-400'
-                      )} />
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">{c.error_type}</span>
-                          <span className="text-xs text-gray-400 line-through truncate">{c.original}</span>
+                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-gray-100 overflow-hidden">
+                      <div className="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
+                        <span className={getCategoryDot(c.error_type || "altro")} />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                          {c.error_type}
+                        </span>
+                      </div>
+
+                      <div className="p-4 space-y-3">
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Hai scritto</p>
+                          <p className="text-sm text-gray-500 line-through leading-relaxed">{c.original}</p>
                         </div>
-                        <p className="font-bold text-gray-900 text-sm leading-tight">{c.corrected}</p>
-                        <p className="text-xs text-gray-500 leading-relaxed">{c.explanation}</p>
+
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Forma corretta</p>
+                          <p className="text-sm font-bold text-gray-900 leading-relaxed">{c.corrected}</p>
+                        </div>
+
+                        <div className="pt-2 border-t border-gray-100">
+                          <p className="text-xs text-gray-500 leading-relaxed italic">{c.explanation}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
