@@ -1,107 +1,288 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { CheckCircle2, AlertCircle, Sparkles } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/server"
+import { notFound } from "next/navigation"
+import {
+  CheckCircle2, FileSearch, Sparkles, Target, Star,
+  TrendingUp
+} from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import { CorrectionHeader } from "@/components/student/CorrectionHeader"
+import { ExaminerCard } from "@/components/student/ExaminerCard"
+import { AnnotatedText } from "@/components/student/AnnotatedText"
+import { RadarChart } from "@/components/student/RadarChart"
+import Link from "next/link"
 
-interface CorrectionHeaderProps {
-  level: string
-  targetLevel: string
-  score: number
-  examCompliant: boolean
-  xpEarned: number
-}
+export default async function CorrectionResultPage({ params }: { params: { id: string } }) {
+  const supabase = createClient()
 
-const LEVEL_STYLES: Record<string, string> = {
-  A1: "bg-gray-400",
-  A2: "bg-emerald-500",
-  B1: "bg-blue-500",
-  B2: "bg-secondary",
-  C1: "bg-purple-500",
-  C2: "bg-accent",
-}
+  const { data: correction } = await supabase
+    .from("corrections")
+    .select("*, writings(*)")
+    .eq("id", params.id)
+    .single()
 
-export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpEarned }: CorrectionHeaderProps) {
-  const [displayScore, setDisplayScore] = useState(0)
+  if (!correction) notFound()
 
-  useEffect(() => {
-    let start = 0
-    const duration = 1000
-    const stepTime = 16
-    const steps = duration / stepTime
-    const increment = score / steps
+  const radarData = [
+    { subject: 'COERENZA', A: correction.score_coherence, fullMark: 25 },
+    { subject: 'LESSICO', A: correction.score_vocabulary, fullMark: 25 },
+    { subject: 'GRAMMATICA', A: correction.score_grammar, fullMark: 25 },
+    { subject: 'COMPITO', A: correction.score_task_completion, fullMark: 25 },
+  ]
 
-    const timer = setInterval(() => {
-      start += increment
-      if (start >= score) {
-        setDisplayScore(score)
-        clearInterval(timer)
-      } else {
-        setDisplayScore(Math.floor(start))
-      }
-    }, stepTime)
-
-    return () => clearInterval(timer)
-  }, [score])
+  const levels = ["A1", "A2", "B1", "B2", "C1", "C2"]
+  const pros = correction.pros || []
+  const cons = correction.cons || []
+  const suggestions = correction.suggestions || []
+  const nextSteps = correction.next_steps || []
+  const inlineCorrections = correction.inline_corrections || []
 
   return (
-    <div className="relative bg-white rounded-3xl p-6 md:p-9 border border-gray-100 shadow-sm overflow-hidden animate-in fade-in slide-in-from-top-2 duration-500">
-      <div
-        className="absolute -right-6 -top-6 md:right-6 md:top-6 pointer-events-none select-none z-0"
-        style={{ opacity: 0.06, transform: 'rotate(-18deg)' }}
-      >
-        <div className={cn(
-          "border-[10px] p-4 md:p-8 rounded-3xl",
-          examCompliant ? "border-primary text-primary" : "border-secondary text-secondary"
-        )}>
-          <span className="text-5xl md:text-7xl font-display font-black uppercase tracking-tighter">
-            {examCompliant ? "Approvato" : "Da Rivedere"}
-          </span>
+    <div className="max-w-6xl mx-auto space-y-10 pb-24 animate-in fade-in duration-700 px-4 md:px-0">
+
+      <CorrectionHeader
+        level={correction.detected_level}
+        targetLevel={correction.writings.target_level}
+        score={correction.overall_score}
+        examCompliant={correction.exam_compliant}
+        xpEarned={correction.xp_earned}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div className="lg:col-span-8 h-full">
+          <ExaminerCard comment={correction.examiner_comment} />
+        </div>
+        <div className="lg:col-span-4 h-full">
+          <RadarChart data={radarData} />
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
-
-        <div className="flex items-center gap-4">
-          <div className={cn(
-            "text-white text-4xl md:text-5xl font-display font-bold w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-2xl shadow-lg shrink-0",
-            LEVEL_STYLES[level] || "bg-gray-400"
-          )}>
-            {level}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3 px-1">
+          <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+            <TrendingUp className="h-4 w-4 text-primary" />
           </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Livello rilevato</p>
-            <h2 className="text-xl md:text-2xl font-display font-bold text-gray-900 leading-tight">Valutazione Finale</h2>
-            <Badge className={cn(
-              "mt-2 gap-1.5 px-3 py-1 rounded-full font-bold border-none text-[11px]",
-              examCompliant ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary"
-            )}>
-              {examCompliant ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
-              {examCompliant ? "Conforme" : "Da migliorare"}
-            </Badge>
-          </div>
+          <h3 className="text-lg font-display font-bold text-gray-900">Analisi qualitativa</h3>
         </div>
 
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="flex items-baseline">
-            <span className="text-6xl md:text-7xl font-display font-black text-gray-900 tracking-tighter tabular-nums">
-              {displayScore}
-            </span>
-            <span className="text-xl md:text-2xl font-bold text-gray-300 ml-1">/100</span>
-          </div>
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-1">Punteggio Globale</p>
-        </div>
+        <Card className="relative border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+          <CardContent className="p-5 md:p-7">
+            <Tabs defaultValue="strengths" className="w-full">
+              <TabsList className="bg-gray-50 p-1 h-11 rounded-xl w-full flex gap-1 mb-6">
+                <TabsTrigger value="strengths" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                  ✅ Punti di forza
+                </TabsTrigger>
+                <TabsTrigger value="to_improve" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-secondary data-[state=active]:text-white transition-all">
+                  ⚠️ Aree da migliorare
+                </TabsTrigger>
+                <TabsTrigger value="suggestions" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-accent data-[state=active]:text-white transition-all">
+                  💡 Suggerimenti
+                </TabsTrigger>
+              </TabsList>
 
-        <div className="flex flex-col items-center justify-center bg-accent/5 border border-accent/10 rounded-2xl p-5 px-7">
-          <div className="flex items-center gap-2 text-accent mb-1">
-            <Sparkles className="h-5 w-5 animate-pulse" />
-            <span className="text-2xl md:text-3xl font-black">+{xpEarned} XP</span>
-          </div>
-          <p className="text-[9px] font-bold text-accent/60 uppercase tracking-widest">Esperienza acquisita</p>
-        </div>
+              <TabsContent value="strengths">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {pros.map((pro: string, i: number) => (
+                    <div
+                      key={i}
+                      className="relative bg-green-50/60 border border-green-100 rounded-2xl p-5 flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2"
+                      style={{ animationDelay: `${i * 80}ms` }}
+                    >
+                      <div className="p-1.5 bg-green-100 rounded-lg shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      </div>
+                      <p className="text-gray-700 text-[14px] leading-[1.7] font-medium">{pro}</p>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
 
+              <TabsContent value="to_improve">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {cons.map((con: string, i: number) => (
+                    <div
+                      key={i}
+                      className="relative bg-red-50/60 border border-red-100 rounded-2xl p-5 flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2"
+                      style={{ animationDelay: `${i * 80}ms` }}
+                    >
+                      <div className="p-1.5 bg-red-100 rounded-lg shrink-0 mt-0.5">
+                        <Target className="h-4 w-4 text-red-500" />
+                      </div>
+                      <p className="text-gray-700 text-[14px] leading-[1.7] font-medium">{con}</p>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="suggestions">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {suggestions.map((sug: any, i: number) => (
+                    <div
+                      key={i}
+                      className="bg-amber-50/60 border border-amber-100 rounded-2xl p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2"
+                      style={{ animationDelay: `${i * 80}ms` }}
+                    >
+                      <Badge className="bg-amber-100 text-amber-700 border-none text-[10px] font-black uppercase tracking-wider">
+                        {sug.category}
+                      </Badge>
+                      <p className="font-bold text-gray-900 text-[14px] leading-snug">{sug.tip}</p>
+                      <div className="bg-white rounded-xl p-3 border border-amber-100">
+                        <p className="text-xs text-gray-500 italic leading-relaxed">&ldquo;{sug.example}&rdquo;</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-white">
+          <CardContent className="p-7 space-y-5 h-full flex flex-col">
+            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">
+              Progresso per livelli
+            </h4>
+            <div className="space-y-2.5 flex-1">
+              {levels.map((l) => {
+                const isMet = correction.meets_level_requirements?.[l]
+                const isCurrent = correction.detected_level === l
+                return (
+                  <div key={l} className={cn(
+                    "flex items-center gap-3 p-2.5 rounded-xl transition-all",
+                    isCurrent && "bg-primary/5"
+                  )}>
+                    <div className={cn(
+                      "w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-all",
+                      isMet ? "bg-primary text-white" : "bg-gray-100 text-gray-400"
+                    )}>
+                      {l}
+                    </div>
+                    <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={cn("h-full rounded-full transition-all duration-700", isMet ? "bg-primary" : "bg-transparent")}
+                        style={{ width: isMet ? '100%' : '0%' }}
+                      />
+                    </div>
+                    {isCurrent ? (
+                      <Badge className="text-[9px] bg-accent text-white border-none font-black tracking-wider shrink-0">
+                        ATTUALE
+                      </Badge>
+                    ) : isMet ? (
+                      <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                    ) : (
+                      <div className="h-4 w-4 shrink-0" />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-7 h-full border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden relative group">
+          <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 transition-transform duration-500">
+            <Sparkles className="h-28 w-28" />
+          </div>
+          <CardContent className="p-7 space-y-5 relative z-10 h-full flex flex-col">
+            <h4 className="font-display font-bold text-lg flex items-center gap-2">
+              <Star className="h-5 w-5 text-accent fill-accent" />
+              Prossimi passi
+            </h4>
+            <ul className="space-y-4 flex-1">
+              {nextSteps.map((step: string, i: number) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5 text-xs font-black">
+                    {i + 1}
+                  </div>
+                  <span className="text-sm leading-relaxed text-gray-300">{step}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-2 grid grid-cols-2 gap-3">
+              <Link href="/student/write">
+                <Button className="w-full bg-primary hover:bg-primary-dark font-bold rounded-xl h-11 text-xs transition-all active:scale-[0.98]">
+                  Nuovo testo
+                </Button>
+              </Link>
+              <Link href="/student/tasks">
+                <Button variant="outline" className="w-full border-white/20 hover:bg-white/10 text-white font-bold rounded-xl h-11 text-xs transition-all active:scale-[0.98]">
+                  Compiti
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      <section className="space-y-5">
+        <div className="flex items-center justify-between flex-wrap gap-3 px-1">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+              <FileSearch className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-display font-bold text-gray-900">Analisi del Testo</h3>
+              <p className="text-gray-400 text-xs">Revisione e correzioni suggerite</p>
+            </div>
+          </div>
+          <Badge className="bg-primary/5 text-primary border-primary/10 font-bold px-4 py-1.5 rounded-full">
+            {inlineCorrections.length} correzioni
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+            <CardContent className="p-6 md:p-9">
+              <AnnotatedText
+                originalText={correction.writings.content}
+                correctedText={correction.corrected_text}
+                corrections={inlineCorrections}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-white">
+            <CardContent className="p-6 space-y-3 h-full">
+              <h4 className="font-bold text-gray-900 text-sm px-1">Dettaglio errori</h4>
+
+              {inlineCorrections.length === 0 ? (
+                <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
+                  <Sparkles className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <p className="font-bold text-primary text-sm">Nessun errore rilevato!</p>
+                  <p className="text-[11px] text-primary/60 mt-1">Testo grammaticalmente perfetto.</p>
+                </div>
+              ) : (
+                <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+                  {inlineCorrections.map((c: any, i: number) => (
+                    <div key={i} className="relative flex gap-3 p-4 rounded-xl bg-gray-50/60 border border-gray-100">
+                      <div className={cn(
+                        "shrink-0 w-1 rounded-full mt-0.5 self-stretch",
+                        c.error_type?.toLowerCase().includes('gramm') ? 'bg-secondary' :
+                        c.error_type?.toLowerCase().includes('lessic') ? 'bg-accent' :
+                        c.error_type?.toLowerCase().includes('ortograf') ? 'bg-blue-400' :
+                        'bg-purple-400'
+                      )} />
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">{c.error_type}</span>
+                          <span className="text-xs text-gray-400 line-through truncate">{c.original}</span>
+                        </div>
+                        <p className="font-bold text-gray-900 text-sm leading-tight">{c.corrected}</p>
+                        <p className="text-xs text-gray-500 leading-relaxed">{c.explanation}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   )
 }
