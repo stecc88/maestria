@@ -3,13 +3,14 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, ChevronRight } from "lucide-react"
+import { Menu, ChevronRight, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { NotificationBell } from "@/components/shared/NotificationBell"
 import { Sidebar } from "./Sidebar"
 import { cn } from "@/lib/utils"
+import { signOut } from "@/app/actions/auth"
 
 interface HeaderProps {
   user: {
@@ -72,7 +73,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
           </SheetContent>
         </Sheet>
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-white font-bold shadow-sm">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-black text-xs shadow-lg">
             M
           </div>
         </Link>
@@ -84,8 +85,8 @@ export function Header({ user, studentData, teacherData, notifications }: Header
            {breadcrumbs.map((label, i) => (
              <React.Fragment key={i}>
                 <span className={cn(
-                  "transition-colors hover:text-gray-900 capitalize",
-                  i === breadcrumbs.length - 1 && "text-gray-900 font-bold"
+                  "transition-colors hover:text-gray-900 capitalize font-bold",
+                  i === breadcrumbs.length - 1 && "text-gray-900"
                 )}>
                   {label}
                 </span>
@@ -100,19 +101,26 @@ export function Header({ user, studentData, teacherData, notifications }: Header
 
         <div className="hidden md:flex items-center gap-3 pl-4 border-l border-gray-100">
           <div className="text-right">
-            <p className="text-xs font-bold text-gray-900 leading-none">{user.full_name}</p>
+            <p className="text-xs font-black text-gray-900 leading-none">{user.full_name}</p>
             <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 opacity-70">
               {user.role}
             </p>
           </div>
           <Link href={`/${user.role}/profile`}>
-            <Avatar className="h-8 w-8 border border-gray-100 ring-2 ring-white hover:ring-primary/10 transition-all">
+            <Avatar className="h-9 w-9 border-2 border-white shadow-sm ring-2 ring-gray-100 hover:ring-primary/20 transition-all">
               <AvatarImage src={user.avatar_url} />
-              <AvatarFallback className="bg-cream text-primary text-[10px] font-bold">
-                {user.full_name.split(' ').map(n => n[0]).join('')}
+              <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-black">
+                {user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Link>
+          <button
+            onClick={() => signOut()}
+            className="ml-2 p-2 rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all active:scale-90"
+            title="Esci"
+          >
+            <LogOut className="h-4.5 w-4.5" />
+          </button>
         </div>
       </div>
     </header>
