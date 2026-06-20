@@ -13,22 +13,25 @@ export default async function TeacherStudentsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Check if user is teacher
-  const { data: profile } = await adminSupabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single()
+  // Parallelize profile check and students fetch
+  const [profileRes, studentsRes] = await Promise.all([
+    adminSupabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single(),
+    adminSupabase
+      .from("students")
+      .select("*, profiles(*)")
+      .eq("teacher_id", user.id)
+  ])
+
+  const { data: profile } = profileRes
+  const { data: students } = studentsRes
 
   if (profile?.role !== 'teacher') {
     redirect("/")
   }
-
-  // Fetch all students for this teacher using admin client to bypass RLS on profiles
-  const { data: students } = await adminSupabase
-    .from("students")
-    .select("*, profiles(*)")
-    .eq("teacher_id", user.id)
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">

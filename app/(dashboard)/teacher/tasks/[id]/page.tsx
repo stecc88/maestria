@@ -73,10 +73,10 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
   }
 
   const exerciseTypeMap: Record<string, string> = {
-    completar: 'Completamento',
-    transformacion: 'Trasformazione',
-    reescritura: 'Riscrittura',
-    escritura: 'Scrittura',
+    completamento: 'Completamento',
+    trasformazione: 'Trasformazione',
+    riscrittura: 'Riscrittura',
+    scrittura: 'Scrittura',
   }
 
   const renderStudentResponse = () => {
@@ -86,7 +86,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
     const content = submission.content;
 
     try {
-      if (type === 'completar' || type === 'transformacion') {
+      if (type === 'completamento' || type === 'trasformazione') {
         const answers = typeof content === 'string' && content.startsWith('{') ? JSON.parse(content) : content;
         const items = task.exercise_content?.items || [];
 
@@ -112,7 +112,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                   </div>
 
                   <div className="flex-grow">
-                    {type === 'completar' ? (
+                    {type === 'completamento' ? (
                       <p className="text-gray-800 leading-snug">
                         {item.sentence_before} <span className={cn("font-bold px-1 rounded", isCorrect ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700 underline decoration-2")}>{studentAns || '(vuoto)'}</span> {item.sentence_after}
                       </p>

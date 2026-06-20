@@ -37,7 +37,7 @@ export function ExerciseArea({
   const exerciseType = content?.type || type
 
   useEffect(() => {
-    if (exerciseType === "scrittura" || exerciseType === "riscrittura" || type === "escritura" || type === "reescritura") {
+    if (exerciseType === "scrittura" || exerciseType === "riscrittura") {
       const words = textAnswer.trim().split(/\s+/).filter((w) => w.length > 0)
       setWordCount(words.length)
     }
