@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { RankingHeader } from "@/components/student/RankingHeader"
 import { Podium } from "@/components/student/Podium"
@@ -14,12 +15,13 @@ import { getLevelFromXP } from "@/lib/utils/levels"
 
 export default async function RankingPage() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
   // 1. Fetch Global Ranking
-  const { data: students } = await supabase
+  const { data: students } = await adminSupabase
     .from("students")
     .select("id, xp_points, streak_days, target_level, teacher_id, achievements, profiles(full_name, avatar_url)")
     .order("xp_points", { ascending: false })
@@ -33,7 +35,7 @@ export default async function RankingPage() {
 
   // 3. Class Ranking (students with same teacher)
   const myTeacherId = me?.teacher_id
-  const { data: classStudents } = await supabase
+  const { data: classStudents } = await adminSupabase
     .from("students")
     .select("id, xp_points, profiles(full_name, avatar_url), teachers:teacher_id(profiles(full_name))")
     .eq("teacher_id", myTeacherId || "")

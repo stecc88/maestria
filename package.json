@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@base-ui/react": "latest",
-    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.4.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
