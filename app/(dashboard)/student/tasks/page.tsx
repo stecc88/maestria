@@ -45,23 +45,23 @@ export default async function StudentTasksPage() {
 
   const TaskIcon = ({ type }: { type: string }) => {
     switch (type) {
-      case 'escritura': return <PenLine className="h-6 w-6" />
-      case 'completar': return <ClipboardList className="h-6 w-6" />
-      case 'transformacion': return <RefreshCw className="h-6 w-6" />
-      case 'reescritura': return <FileText className="h-6 w-6" />
+      case 'scrittura': return <PenLine className="h-6 w-6" />
+      case 'completamento': return <ClipboardList className="h-6 w-6" />
+      case 'trasformazione': return <RefreshCw className="h-6 w-6" />
+      case 'riscrittura': return <FileText className="h-6 w-6" />
       default: return <ClipboardList className="h-6 w-6" />
     }
   }
 
   const TYPE_CONFIG: Record<string, { color: string, gradient: string }> = {
-    "escritura": { color: "text-emerald-500", gradient: "from-emerald-400 to-emerald-600" },
-    "completar": { color: "text-blue-500", gradient: "from-blue-400 to-blue-600" },
-    "transformacion": { color: "text-purple-500", gradient: "from-purple-400 to-purple-600" },
-    "reescritura": { color: "text-orange-500", gradient: "from-orange-400 to-orange-600" },
+    "scrittura": { color: "text-emerald-500", gradient: "from-emerald-400 to-emerald-600" },
+    "completamento": { color: "text-blue-500", gradient: "from-blue-400 to-blue-600" },
+    "trasformazione": { color: "text-purple-500", gradient: "from-purple-400 to-purple-600" },
+    "riscrittura": { color: "text-orange-500", gradient: "from-orange-400 to-orange-600" },
   }
 
   const TaskCard = ({ task }: { task: any }) => {
-    const config = TYPE_CONFIG[task.exercise_type] || TYPE_CONFIG["escritura"]
+    const config = TYPE_CONFIG[task.exercise_type] || TYPE_CONFIG["scrittura"]
 
     return (
       <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-white rounded-[2rem] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">

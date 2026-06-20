@@ -11,25 +11,28 @@ export default async function TeacherProfilePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Fetch Teacher and Profile Data
-  const { data: teacher } = await adminSupabase
-    .from("teachers")
-    .select("*, profiles(*)")
-    .eq("id", user.id)
-    .single()
+  // Parallelize data fetching
+  const [teacherRes, studentCountRes, taskCountRes] = await Promise.all([
+    adminSupabase
+      .from("teachers")
+      .select("*, profiles(*)")
+      .eq("id", user.id)
+      .single(),
+    adminSupabase
+      .from("students")
+      .select("*", { count: "exact", head: true })
+      .eq("teacher_id", user.id),
+    adminSupabase
+      .from("tasks")
+      .select("*", { count: "exact", head: true })
+      .eq("teacher_id", user.id)
+  ])
+
+  const { data: teacher } = teacherRes
+  const { count: studentCount } = studentCountRes
+  const { count: taskCount } = taskCountRes
 
   if (!teacher) redirect("/teacher")
-
-  // Fetch Stats
-  const { count: studentCount } = await adminSupabase
-    .from("students")
-    .select("*", { count: "exact", head: true })
-    .eq("teacher_id", user.id)
-
-  const { count: taskCount } = await adminSupabase
-    .from("tasks")
-    .select("*", { count: "exact", head: true })
-    .eq("teacher_id", user.id)
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700">

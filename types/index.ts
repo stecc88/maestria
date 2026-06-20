@@ -1,7 +1,7 @@
 export type UserRole = 'student' | 'teacher' | 'admin';
 export type UserStatus = 'pending' | 'approved' | 'rejected';
 export type ItalianLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-export type ExerciseType = 'escritura' | 'completar' | 'transformacion' | 'reescritura';
+export type ExerciseType = 'scrittura' | 'completamento' | 'trasformazione' | 'riscrittura';
 export type TaskStatus = 'pending' | 'started' | 'in_progress' | 'completed';
 
 export interface Profile {

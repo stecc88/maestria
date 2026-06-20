@@ -42,16 +42,6 @@ export async function POST(request: Request) {
       .eq("id", teacherUser.id)
       .single()
 
-    // Map Italian UI types to database allowed values
-    const typeMap: Record<string, string> = {
-      'scrittura': 'escritura',
-      'completamento': 'completar',
-      'trasformazione': 'transformacion',
-      'riscrittura': 'reescritura'
-    }
-
-    const dbType = typeMap[exerciseType] || 'completar'
-
     // 1. Save Task
     const { data: newTask, error: taskError } = await adminSupabase
       .from("tasks")
@@ -62,7 +52,7 @@ export async function POST(request: Request) {
         title: finalTask.title || "Nuovo Compito",
         theory_explanation: finalTask.theory_explanation || "",
         exercise_instructions: finalTask.exercise_instructions || "",
-        exercise_type: dbType,
+        exercise_type: exerciseType,
         exercise_content: finalTask.exercise_content || {},
         status: 'pending'
       })
