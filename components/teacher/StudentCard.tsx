@@ -69,10 +69,13 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
     }
   }
 
-  // Mock sparkline data
-  const sparkData = React.useMemo(() =>
-    Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) })),
-  [])
+  // Puntajes reales de las últimas correcciones del alumno
+  const sparkData = React.useMemo(
+    () => (student.recentScores && student.recentScores.length > 0
+      ? student.recentScores.map((score: number) => ({ score }))
+      : []),
+    [student.recentScores]
+  )
 
   return (
     <Card className="hover:border-primary/30 hover:shadow-xl transition-all duration-300 group overflow-hidden">
@@ -129,7 +132,9 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Compiti</p>
               <div className="flex items-center gap-2 mt-1">
                  <ClipboardList className="h-3 w-3 text-primary" />
-                 <span className="text-sm font-black text-foreground/90">0/0</span>
+                 <span className="text-sm font-black text-foreground/90">
+                   {student.taskStats?.completed ?? 0}/{student.taskStats?.total ?? 0}
+                 </span>
               </div>
            </div>
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
@@ -137,11 +142,15 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
               <div className="h-5 w-full mt-1">
                  <div style={{ width: '100%', height: 20 }}>
                     {mounted && (
-                        <ResponsiveContainer width="100%" height={20}>
-                            <LineChart data={sparkData}>
-                                <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
-                            </LineChart>
-                        </ResponsiveContainer>
+                        sparkData.length > 0 ? (
+                          <ResponsiveContainer width="100%" height={20}>
+                              <LineChart data={sparkData}>
+                                  <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                              </LineChart>
+                          </ResponsiveContainer>
+                        ) : (
+                          <span className="text-[10px] font-bold text-muted-foreground">Nessun dato</span>
+                        )
                     )}
                  </div>
               </div>

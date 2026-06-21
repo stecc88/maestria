@@ -19,7 +19,7 @@ export default async function TeacherStudentsPage() {
       .single(),
     adminSupabase
       .from("students")
-      .select("*, profiles(*)")
+      .select("*, profiles(*), writings(submitted_at, corrections(overall_score)), tasks(status)")
       .eq("teacher_id", user.id),
     adminSupabase
       .from("courses")
@@ -36,9 +36,32 @@ export default async function TeacherStudentsPage() {
     redirect("/")
   }
 
+  // Derivar puntajes reales recientes por alumno (últimos 5, orden cronológico)
+  const studentsWithScores = (students || []).map((student: any) => {
+    const writings = Array.isArray(student.writings) ? student.writings : []
+    const scoredWritings = writings
+      .filter((w: any) => w.corrections?.[0]?.overall_score != null || w.corrections?.overall_score != null)
+      .map((w: any) => {
+        const correction = Array.isArray(w.corrections) ? w.corrections[0] : w.corrections
+        return { score: correction?.overall_score ?? 0, date: w.submitted_at }
+      })
+      .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(-5)
+
+    const tasks = Array.isArray(student.tasks) ? student.tasks : []
+    const completedTasks = tasks.filter((t: any) => t.status === "completed").length
+
+    const { writings: _omit, tasks: _omitTasks, ...rest } = student
+    return {
+      ...rest,
+      recentScores: scoredWritings.map((s: any) => s.score),
+      taskStats: { completed: completedTasks, total: tasks.length },
+    }
+  })
+
   return (
     <TeacherStudentsClient
-      initialStudents={students || []}
+      initialStudents={studentsWithScores}
       initialCourses={courses || []}
     />
   )
