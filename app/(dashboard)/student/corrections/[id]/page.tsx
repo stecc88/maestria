@@ -239,7 +239,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
+        <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card hover-pop">
           <CardContent className="p-7 space-y-5 h-full flex flex-col">
             <h4 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest text-center">
               Progresso per livelli
@@ -281,7 +281,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-7 h-full border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden relative group">
+        <Card className="lg:col-span-7 h-full border-none bg-gray-900 text-white shadow-xl rounded-3xl overflow-hidden relative group hover-pop">
           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 transition-transform duration-500">
             <Sparkles className="h-28 w-28" />
           </div>

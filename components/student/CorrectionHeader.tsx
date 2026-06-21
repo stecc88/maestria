@@ -97,13 +97,36 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
           </div>
         </div>
 
-        {/* Center: Large Score */}
-        <div className="flex flex-col items-center lg:items-start justify-center">
-            <div className="flex items-baseline">
-                <span className="text-7xl md:text-[8rem] font-display font-black text-foreground tracking-tighter leading-none">{count}</span>
-                <span className="text-xl md:text-2xl font-bold text-gray-300 ml-2">/100</span>
+        {/* Center: Circular Score Gauge */}
+        <div className="flex flex-col items-center justify-center">
+          <div className="relative w-44 h-44 md:w-52 md:h-52">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 200 200">
+              <circle
+                cx="100" cy="100" r="84"
+                fill="none"
+                stroke="hsl(var(--muted))"
+                strokeWidth="14"
+              />
+              <motion.circle
+                cx="100" cy="100" r="84"
+                fill="none"
+                stroke={examCompliant ? "hsl(var(--primary))" : "hsl(var(--secondary))"}
+                strokeWidth="14"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 84}
+                initial={{ strokeDashoffset: 2 * Math.PI * 84 }}
+                animate={{ strokeDashoffset: 2 * Math.PI * 84 * (1 - score / 100) }}
+                transition={{ duration: 1.3, ease: "easeOut" }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="flex items-baseline">
+                <span className="text-5xl md:text-6xl font-display font-black text-foreground tracking-tighter leading-none">{count}</span>
+                <span className="text-base font-bold text-muted-foreground/60 ml-1">/100</span>
+              </div>
             </div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] lg:ml-2">Punteggio Complessivo</p>
+          </div>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-3">Punteggio Complessivo</p>
         </div>
 
         {/* Right: XP Earned */}
