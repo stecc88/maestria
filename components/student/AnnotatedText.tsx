@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { FileText, History } from "lucide-react"
+import { FileText, Pencil, CheckCircle2 } from "lucide-react"
 
 interface InlineCorrection {
   original: string
@@ -27,22 +27,44 @@ const getCategoryStyle = (type: string) => {
   return { text: "text-muted-foreground", underline: "border-gray-300", dot: "bg-gray-400", label: type || "Altro" }
 }
 
+/**
+ * Modalità "Pratica" (default): mostra il testo originale dello studente
+ * con gli errori segnati ma SENZA rivelare la correzione. Lo studente deve
+ * toccare ogni parola per scoprire la forma corretta — questo attiva il
+ * "retrieval practice": notare l'errore da solo, prima di vedere la
+ * risposta, migliora la ritenzione rispetto a leggere subito il testo
+ * già corretto.
+ *
+ * Modalità "Testo corretto": il testo finale completo, per chi vuole
+ * vedere subito la versione pulita.
+ */
 export function AnnotatedText({ originalText, correctedText, corrections }: AnnotatedTextProps) {
-  const [showOriginal, setShowOriginal] = useState(false)
+  const [mode, setMode] = useState<"practice" | "corrected">("practice")
+  const [revealed, setRevealed] = useState<Set<number>>(new Set())
 
   const usedCategories = Array.from(new Set(corrections.map(c => c.error_type))).filter(Boolean)
+  const allRevealed = corrections.length > 0 && revealed.size === corrections.length
 
-  const buildParts = (sourceText: string, mode: "corrected" | "original") => {
-    const sorted = [...corrections].sort((a, b) =>
-      mode === "corrected" ? b.corrected.length - a.corrected.length : b.original.length - a.original.length
-    )
+  const toggleReveal = (idx: number) => {
+    setRevealed((prev) => {
+      const next = new Set(prev)
+      if (next.has(idx)) next.delete(idx)
+      else next.add(idx)
+      return next
+    })
+  }
 
-    let parts: (string | React.ReactNode)[] = [sourceText]
+  const revealAll = () => setRevealed(new Set(corrections.map((_, i) => i)))
 
-    sorted.forEach((corr, idx) => {
-      const target = mode === "corrected" ? corr.corrected : corr.original
-      if (!target) return
+  const buildPracticeParts = () => {
+    const sorted = corrections
+      .map((c, i) => ({ ...c, _i: i }))
+      .sort((a, b) => b.original.length - a.original.length)
 
+    let parts: (string | React.ReactNode)[] = [originalText]
+
+    sorted.forEach((corr) => {
+      if (!corr.original) return
       const newParts: (string | React.ReactNode)[] = []
 
       parts.forEach((part) => {
@@ -51,22 +73,62 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
           return
         }
 
-        const segments = part.split(target)
+        const segments = part.split(corr.original)
+        segments.forEach((segment, segIndex) => {
+          newParts.push(segment)
+          if (segIndex < segments.length - 1) {
+            const style = getCategoryStyle(corr.error_type)
+            const isRevealed = revealed.has(corr._i)
+
+            newParts.push(
+              <button
+                key={`${corr._i}-${segIndex}`}
+                type="button"
+                onClick={() => toggleReveal(corr._i)}
+                className={cn(
+                  "font-bold px-0.5 rounded-sm border-b-2 transition-all cursor-pointer outline-none",
+                  isRevealed
+                    ? "border-primary/40 text-primary bg-primary/5"
+                    : cn(style.underline, style.text, "line-through opacity-70 hover:bg-muted")
+                )}
+                title={isRevealed ? "Tocca per nascondere" : "Tocca per scoprire la correzione"}
+              >
+                {isRevealed ? corr.corrected : corr.original}
+              </button>
+            )
+          }
+        })
+      })
+      parts = newParts
+    })
+
+    return parts
+  }
+
+  const buildCorrectedParts = () => {
+    const sorted = [...corrections].sort((a, b) => b.corrected.length - a.corrected.length)
+    let parts: (string | React.ReactNode)[] = [correctedText]
+
+    sorted.forEach((corr, idx) => {
+      if (!corr.corrected) return
+      const newParts: (string | React.ReactNode)[] = []
+
+      parts.forEach((part) => {
+        if (typeof part !== "string") {
+          newParts.push(part)
+          return
+        }
+        const segments = part.split(corr.corrected)
         segments.forEach((segment, segIndex) => {
           newParts.push(segment)
           if (segIndex < segments.length - 1) {
             const style = getCategoryStyle(corr.error_type)
             newParts.push(
               <span
-                key={`${idx}-${segIndex}-${mode}`}
-                className={cn(
-                  "font-bold px-0.5 rounded-sm border-b-2",
-                  style.underline,
-                  style.text,
-                  mode === "original" && "line-through opacity-70"
-                )}
+                key={`${idx}-${segIndex}`}
+                className={cn("font-bold px-0.5 rounded-sm border-b-2", style.underline, style.text)}
               >
-                {target}
+                {corr.corrected}
               </span>
             )
           }
@@ -78,7 +140,7 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
     return parts
   }
 
-  const parts = buildParts(showOriginal ? originalText : correctedText, showOriginal ? "original" : "corrected")
+  const parts = mode === "practice" ? buildPracticeParts() : buildCorrectedParts()
 
   return (
     <div className="space-y-5">
@@ -89,24 +151,24 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
             size="sm"
             className={cn(
               "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-              !showOriginal ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
+              mode === "practice" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
             )}
-            onClick={() => setShowOriginal(false)}
+            onClick={() => setMode("practice")}
           >
-            <FileText className="h-3.5 w-3.5" />
-            Testo corretto
+            <Pencil className="h-3.5 w-3.5" />
+            Pratica
           </Button>
           <Button
             variant="ghost"
             size="sm"
             className={cn(
               "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-              showOriginal ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
+              mode === "corrected" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
             )}
-            onClick={() => setShowOriginal(true)}
+            onClick={() => setMode("corrected")}
           >
-            <History className="h-3.5 w-3.5" />
-            Testo originale
+            <FileText className="h-3.5 w-3.5" />
+            Testo corretto
           </Button>
         </div>
 
@@ -125,9 +187,26 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
         )}
       </div>
 
-      <p className="text-[11px] text-muted-foreground italic px-1">
-        Le parole sottolineate corrispondono alle correzioni elencate qui sotto →
-      </p>
+      {mode === "practice" ? (
+        <div className="flex items-center justify-between px-1">
+          <p className="text-[11px] text-muted-foreground italic">
+            Tocca una parola sottolineata per scoprire la forma corretta
+          </p>
+          {corrections.length > 0 && (
+            <button
+              onClick={allRevealed ? () => setRevealed(new Set()) : revealAll}
+              className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1 shrink-0"
+            >
+              <CheckCircle2 className="h-3 w-3" />
+              {allRevealed ? "Nascondi tutte" : "Mostra tutte"}
+            </button>
+          )}
+        </div>
+      ) : (
+        <p className="text-[11px] text-muted-foreground italic px-1">
+          Le parole sottolineate corrispondono alle correzioni elencate qui sotto →
+        </p>
+      )}
 
       <div className="font-mono text-base md:text-lg leading-[2.1] text-gray-800 whitespace-pre-wrap">
         {parts}
