@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { FileText, Calendar, Eye, Star } from "lucide-react"
+import { FileText, Calendar, Eye } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils/date"
 import { useState, useEffect } from "react"

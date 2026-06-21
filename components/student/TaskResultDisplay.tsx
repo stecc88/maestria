@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Trophy, ArrowRight, BookOpen, Sparkles, Flame, CheckCircle2, XCircle } from "lucide-react"
+import { Trophy, Sparkles, Flame, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
