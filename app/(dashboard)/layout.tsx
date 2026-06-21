@@ -62,7 +62,7 @@ export default async function DashboardLayout({
   const notifications = notificationsResult.data || []
 
   return (
-    <div className="flex min-h-screen bg-cream/30">
+    <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-40">
         <Sidebar user={profile} studentData={studentData ?? undefined} teacherData={teacherData ?? undefined} />

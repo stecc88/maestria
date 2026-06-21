@@ -60,9 +60,9 @@ const config: Config = {
 			sm: 'calc(var(--radius) - 4px)'
 		},
       fontFamily: {
-        display: ["var(--font-playfair)", "serif"],
-        body: ["var(--font-dm-sans)", "sans-serif"],
-        sans: ["var(--font-dm-sans)", "sans-serif"],
+        display: ["var(--font-display)", "sans-serif"],
+        body: ["var(--font-body)", "sans-serif"],
+        sans: ["var(--font-body)", "sans-serif"],
       }
 	}
   },
