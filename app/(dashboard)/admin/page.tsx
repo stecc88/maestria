@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Users, CheckCircle2, ShieldCheck, UserCheck, Clock, Mail, User, Key, Sparkles, ChevronRight, AlertCircle } from "lucide-react"
+import { Users, CheckCircle2, ShieldCheck, UserCheck, Clock, Mail, User, Key, Sparkles, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"

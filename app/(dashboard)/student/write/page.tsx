@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react"
+import React, { useState, useEffect, Suspense, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import {
   Mail,
@@ -17,11 +17,10 @@ import {
   Save,
   CheckCircle2
 } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { ContextualGuide } from "@/components/student/ContextualGuide"

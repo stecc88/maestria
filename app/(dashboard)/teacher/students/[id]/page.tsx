@@ -19,7 +19,7 @@ import { RadarChart } from "@/components/student/RadarChart"
 import { ErrorAnalysis } from "@/components/teacher/ErrorAnalysis"
 import { StudentWritingHistory } from "@/components/teacher/StudentWritingHistory"
 import { GenerateTaskIA } from "@/components/teacher/GenerateTaskIA"
-import { formatDate, formatRelative } from "@/lib/utils/date"
+import { formatDate } from "@/lib/utils/date"
 import { SafeRelativeTime } from "@/components/ui/safe-relative-time"
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {

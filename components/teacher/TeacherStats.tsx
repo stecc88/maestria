@@ -3,7 +3,7 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { Users, FileText, CheckCircle2, TrendingUp, Copy, Sparkles, Zap } from "lucide-react"
+import { Users, FileText, CheckCircle2, TrendingUp, Copy, Zap } from "lucide-react"
 import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
