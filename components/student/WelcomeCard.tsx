@@ -1,9 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Flame, Sparkles, Target, Zap, GraduationCap } from "lucide-react"
+import { Sparkles, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { getLevelFromXP } from "@/lib/utils/levels"
@@ -25,139 +24,68 @@ const LEVEL_COLORS: Record<string, string> = {
   "C2": "bg-red-500",
 }
 
+/**
+ * Header compacto del dashboard. Antes era una card gigante con saludo,
+ * 3 chips informativos, barra de XP y CTA — mucha carga visual para ser
+ * lo primero que ve el alumno. Ahora es una sola fila: identidad + progreso
+ * de nivel + acción principal, sin información duplicada con StatsCards.
+ */
 export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp }: WelcomeCardProps) {
   const levelInfo = getLevelFromXP(xp)
-  const currentLevelXp = levelInfo.current.minXp
-  const nextLevelXp = levelInfo.next ? levelInfo.next.minXp : currentLevelXp
+  const nextLevelXp = levelInfo.next ? levelInfo.next.minXp : levelInfo.current.minXp
   const progress = levelInfo.progress
+  const firstName = name.split(' ')[0]
 
   return (
-    <Card className="overflow-hidden border-none bg-gradient-to-br from-primary/5 via-white to-accent/5 premium-shadow relative group">
-      {/* Decorative animated bar */}
-      <motion.div
-        className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-accent to-secondary"
-        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-        style={{ backgroundSize: "200% 100%" }}
-      />
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card border border-border rounded-3xl p-6 premium-shadow"
+    >
+      <div className="space-y-1">
+        <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+          Ciao, {firstName} 👋
+        </h1>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Badge className={cn("font-black border-none text-white", LEVEL_COLORS[currentLevel] || "bg-blue-500")}>
+            {currentLevel}
+          </Badge>
+          <span className="text-xs text-muted-foreground font-bold">→ obiettivo</span>
+          <Badge variant="outline" className={cn("font-black border-2", LEVEL_COLORS[targetLevel] || "bg-primary")}>
+            {targetLevel}
+          </Badge>
+        </div>
+      </div>
 
-      <CardContent className="p-6 md:p-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-8">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+        <div className="flex-1 min-w-[180px] space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground">
+            <span>{levelInfo.current.name}</span>
+            <span>{xp}/{nextLevelXp} XP</span>
+          </div>
+          <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-primary/10 rounded-xl">
-                  <GraduationCap className="h-6 w-6 text-primary" />
-                </div>
-                <span className="text-sm font-black text-primary uppercase tracking-widest">Studente Premium</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4 tracking-tight leading-tight">
-                Ciao, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{name.split(' ')[0]}</span>! 👋
-              </h1>
-              <p className="text-muted-foreground font-bold text-lg leading-relaxed max-w-xl">
-                Il tuo viaggio verso l&apos;italiano perfetto continua. Quale sarà la tua próxima sfida oggi?
-              </p>
-            </motion.div>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-border rounded-2xl px-5 py-3 transition-all hover:shadow-md">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Target className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Obiettivo</p>
-                  <Badge className={cn("mt-0.5 font-black border-none", LEVEL_COLORS[targetLevel] || "bg-primary")}>{targetLevel}</Badge>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-border rounded-2xl px-5 py-3 transition-all hover:shadow-md">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Attuale</p>
-                  <Badge className={cn("mt-0.5 font-black border-none text-white", LEVEL_COLORS[currentLevel] || "bg-blue-500")}>{currentLevel}</Badge>
-                </div>
-              </div>
-
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-3 bg-secondary/10 border border-secondary/20 rounded-2xl px-5 py-3 shadow-sm transition-all hover:shadow-md"
-              >
-                <div className="p-2 bg-secondary/20 rounded-lg">
-                  <Flame className="h-5 w-5 text-secondary fill-secondary" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-secondary uppercase tracking-widest">Serie</p>
-                  <p className="text-lg font-black text-secondary">{streak} GIORNI</p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-10 relative">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-accent animate-pulse" />
-                    <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">{levelInfo.next?.name || "Prossimo Livello"}</span>
-                 </div>
-                 <span className="text-sm font-black text-foreground">{xp} <span className="text-gray-300">/</span> {nextLevelXp} XP</span>
-              </div>
-
-              <div className="space-y-3">
-                <div className="h-4 w-full bg-muted rounded-full overflow-hidden p-1 shadow-inner">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-primary via-accent to-primary rounded-full relative"
-                    initial={{ width: 0 }}
-                    animate={{
-                      width: `${progress}%`,
-                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-                    }}
-                    transition={{
-                      width: { duration: 1.5, ease: "easeOut" },
-                      backgroundPosition: { duration: 3, repeat: Infinity, ease: "linear" }
-                    }}
-                    style={{ backgroundSize: "200% 100%" }}
-                  >
-                    <div className="absolute inset-0 bg-white/20 animate-pulse rounded-full" />
-                  </motion.div>
-                </div>
-                <div className="flex justify-between items-center px-1">
-                   <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                     {levelInfo.next ? `Mancano ${nextLevelXp - xp} XP` : "Livello Massimo"}
-                   </p>
-                   <p className="text-[10px] text-primary font-black uppercase tracking-widest">
-                     {levelInfo.current.name}
-                   </p>
-                </div>
-              </div>
-
-              <Link href="/student/write" className="block w-full">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full relative overflow-hidden bg-gray-900 text-white font-black py-4 rounded-[1.25rem] transition-all shadow-xl shadow-gray-900/20 text-sm group"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    INIZIA A SCRIVERE ORA <Sparkles className="h-4 w-4" />
-                  </span>
-                </motion.button>
-              </Link>
-            </div>
+              className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
           </div>
         </div>
 
-        {/* Floating background element */}
-        <div className="absolute -bottom-10 -right-6 opacity-[0.03] pointer-events-none select-none overflow-hidden group-hover:opacity-[0.05] transition-opacity">
-           <span className="text-[15rem] font-black leading-none italic">IT</span>
-        </div>
-      </CardContent>
-    </Card>
+        <Link href="/student/write">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="w-full sm:w-auto h-full bg-foreground text-background font-black px-6 py-3 rounded-2xl text-sm flex items-center justify-center gap-2 shadow-lg transition-all hover-pop"
+          >
+            <Sparkles className="h-4 w-4" />
+            Scrivi ora
+            <ArrowRight className="h-4 w-4" />
+          </motion.button>
+        </Link>
+      </div>
+    </motion.div>
   )
 }

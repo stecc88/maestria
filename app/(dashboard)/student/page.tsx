@@ -2,8 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { WelcomeCard } from "@/components/student/WelcomeCard"
 import { StatsCards } from "@/components/student/StatsCards"
-import { EvolutionChart } from "@/components/student/EvolutionChart"
-import { RadarChart } from "@/components/student/RadarChart"
+import { ProgressSection } from "@/components/student/ProgressSection"
 import { PendingTasks } from "@/components/student/PendingTasks"
 import { LatestCorrections } from "@/components/student/LatestCorrections"
 import { MiniRanking } from "@/components/student/MiniRanking"
@@ -73,43 +72,41 @@ export default async function StudentDashboard() {
         <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[150px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-10 py-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-stretch">
-          <div className="xl:col-span-8 space-y-10">
-            <WelcomeCard
-              name={student.profiles.full_name}
-              targetLevel={student.target_level}
-              currentLevel={student.current_level}
-              streak={student.streak_days}
-              xp={student.xp_points}
-            />
+      <div className="max-w-7xl mx-auto space-y-8 py-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
 
+        {/* 1. Header compacto: identidad + progreso de nivel + acción principal */}
+        <WelcomeCard
+          name={student.profiles.full_name}
+          targetLevel={student.target_level}
+          currentLevel={student.current_level}
+          streak={student.streak_days}
+          xp={student.xp_points}
+        />
+
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+          <div className="xl:col-span-8 space-y-8">
+
+            {/* 2. Zona de acción: lo primero que el alumno debe ver es qué tiene pendiente */}
+            <PendingTasks tasks={pendingTasks || []} />
+
+            {/* 3. Estadísticas (sin duplicar la racha, ya está en el header) */}
             <StatsCards
               writings={writingsCount || 0}
               avgScore={avgScore}
               completedTasks={completedTasks || 0}
-              streak={student.streak_days}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
-              <div className="h-full">
-                <EvolutionChart data={evolutionData || []} />
-              </div>
-              <div className="h-full">
-                <RadarChart data={radarData} />
-              </div>
-            </div>
+            {/* 4. Progreso unificado: un gráfico a la vez, con propósito explicado */}
+            <ProgressSection evolutionData={evolutionData || []} radarData={radarData} />
           </div>
 
-          <aside className="xl:col-span-4 space-y-10 h-full">
-            <div className="h-full flex flex-col gap-10">
-              <MiniRanking
-                topStudents={topStudents || []}
-                userRank={userRank}
-              />
-              <PendingTasks tasks={pendingTasks || []} />
-              <LatestCorrections corrections={latestCorrections || []} />
-            </div>
+          {/* 5. Sidebar: primero feedback de aprendizaje, ranking social al final */}
+          <aside className="xl:col-span-4 space-y-8">
+            <LatestCorrections corrections={latestCorrections || []} />
+            <MiniRanking
+              topStudents={topStudents || []}
+              userRank={userRank}
+            />
           </aside>
         </div>
       </div>

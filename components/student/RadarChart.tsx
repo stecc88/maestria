@@ -52,8 +52,8 @@ export function RadarChart({ data }: RadarChartProps) {
                 <Radar
                   name="Studente"
                   dataKey="A"
-                  stroke="#CE2B37"
-                  fill="#CE2B37"
+                  stroke="hsl(var(--secondary))"
+                  fill="hsl(var(--secondary))"
                   fillOpacity={0.5}
                 />
               </RechartsRadarChart>

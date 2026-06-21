@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { PenLine, Star, CheckCircle2, Flame, TrendingUp } from "lucide-react"
+import { PenLine, Star, CheckCircle2, TrendingUp } from "lucide-react"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
@@ -83,10 +83,9 @@ interface StatsCardsProps {
   writings: number
   avgScore: number
   completedTasks: number
-  streak: number
 }
 
-export function StatsCards({ writings, avgScore, completedTasks, streak }: StatsCardsProps) {
+export function StatsCards({ writings, avgScore, completedTasks }: StatsCardsProps) {
   const stats = [
     {
       label: "Testi Scritti",
@@ -110,18 +109,10 @@ export function StatsCards({ writings, avgScore, completedTasks, streak }: Stats
       color: "bg-blue-500",
       gradient: "from-blue-400 to-blue-600"
     },
-    {
-      label: "Serie Attuale",
-      value: streak,
-      icon: Flame,
-      color: "bg-secondary",
-      gradient: "from-red-400 to-red-600",
-      suffix: " d"
-    },
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 items-stretch">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-stretch">
       {stats.map((stat, i) => (
         <StatCard key={stat.label} {...stat} delay={i * 0.1} />
       ))}
