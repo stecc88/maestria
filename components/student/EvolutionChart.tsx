@@ -70,10 +70,10 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
                 <Line
                   type="monotone"
                   dataKey="writing_score"
-                  stroke="#009246"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#009246', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, fill: '#F5A623', stroke: '#fff', strokeWidth: 2 }}
+                  dot={{ r: 4, fill: 'hsl(var(--primary))', strokeWidth: 2, stroke: 'hsl(var(--card))' }}
+                  activeDot={{ r: 6, fill: 'hsl(var(--accent))', stroke: 'hsl(var(--card))', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
