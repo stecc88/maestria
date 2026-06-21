@@ -37,11 +37,11 @@ export default async function TeacherProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700">
       <header>
-        <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
+        <h1 className="text-3xl font-display font-bold text-foreground flex items-center gap-3">
           <User className="h-8 w-8 text-primary" />
           Profilo
         </h1>
-        <p className="text-gray-500 mt-1">Gestisci le tue informazioni personali e controlla le tue statistiche generali.</p>
+        <p className="text-muted-foreground mt-1">Gestisci le tue informazioni personali e controlla le tue statistiche generali.</p>
       </header>
 
       <TeacherProfileForm

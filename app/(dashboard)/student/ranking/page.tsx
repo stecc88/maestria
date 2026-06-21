@@ -59,10 +59,10 @@ export default async function RankingPage() {
               <Trophy className="h-5 w-5" />
               <span className="text-xs font-black uppercase tracking-[0.2em]">Hall of Fame</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
               Classifiche <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">& Premi</span> 🏆
             </h1>
-            <p className="text-gray-500 font-bold text-lg max-w-2xl leading-relaxed">
+            <p className="text-muted-foreground font-bold text-lg max-w-2xl leading-relaxed">
               Scala la vetta, sblocca obiettivi unici e competi con studenti da tutto il mondo. 🇮🇹
             </p>
           </div>
@@ -85,8 +85,8 @@ export default async function RankingPage() {
                       <Medal className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-black text-gray-900 tracking-tight">Classifica Globale</h2>
-                      <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Aggiornato in tempo reale • 🇮🇹 Global</p>
+                      <h2 className="text-3xl font-black text-foreground tracking-tight">Classifica Globale</h2>
+                      <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1">Aggiornato in tempo reale • 🇮🇹 Global</p>
                     </div>
                   </div>
 
@@ -103,14 +103,14 @@ export default async function RankingPage() {
                    userId={user.id}
                  />
                ) : (
-                 <Card className="bg-white border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-[2.5rem] relative overflow-hidden group">
+                 <Card className="bg-card border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-[2.5rem] relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10" />
-                    <div className="h-20 w-20 bg-gray-100 rounded-[1.5rem] flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
+                    <div className="h-20 w-20 bg-muted rounded-[1.5rem] flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
                        <Users className="h-10 w-10 text-gray-300" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-gray-900 mb-2">Nessuna classe attiva</h3>
-                      <p className="text-gray-400 text-sm font-bold leading-relaxed">
+                      <h3 className="text-xl font-black text-foreground mb-2">Nessuna classe attiva</h3>
+                      <p className="text-muted-foreground text-sm font-bold leading-relaxed">
                         Unisciti a una classe inserendo el codice del tuo docente nel profilo per sfidare i tuoi compagni.
                       </p>
                     </div>

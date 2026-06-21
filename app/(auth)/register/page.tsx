@@ -26,7 +26,7 @@ import { signUp, validateTeacherCode } from "@/app/actions/auth"
 import { cn } from "@/lib/utils"
 
 const levels = [
-  { id: "A1", label: "A1", gradient: "from-gray-400 to-gray-600", bg: "bg-gray-50", desc: "Principiante" },
+  { id: "A1", label: "A1", gradient: "from-gray-400 to-gray-600", bg: "bg-muted", desc: "Principiante" },
   { id: "A2", label: "A2", gradient: "from-emerald-400 to-emerald-600", bg: "bg-emerald-50", desc: "Elementare" },
   { id: "B1", label: "B1", gradient: "from-blue-400 to-blue-600", bg: "bg-blue-50", desc: "Intermedio" },
   { id: "B2", label: "B2", gradient: "from-purple-400 to-purple-600", bg: "bg-purple-50", desc: "Intermedio superiore" },
@@ -103,14 +103,14 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-card flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-accent/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-16 border border-gray-50 relative">
+      <div className="w-full max-w-2xl bg-card rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-16 border border-gray-50 relative">
         <div className="absolute top-10 right-10">
            <Link href="/">
              <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-black hover:scale-110 transition-transform">
@@ -123,7 +123,7 @@ export default function RegisterPage() {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mx-auto">
               <Sparkles className="h-3.5 w-3.5" /> Registrazione Premium
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Crea el tuo account</h1>
+            <h1 className="text-4xl font-black text-foreground tracking-tight">Crea el tuo account</h1>
             <AuthProgress currentStep={step} totalSteps={3} />
         </div>
 
@@ -143,14 +143,14 @@ export default function RegisterPage() {
                     onClick={() => { setValue("role", "student"); setStep(2); }}
                     className={cn(
                       "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                      role === "student" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-gray-100 hover:border-primary/20"
+                      role === "student" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-border hover:border-primary/20"
                     )}
                   >
                     <div className="p-4 bg-primary/10 rounded-2xl mb-4 group-hover:rotate-12 transition-transform">
                       <GraduationCap className="h-8 w-8 text-primary" />
                     </div>
-                    <span className="text-xl font-black text-gray-900">Studente</span>
-                    <p className="text-xs text-gray-400 text-center mt-2 font-bold leading-relaxed">Impara l&apos;italiano con l&apos;analisi IA.</p>
+                    <span className="text-xl font-black text-foreground">Studente</span>
+                    <p className="text-xs text-muted-foreground text-center mt-2 font-bold leading-relaxed">Impara l&apos;italiano con l&apos;analisi IA.</p>
                     {role === "student" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4 p-1 bg-primary rounded-full"><Check className="text-white h-4 w-4" /></motion.div>}
                   </button>
 
@@ -159,14 +159,14 @@ export default function RegisterPage() {
                     onClick={() => { setValue("role", "teacher"); setStep(2); }}
                     className={cn(
                       "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                      role === "teacher" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-gray-100 hover:border-primary/20"
+                      role === "teacher" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-border hover:border-primary/20"
                     )}
                   >
                     <div className="p-4 bg-blue-100 rounded-2xl mb-4 group-hover:rotate-12 transition-transform">
                       <User className="h-8 w-8 text-blue-600" />
                     </div>
-                    <span className="text-xl font-black text-gray-900">Docente</span>
-                    <p className="text-xs text-gray-400 text-center mt-2 font-bold leading-relaxed">Gestisci classi e genera compiti.</p>
+                    <span className="text-xl font-black text-foreground">Docente</span>
+                    <p className="text-xs text-muted-foreground text-center mt-2 font-bold leading-relaxed">Gestisci classi e genera compiti.</p>
                     {role === "teacher" && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mt-4 p-1 bg-primary rounded-full"><Check className="text-white h-4 w-4" /></motion.div>}
                   </button>
                 </div>
@@ -183,35 +183,35 @@ export default function RegisterPage() {
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Nome Completo</label>
-                    <Input {...register("full_name")} placeholder="Mario Rossi" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-bold focus:bg-white" />
+                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Nome Completo</label>
+                    <Input {...register("full_name")} placeholder="Mario Rossi" className="h-12 rounded-xl bg-gray-50/50 border-border px-4 font-bold focus:bg-card" />
                     {errors.full_name && <p className="text-xs text-secondary font-bold">{errors.full_name.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Email</label>
-                    <Input {...register("email")} type="email" placeholder="mario@email.it" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-bold focus:bg-white" />
+                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Email</label>
+                    <Input {...register("email")} type="email" placeholder="mario@email.it" className="h-12 rounded-xl bg-gray-50/50 border-border px-4 font-bold focus:bg-card" />
                     {errors.email && <p className="text-xs text-secondary font-bold">{errors.email.message}</p>}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Password</label>
-                    <PasswordInput {...register("password")} className="h-12 rounded-xl bg-gray-50/50 border-gray-100 focus:bg-white" />
-                    <div className="h-1 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
+                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Password</label>
+                    <PasswordInput {...register("password")} className="h-12 rounded-xl bg-gray-50/50 border-border focus:bg-card" />
+                    <div className="h-1 w-full bg-muted rounded-full mt-2 overflow-hidden">
                       <div className={cn("h-full transition-all duration-500", strengthColor)} style={{ width: `${strength}%` }} />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Conferma</label>
-                    <PasswordInput {...register("confirm_password")} className="h-12 rounded-xl bg-gray-50/50 border-gray-100 focus:bg-white" />
+                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Conferma</label>
+                    <PasswordInput {...register("confirm_password")} className="h-12 rounded-xl bg-gray-50/50 border-border focus:bg-card" />
                   </div>
                 </div>
 
                 {role === "student" && (
                   <div className="space-y-8 pt-6 border-t border-gray-50">
                     <div className="space-y-4">
-                      <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Obiettivo QCER</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Obiettivo QCER</label>
                       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                         {levels.map((lvl) => (
                           <button
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                               "h-12 rounded-xl border-2 flex items-center justify-center font-black transition-all text-sm",
                               watch("target_level") === lvl.id
                                 ? "border-primary bg-primary text-white shadow-lg shadow-primary/20 scale-105"
-                                : "border-gray-100 bg-gray-50/50 text-gray-400 hover:border-primary/20"
+                                : "border-border bg-gray-50/50 text-muted-foreground hover:border-primary/20"
                             )}
                           >
                             {lvl.label}
@@ -232,9 +232,9 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Codice Docente <span className="opacity-50">(Opzionale)</span></label>
+                      <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Codice Docente <span className="opacity-50">(Opzionale)</span></label>
                       <div className="relative">
-                        <Input {...register("teacher_code")} placeholder="Es: ITA2025" className="h-12 rounded-xl bg-gray-50/50 border-gray-100 px-4 font-black uppercase tracking-widest focus:bg-white" />
+                        <Input {...register("teacher_code")} placeholder="Es: ITA2025" className="h-12 rounded-xl bg-gray-50/50 border-border px-4 font-black uppercase tracking-widest focus:bg-card" />
                         <div className="absolute right-3 top-3">
                           {teacherStatus.exists === true && <CheckCircle2 className="text-primary w-6 h-6" />}
                           {teacherStatus.exists === false && <XCircle className="text-secondary w-6 h-6" />}
@@ -260,27 +260,27 @@ export default function RegisterPage() {
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
-                <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 space-y-6">
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 border-b border-gray-200 pb-4">Conferma Dati</h3>
+                <div className="bg-muted p-8 rounded-[2rem] border border-border space-y-6">
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground border-b border-border pb-4">Conferma Dati</h3>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nome</span>
-                      <span className="font-black text-gray-900">{watch("full_name")}</span>
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Nome</span>
+                      <span className="font-black text-foreground">{watch("full_name")}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ruolo</span>
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Ruolo</span>
                       <span className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest">{role}</span>
                     </div>
                     {role === 'student' && (
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Livello</span>
-                        <span className="font-black text-gray-900">{watch("target_level")}</span>
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Livello</span>
+                        <span className="font-black text-foreground">{watch("target_level")}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 transition-colors cursor-pointer group">
+                <div className="flex items-start gap-4 p-6 border-2 border-gray-50 rounded-[1.5rem] hover:bg-muted transition-colors cursor-pointer group">
                   <div className="relative h-6 w-6 shrink-0 mt-1">
                     <input
                       type="checkbox"
@@ -288,11 +288,11 @@ export default function RegisterPage() {
                       className="peer absolute inset-0 opacity-0 cursor-pointer z-10"
                       {...register("accept_terms")}
                     />
-                    <div className="absolute inset-0 border-2 border-gray-200 rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                    <div className="absolute inset-0 border-2 border-border rounded-lg peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
                        <Check className="h-4 w-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
                     </div>
                   </div>
-                  <label htmlFor="terms" className="text-sm font-bold text-gray-500 leading-relaxed cursor-pointer select-none">
+                  <label htmlFor="terms" className="text-sm font-bold text-muted-foreground leading-relaxed cursor-pointer select-none">
                     Accetto i <span className="text-primary font-black underline">termini di servizio</span> e confermo di aver letto l&apos;informativa sulla privacy.
                   </label>
                 </div>
@@ -311,7 +311,7 @@ export default function RegisterPage() {
           </AnimatePresence>
         </form>
 
-        <p className="mt-12 text-center text-sm font-bold text-gray-400">
+        <p className="mt-12 text-center text-sm font-bold text-muted-foreground">
            Hai già un account?
            <Link href="/login" className="text-primary font-black uppercase tracking-widest hover:underline ml-2">
              Accedi &rarr;

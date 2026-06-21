@@ -19,10 +19,10 @@ export function TheoryCard({ explanation }: TheoryCardProps) {
           <div className="p-2 bg-accent/20 rounded-lg">
             <BookOpen className="h-6 w-6 text-accent" />
           </div>
-          <h2 className="text-xl font-display font-bold text-gray-900">Antes de empezar, leé esto</h2>
+          <h2 className="text-xl font-display font-bold text-foreground">Antes de empezar, leé esto</h2>
         </div>
 
-        <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed font-body">
+        <div className="prose prose-sm max-w-none text-foreground/90 leading-relaxed font-body">
           <ReactMarkdown>{explanation}</ReactMarkdown>
         </div>
 
@@ -30,7 +30,7 @@ export function TheoryCard({ explanation }: TheoryCardProps) {
           <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest mb-2">
             <CheckCircle2 className="h-3 w-3" /> Tip del Profe
           </div>
-          <p className="text-sm text-gray-600 italic">
+          <p className="text-sm text-muted-foreground italic">
             Prestá especial atención a la concordancia. ¡Vos podés!
           </p>
         </div>

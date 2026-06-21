@@ -116,10 +116,10 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
 
   if (!guide) {
     return (
-      <Card className="border-dashed border-gray-200 bg-gray-50/50">
+      <Card className="border-dashed border-border bg-gray-50/50">
         <CardContent className="p-8 text-center">
           <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">Seleziona un tipo di testo per vedere suggerimenti di scrittura</p>
+          <p className="text-muted-foreground font-medium">Seleziona un tipo di testo per vedere suggerimenti di scrittura</p>
         </CardContent>
       </Card>
     )
@@ -136,13 +136,13 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <section>
-            <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
+            <h4 className="flex items-center gap-2 text-sm font-bold text-foreground mb-3">
               <ListChecks className="h-4 w-4 text-primary" />
               Struttura consigliata
             </h4>
             <ul className="space-y-2">
               {guide.structure.map((item, i) => (
-                <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
                   {item}
                 </li>
@@ -151,13 +151,13 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
           </section>
 
           <section>
-            <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
+            <h4 className="flex items-center gap-2 text-sm font-bold text-foreground mb-3">
               <Lightbulb className="h-4 w-4 text-accent" />
               Connettori utili
             </h4>
             <div className="flex flex-wrap gap-2">
               {guide.connectors.map((item, i) => (
-                <Badge key={i} variant="secondary" className="bg-cream border-accent/20 text-gray-700 font-medium italic">
+                <Badge key={i} variant="secondary" className="bg-cream border-accent/20 text-foreground/90 font-medium italic">
                   {item}
                 </Badge>
               ))}
@@ -165,7 +165,7 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
           </section>
 
           <section>
-            <h4 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
+            <h4 className="flex items-center gap-2 text-sm font-bold text-foreground mb-3">
               <AlertTriangle className="h-4 w-4 text-secondary" />
               Errori comuni da evitare
             </h4>
@@ -187,7 +187,7 @@ export function ContextualGuide({ type, level }: ContextualGuideProps) {
             <Lightbulb className="h-5 w-5 text-accent shrink-0 mt-0.5" />
             <div>
               <p className="text-xs font-bold text-accent-dark mb-1">Pro-tip dell&apos;esaminatore</p>
-              <p className="text-xs text-gray-600 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Prova a variare l&apos;inizio delle tue frasi e usa sinonimi per non ripetere parole base come &quot;fare&quot; o &quot;andare&quot;.
               </p>
             </div>

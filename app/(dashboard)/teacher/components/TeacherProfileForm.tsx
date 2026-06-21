@@ -62,11 +62,11 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
       <div className="space-y-6">
         <Card className="border-none shadow-sm bg-primary/5">
           <CardContent className="p-6 text-center">
-            <div className="h-24 w-24 rounded-full bg-white mx-auto flex items-center justify-center shadow-sm mb-4">
+            <div className="h-24 w-24 rounded-full bg-card mx-auto flex items-center justify-center shadow-sm mb-4">
                <UserCircle className="h-16 w-16 text-primary/20" />
             </div>
-            <h3 className="font-bold text-gray-900 text-lg">{teacher.profiles.full_name}</h3>
-            <p className="text-sm text-gray-500">{roleLabels[teacher.profiles.role] || teacher.profiles.role}</p>
+            <h3 className="font-bold text-foreground text-lg">{teacher.profiles.full_name}</h3>
+            <p className="text-sm text-muted-foreground">{roleLabels[teacher.profiles.role] || teacher.profiles.role}</p>
             <div className="flex items-center justify-center gap-1 mt-2 text-primary font-bold text-xs uppercase tracking-wider">
                <ShieldCheck className="h-3 w-3" />
                Verificato
@@ -75,18 +75,18 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
         </Card>
 
         <div className="grid grid-cols-2 gap-4">
-           <Card className="border-none shadow-sm bg-white">
+           <Card className="border-none shadow-sm bg-card">
               <CardContent className="p-4 flex flex-col items-center">
                  <Users className="h-5 w-5 text-blue-500 mb-2" />
                  <span className="text-2xl font-bold">{stats.studentCount}</span>
-                 <span className="text-[10px] text-gray-400 font-bold uppercase">Studenti</span>
+                 <span className="text-[10px] text-muted-foreground font-bold uppercase">Studenti</span>
               </CardContent>
            </Card>
-           <Card className="border-none shadow-sm bg-white">
+           <Card className="border-none shadow-sm bg-card">
               <CardContent className="p-4 flex flex-col items-center">
                  <FileText className="h-5 w-5 text-green-500 mb-2" />
                  <span className="text-2xl font-bold">{stats.taskCount}</span>
-                 <span className="text-[10px] text-gray-400 font-bold uppercase">Compiti</span>
+                 <span className="text-[10px] text-muted-foreground font-bold uppercase">Compiti</span>
               </CardContent>
            </Card>
         </div>
@@ -102,17 +102,17 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
             <form onSubmit={handleUpdateProfile} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email">Indirizzo Email</Label>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 text-gray-500">
+                <div className="flex items-center gap-3 p-3 bg-muted rounded-xl border border-border text-muted-foreground">
                    <Mail className="h-4 w-4" />
                    <span className="text-sm font-medium">{teacher.profiles.email}</span>
                 </div>
-                <p className="text-[10px] text-gray-400">L&apos;indirizzo email non può essere modificato per motivi di sicurezza.</p>
+                <p className="text-[10px] text-muted-foreground">L&apos;indirizzo email non può essere modificato per motivi di sicurezza.</p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="name">Nome Completo</Label>
                 <div className="relative">
-                   <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                   <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                    <Input
                      id="name"
                      value={fullName}
@@ -146,7 +146,7 @@ export default function TeacherProfileForm({ teacher, stats }: TeacherProfileFor
               <Button
                 onClick={copyToClipboard}
                 size="lg"
-                className="h-full aspect-square rounded-2xl bg-white text-primary hover:bg-white/90"
+                className="h-full aspect-square rounded-2xl bg-card text-primary hover:bg-white/90"
               >
                 {copied ? <Check className="h-6 w-6" /> : <Copy className="h-6 w-6" />}
               </Button>

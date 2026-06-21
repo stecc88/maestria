@@ -25,7 +25,7 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
             </div>
             <h3 className="font-display font-bold text-xl text-white">I miei compagni</h3>
           </div>
-          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest bg-white/5 px-2 py-1 rounded border border-white/5">
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest bg-white/5 px-2 py-1 rounded border border-white/5">
             Prof. {teacherName}
           </p>
         </div>
@@ -40,7 +40,7 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
         </div>
 
         <div className="space-y-4">
-          <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-1">Top 5 Classe</p>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] px-1">Top 5 Classe</p>
           <div className="grid grid-cols-1 gap-2">
             {students.slice(0, 5).map((student, i) => (
               <div key={student.id} className={cn(
@@ -50,7 +50,7 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
                 <div className="flex items-center gap-3">
                    <span className={cn(
                      "text-xs font-black w-5 text-center",
-                     i === 0 ? "text-accent" : "text-gray-600"
+                     i === 0 ? "text-accent" : "text-muted-foreground"
                    )}>{i + 1}</span>
                    <Avatar className="h-9 w-9 border-2 border-white/5 ring-2 ring-[#0F0F0F]">
                      <AvatarImage src={student.profiles.avatar_url} />
@@ -65,12 +65,12 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
                      )}>
                        {student.profiles.full_name}
                      </span>
-                     <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Lvl {Math.floor(student.xp_points / 500) + 1}</span>
+                     <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Lvl {Math.floor(student.xp_points / 500) + 1}</span>
                    </div>
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-black text-white">{student.xp_points.toLocaleString()}</p>
-                  <p className="text-[8px] font-black text-gray-600 uppercase">XP</p>
+                  <p className="text-[8px] font-black text-muted-foreground uppercase">XP</p>
                 </div>
               </div>
             ))}

@@ -48,8 +48,8 @@ export default async function AdminUsersPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Gestione Utenti</h1>
-          <p className="text-gray-500">Gestisci tutti gli utenti registrati su Maestria.</p>
+          <h1 className="text-3xl font-display font-bold text-foreground">Gestione Utenti</h1>
+          <p className="text-muted-foreground">Gestisci tutti gli utenti registrati su Maestria.</p>
         </div>
       </div>
 

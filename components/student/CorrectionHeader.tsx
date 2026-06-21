@@ -46,7 +46,7 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
   }, [score])
 
   return (
-    <div className="relative bg-white rounded-[2rem] p-8 md:p-12 border border-gray-100 shadow-sm overflow-hidden">
+    <div className="relative bg-card rounded-[2rem] p-8 md:p-12 border border-border shadow-sm overflow-hidden">
       {/* Diagonal Watermark Stamp */}
       <motion.div
         initial={{ scale: 2, opacity: 0, rotate: -25 }}
@@ -78,8 +78,8 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
             {level}
           </motion.div>
           <div className="space-y-2">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Esito Valutazione</p>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 leading-tight">Analisi Finale</h2>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Esito Valutazione</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-tight">Analisi Finale</h2>
             <div className="flex flex-wrap gap-2 pt-2">
               {examCompliant ? (
                 <Badge className="bg-primary/10 text-primary border-none gap-1.5 px-4 py-1.5 rounded-full font-bold text-[11px]">
@@ -90,7 +90,7 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
                   <AlertCircle className="h-3.5 w-3.5" /> Da migliorare
                 </Badge>
               )}
-              <Badge variant="outline" className="border-gray-200 text-gray-500 gap-1.5 px-4 py-1.5 rounded-full font-bold text-[11px]">
+              <Badge variant="outline" className="border-border text-muted-foreground gap-1.5 px-4 py-1.5 rounded-full font-bold text-[11px]">
                 Target: {targetLevel}
               </Badge>
             </div>
@@ -100,10 +100,10 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
         {/* Center: Large Score */}
         <div className="flex flex-col items-center lg:items-start justify-center">
             <div className="flex items-baseline">
-                <span className="text-7xl md:text-[8rem] font-display font-black text-gray-900 tracking-tighter leading-none">{count}</span>
+                <span className="text-7xl md:text-[8rem] font-display font-black text-foreground tracking-tighter leading-none">{count}</span>
                 <span className="text-xl md:text-2xl font-bold text-gray-300 ml-2">/100</span>
             </div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] lg:ml-2">Punteggio Complessivo</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] lg:ml-2">Punteggio Complessivo</p>
         </div>
 
         {/* Right: XP Earned */}

@@ -30,7 +30,7 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
                 #{rank}
               </div>
               <div>
-                <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Posizione in classifica</p>
+                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Posizione in classifica</p>
                 <h2 className="text-5xl md:text-7xl font-display font-black text-white mt-1">
                   #{rank}
                 </h2>
@@ -50,10 +50,10 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
           <div className="w-full md:w-80 space-y-6">
             <div className="flex justify-between items-end">
               <div>
-                 <p className="text-xs font-bold text-gray-400 uppercase">Prossimo livello</p>
+                 <p className="text-xs font-bold text-muted-foreground uppercase">Prossimo livello</p>
                  <p className="text-lg font-bold text-accent">{next?.name || 'Maestro'}</p>
               </div>
-              <p className="text-xs font-bold text-gray-400">+{xpToNext} XP per salire</p>
+              <p className="text-xs font-bold text-muted-foreground">+{xpToNext} XP per salire</p>
             </div>
 
             <div className="space-y-2">
@@ -65,7 +65,7 @@ export function RankingHeader({ rank, xp, xpToNext }: RankingHeaderProps) {
                   className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent shadow-[0_0_15px_rgba(245,166,35,0.5)]"
                 />
               </div>
-              <div className="flex justify-between text-[10px] font-black text-gray-500 uppercase tracking-tighter">
+              <div className="flex justify-between text-[10px] font-black text-muted-foreground uppercase tracking-tighter">
                 <span>{current.minXp} XP</span>
                 <span>{next?.minXp || 'MAX'} XP</span>
               </div>

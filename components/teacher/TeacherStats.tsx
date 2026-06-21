@@ -64,7 +64,7 @@ export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-50 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group"
+        className="bg-card p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-50 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-white to-accent/5 opacity-50" />
 
@@ -75,8 +75,8 @@ export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
             </div>
             <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Accesso Rapido</span>
           </div>
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Il tuo codice classe docente</h2>
-          <p className="text-gray-500 font-bold">Condividi questo codice per far iscrivere i tuoi studenti con te.</p>
+          <h2 className="text-2xl font-black text-foreground tracking-tight">Il tuo codice classe docente</h2>
+          <p className="text-muted-foreground font-bold">Condividi questo codice per far iscrivere i tuoi studenti con te.</p>
         </div>
 
         <div className="relative z-10 flex items-center gap-3">
@@ -103,16 +103,16 @@ export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
             transition={{ delay: i * 0.1 }}
             whileHover={{ y: -5 }}
           >
-            <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-white rounded-[2rem] hover:shadow-2xl transition-all duration-500">
+            <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-[2rem] hover:shadow-2xl transition-all duration-500">
               <div className={cn("absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", item.gradient)} />
               <CardContent className="p-8">
                 <div className={cn("p-4 rounded-2xl w-fit mb-6 transition-all duration-500 group-hover:rotate-6 shadow-inner", item.bg, item.color)}>
                   <item.icon className="h-7 w-7" />
                 </div>
-                <p className="text-4xl font-black text-gray-900 tracking-tight leading-none">{item.value}</p>
+                <p className="text-4xl font-black text-foreground tracking-tight leading-none">{item.value}</p>
                 <div className="flex items-center gap-2 mt-3">
-                   <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.15em]">{item.label}</p>
-                   <div className="h-1 w-4 bg-gray-100 rounded-full group-hover:w-8 group-hover:bg-primary transition-all duration-500" />
+                   <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.15em]">{item.label}</p>
+                   <div className="h-1 w-4 bg-muted rounded-full group-hover:w-8 group-hover:bg-primary transition-all duration-500" />
                 </div>
               </CardContent>
             </Card>

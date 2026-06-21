@@ -126,7 +126,7 @@ export default function ExercisesSelectionPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-gray-500 text-lg max-w-2xl mx-auto"
+          className="text-muted-foreground text-lg max-w-2xl mx-auto"
         >
           Allena le tue competenze linguistiche con esercizi su misura per te
         </motion.p>
@@ -149,12 +149,12 @@ export default function ExercisesSelectionPage() {
               </motion.div>
               <span className={cn(
                 "text-sm font-bold",
-                step === s ? "text-primary" : "text-gray-400"
+                step === s ? "text-primary" : "text-muted-foreground"
               )}>
                 Passo {s}
               </span>
               {s === 1 && (
-                <div className="w-12 h-1 bg-gray-100 rounded-full mx-2 overflow-hidden">
+                <div className="w-12 h-1 bg-muted rounded-full mx-2 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: step > 1 ? "100%" : "0%" }}
@@ -172,7 +172,7 @@ export default function ExercisesSelectionPage() {
         <motion.h2
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-xl font-bold text-gray-900 flex items-center gap-2"
+          className="text-xl font-bold text-foreground flex items-center gap-2"
         >
           <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm">1</span>
           Seleziona il tuo livello
@@ -213,7 +213,7 @@ export default function ExercisesSelectionPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-lg"
+                  className="absolute top-2 right-2 bg-card rounded-full p-1 shadow-lg"
                 >
                   <Check className="h-4 w-4 text-primary" />
                 </motion.div>
@@ -232,7 +232,7 @@ export default function ExercisesSelectionPage() {
             className="space-y-6"
           >
             <motion.h2
-              className="text-xl font-bold text-gray-900 flex items-center gap-2"
+              className="text-xl font-bold text-foreground flex items-center gap-2"
             >
               <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm">2</span>
               Scegli il tipo di esercizio
@@ -250,7 +250,7 @@ export default function ExercisesSelectionPage() {
                       "cursor-pointer transition-all duration-300 border-2 h-full",
                       type === t.id
                         ? "border-primary bg-primary/5 ring-4 ring-primary/5"
-                        : "border-gray-100 hover:border-primary/20 hover:bg-gray-50/50 shadow-sm hover:shadow-md"
+                        : "border-border hover:border-primary/20 hover:bg-gray-50/50 shadow-sm hover:shadow-md"
                     )}
                     onClick={() => setType(t.id)}
                   >
@@ -258,13 +258,13 @@ export default function ExercisesSelectionPage() {
                       <div className="flex items-center gap-4">
                         <div className={cn(
                           "p-4 rounded-2xl transition-colors",
-                          type === t.id ? "bg-primary text-white" : "bg-gray-100 text-gray-500 group-hover:bg-primary/10 group-hover:text-primary"
+                          type === t.id ? "bg-primary text-white" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                         )}>
                           <t.icon className="h-6 w-6" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-black text-lg text-gray-900">{t.label}</h3>
-                          <p className="text-sm text-gray-500 font-medium">{t.description}</p>
+                          <h3 className="font-black text-lg text-foreground">{t.label}</h3>
+                          <p className="text-sm text-muted-foreground font-medium">{t.description}</p>
                         </div>
                         {type === t.id && (
                           <motion.div
@@ -343,7 +343,7 @@ export default function ExercisesSelectionPage() {
                 </>
               )}
             </Button>
-            <p className="text-gray-400 font-bold text-sm uppercase tracking-widest animate-pulse">
+            <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest animate-pulse">
               Pronto a sfidare te stesso? 🚀
             </p>
           </motion.footer>

@@ -42,7 +42,7 @@ export function NotificationBell({ notifications = [] }: NotificationBellProps) 
       <PopoverTrigger
         render={
           <Button variant="ghost" size="icon" className="relative group">
-            <Bell className="h-5 w-5 text-gray-600 group-hover:text-primary transition-colors" />
+            <Bell className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
             {unreadCount > 0 && (
               <Badge
                 variant="destructive"
@@ -54,8 +54,8 @@ export function NotificationBell({ notifications = [] }: NotificationBellProps) 
           </Button>
         }
       />
-      <PopoverContent align="end" className="w-80 p-0 rounded-2xl shadow-2xl border-gray-100 overflow-hidden">
-        <PopoverHeader className="p-4 bg-gray-50/50 border-b border-gray-100">
+      <PopoverContent align="end" className="w-80 p-0 rounded-2xl shadow-2xl border-border overflow-hidden">
+        <PopoverHeader className="p-4 bg-gray-50/50 border-b border-border">
           <PopoverTitle className="text-sm font-bold flex items-center justify-between">
             Notifiche
             {unreadCount > 0 && (
@@ -72,12 +72,12 @@ export function NotificationBell({ notifications = [] }: NotificationBellProps) 
               {notifications.slice(0, 10).map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-4 transition-colors hover:bg-gray-50 flex flex-col gap-1 ${!notification.read ? 'bg-primary/5' : ''}`}
+                  className={`p-4 transition-colors hover:bg-muted flex flex-col gap-1 ${!notification.read ? 'bg-primary/5' : ''}`}
                 >
-                  <p className="text-xs font-bold text-gray-900">{notification.title}</p>
-                  <p className="text-[11px] text-gray-500 leading-relaxed line-clamp-2">{notification.message}</p>
+                  <p className="text-xs font-bold text-foreground">{notification.title}</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">{notification.message}</p>
                   {notification.created_at && (
-                    <p className="text-[9px] text-gray-400 font-medium mt-1 uppercase tracking-tighter">
+                    <p className="text-[9px] text-muted-foreground font-medium mt-1 uppercase tracking-tighter">
                       {formatDate(notification.created_at, "d MMMM, HH:mm")}
                     </p>
                   )}
@@ -85,7 +85,7 @@ export function NotificationBell({ notifications = [] }: NotificationBellProps) 
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center text-gray-400">
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center text-muted-foreground">
               <BellOff className="h-10 w-10 mb-3 opacity-20" />
               <p className="text-xs font-medium italic">Nessuna notifica</p>
             </div>
@@ -93,7 +93,7 @@ export function NotificationBell({ notifications = [] }: NotificationBellProps) 
         </ScrollArea>
 
         {notifications.length > 0 && notificationsPath !== '#' && (
-          <div className="p-3 bg-gray-50/50 border-t border-gray-100">
+          <div className="p-3 bg-gray-50/50 border-t border-border">
             <Link href={notificationsPath}>
               <Button variant="ghost" size="sm" className="w-full text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary hover:bg-primary/5 gap-2">
                 Vedi tutte <ArrowRight className="h-3 w-3" />

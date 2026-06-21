@@ -80,30 +80,30 @@ export function ProfileClient({ profile, student, teacherName, writingsCount, ta
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-20 animate-in fade-in duration-700">
       <header>
-        <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
+        <h1 className="text-3xl font-display font-bold text-foreground flex items-center gap-3">
           <User className="h-8 w-8 text-primary" />
           Il mio profilo
         </h1>
-        <p className="text-gray-500 mt-1">Gestisci le tue informazioni personali e controlla i tuoi progressi.</p>
+        <p className="text-muted-foreground mt-1">Gestisci le tue informazioni personali e controlla i tuoi progressi.</p>
       </header>
 
       {/* Datos personales */}
-      <Card className="border-none shadow-sm rounded-3xl bg-white">
+      <Card className="border-none shadow-sm rounded-3xl bg-card">
         <CardContent className="p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <Avatar className="h-20 w-20 border-2 border-gray-100 shrink-0">
+          <Avatar className="h-20 w-20 border-2 border-border shrink-0">
             <AvatarImage src={profile.avatar_url} />
             <AvatarFallback className="bg-primary text-white font-bold text-2xl">{initials}</AvatarFallback>
           </Avatar>
 
           <div className="flex-1 w-full space-y-4">
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Nome completo</Label>
+              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Nome completo</Label>
               {isEditingName ? (
                 <div className="flex items-center gap-2 mt-1">
                   <Input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="bg-gray-50 border-gray-100 rounded-xl"
+                    className="bg-muted border-border rounded-xl"
                     autoFocus
                   />
                   <Button size="icon" onClick={handleSaveName} disabled={isSavingName} className="bg-primary hover:bg-primary-dark rounded-xl shrink-0">
@@ -115,15 +115,15 @@ export function ProfileClient({ profile, student, teacherName, writingsCount, ta
                 </div>
               ) : (
                 <div className="flex items-center gap-2 mt-1">
-                  <p className="font-bold text-gray-900 text-lg">{fullName || "Senza nome"}</p>
-                  <button onClick={() => setIsEditingName(true)} className="text-gray-400 hover:text-primary transition-colors">
+                  <p className="font-bold text-foreground text-lg">{fullName || "Senza nome"}</p>
+                  <button onClick={() => setIsEditingName(true)} className="text-muted-foreground hover:text-primary transition-colors">
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-gray-500 text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
               <Mail className="h-4 w-4" />
               {profile.email}
             </div>
@@ -148,20 +148,20 @@ export function ProfileClient({ profile, student, teacherName, writingsCount, ta
           { icon: FileText, label: "Testi scritti", value: writingsCount, color: "text-blue-500" },
           { icon: ClipboardCheck, label: "Compiti completati", value: tasksCount, color: "text-accent-dark" },
         ].map((stat, i) => (
-          <Card key={i} className="border-none shadow-sm rounded-2xl bg-white">
+          <Card key={i} className="border-none shadow-sm rounded-2xl bg-card">
             <CardContent className="p-5 flex flex-col items-center justify-center text-center gap-2">
               <stat.icon className={`h-6 w-6 ${stat.color}`} />
-              <p className="text-2xl font-black text-gray-900">{stat.value}</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
+              <p className="text-2xl font-black text-foreground">{stat.value}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Profesor / Clase */}
-      <Card className="border-none shadow-sm rounded-3xl bg-white">
+      <Card className="border-none shadow-sm rounded-3xl bg-card">
         <CardContent className="p-8 space-y-4">
-          <h3 className="font-bold text-gray-900 flex items-center gap-2">
+          <h3 className="font-bold text-foreground flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
             La tua classe
           </h3>
@@ -172,24 +172,24 @@ export function ProfileClient({ profile, student, teacherName, writingsCount, ta
                 {currentTeacherName[0]?.toUpperCase()}
               </div>
               <div>
-                <p className="text-sm text-gray-500">Sei nella classe di</p>
-                <p className="font-bold text-gray-900">{currentTeacherName}</p>
+                <p className="text-sm text-muted-foreground">Sei nella classe di</p>
+                <p className="font-bold text-foreground">{currentTeacherName}</p>
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Non sei ancora in nessuna classe. Inserisci il codice del tuo insegnante per iscriverti.
               </p>
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
-                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Es: ITA2025"
                     value={teacherCode}
                     onChange={(e) => setTeacherCode(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleJoinTeacher()}
-                    className="pl-10 bg-gray-50 border-gray-100 rounded-xl uppercase tracking-widest font-bold"
+                    className="pl-10 bg-muted border-border rounded-xl uppercase tracking-widest font-bold"
                   />
                 </div>
                 <Button

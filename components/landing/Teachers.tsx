@@ -38,7 +38,7 @@ export default function Teachers() {
               Strumenti Avanzati per <span className="text-primary italic">Professionisti</span> della Lingua
             </h2>
 
-            <p className="text-xl text-gray-400 font-bold leading-relaxed max-w-xl">
+            <p className="text-xl text-muted-foreground font-bold leading-relaxed max-w-xl">
               Gestisci la tua classe con precisione chirurgica. Lascia che l&apos;IA si occupi dell&apos;analisi tecnica, mentre tu ti concentri sulla crescita dei tuoi studenti.
             </p>
 
@@ -107,8 +107,8 @@ export default function Teachers() {
 
                   <div className="h-48 bg-white/5 rounded-[2rem] border border-white/5 p-8 flex items-center justify-center">
                      <div className="text-center space-y-3">
-                        <Users className="h-10 w-10 text-gray-500 mx-auto" />
-                        <p className="text-xs font-black text-gray-500 tracking-[0.2em] uppercase">Monitoraggio Attivo</p>
+                        <Users className="h-10 w-10 text-muted-foreground mx-auto" />
+                        <p className="text-xs font-black text-muted-foreground tracking-[0.2em] uppercase">Monitoraggio Attivo</p>
                      </div>
                   </div>
                </div>

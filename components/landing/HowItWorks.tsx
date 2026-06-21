@@ -66,10 +66,10 @@ export function HowItWorks() {
           <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em]">
             <Target className="h-4 w-4" /> Flusso di Apprendimento
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tight">
             Come <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Funziona</span>
           </h2>
-          <p className="text-gray-500 font-bold text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground font-bold text-lg max-w-2xl mx-auto">
             Un ciclo continuo di scrittura, analisi e miglioramento progettato per portarti all&apos;eccellenza linguistica.
           </p>
         </motion.div>
@@ -87,19 +87,19 @@ export function HowItWorks() {
               transition={{ delay: i * 0.1 }}
               className="relative z-10"
             >
-              <div className="group bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white hover:border-primary/20 transition-all duration-500 h-full">
+              <div className="group bg-card p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white hover:border-primary/20 transition-all duration-500 h-full">
                 <div className="flex items-center gap-4 mb-8">
                   <div className={`w-14 h-14 ${step.bg} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner`}>
                     <step.icon className={`w-7 h-7 ${step.color}`} />
                   </div>
-                  <div className="flex-1 h-px bg-gray-100" />
+                  <div className="flex-1 h-px bg-muted" />
                   <span className="text-4xl font-black text-gray-100 group-hover:text-primary/10 transition-colors">0{i + 1}</span>
                 </div>
 
-                <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">
+                <h3 className="text-2xl font-black text-foreground mb-4 tracking-tight">
                   {step.title}
                 </h3>
-                <p className="text-gray-500 font-medium leading-relaxed">
+                <p className="text-muted-foreground font-medium leading-relaxed">
                   {step.text}
                 </p>
               </div>
