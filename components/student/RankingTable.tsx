@@ -4,7 +4,7 @@ import React from "react"
 import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ArrowUp, ArrowDown, Minus, Flame } from "lucide-react"
+import { ArrowUp, Minus, Flame } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface RankingTableProps {
@@ -24,14 +24,13 @@ export function RankingTable({ students, userId }: RankingTableProps) {
               <th className="px-6 py-5">Livello</th>
               <th className="px-6 py-5">XP Totali</th>
               <th className="px-6 py-5">Streak</th>
-              <th className="px-6 py-5 text-center">Trend</th>
+              <th className="px-6 py-5 text-center">XP settimana</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
             {students.map((student, i) => {
               const isMe = student.id === userId
               const rank = i + 1
-              const trend = Math.floor(Math.random() * 3) - 1
 
               return (
                 <motion.tr
@@ -105,11 +104,15 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/5 border border-white/5">
-                      {trend > 0 ? (
-                        <ArrowUp className="h-3.5 w-3.5 text-primary" />
-                      ) : trend < 0 ? (
-                        <ArrowDown className="h-3.5 w-3.5 text-secondary" />
+                    <div className={cn(
+                      "inline-flex items-center justify-center gap-1 h-8 px-3 rounded-full border",
+                      student.weeklyXp > 0 ? "bg-primary/10 border-primary/20" : "bg-white/5 border-white/5"
+                    )}>
+                      {student.weeklyXp > 0 ? (
+                        <>
+                          <ArrowUp className="h-3 w-3 text-primary" />
+                          <span className="font-bold text-xs text-primary">+{student.weeklyXp}</span>
+                        </>
                       ) : (
                         <Minus className="h-3.5 w-3.5 text-muted-foreground" />
                       )}

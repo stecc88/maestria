@@ -28,6 +28,20 @@ export default async function RankingPage() {
 
   if (!students) return <div>Caricamento classifica...</div>
 
+  // XP real ganado en los últimos 7 días, para mostrar una tendencia honesta
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  const { data: recentProgress } = await adminSupabase
+    .from("progress_history")
+    .select("student_id, xp_earned")
+    .gte("created_at", sevenDaysAgo.toISOString())
+
+  const weeklyXpByStudent: Record<string, number> = {}
+  for (const entry of recentProgress || []) {
+    weeklyXpByStudent[entry.student_id] = (weeklyXpByStudent[entry.student_id] || 0) + (entry.xp_earned || 0)
+  }
+  const studentsWithWeeklyXp = students.map((s) => ({ ...s, weeklyXp: weeklyXpByStudent[s.id] || 0 }))
+
   // 2. My Data
   const me = students.find(s => s.id === user.id)
   const myRank = students.findIndex(s => s.id === user.id) + 1
@@ -91,7 +105,7 @@ export default async function RankingPage() {
                   </div>
 
                   <Podium topStudents={students.slice(0, 3)} />
-                  <RankingTable students={students.slice(0, 20)} userId={user.id} />
+                  <RankingTable students={studentsWithWeeklyXp.slice(0, 20)} userId={user.id} />
                </section>
              </div>
 
