@@ -21,7 +21,7 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
 
   return (
     <Card className="border-none shadow-sm bg-card overflow-hidden">
-      <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
+      <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
         <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
           <FileText className="h-3.5 w-3.5 text-primary" />
           <span>Ultime Correzioni</span>

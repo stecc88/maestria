@@ -148,7 +148,7 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
            </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
               <Clock className="h-3 w-3" />
               Attività: {mounted ? formatRelative(student.last_activity) : '...'}

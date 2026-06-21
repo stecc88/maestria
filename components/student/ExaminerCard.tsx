@@ -12,7 +12,7 @@ export function ExaminerCard({ comment }: ExaminerCardProps) {
     <Card className="h-full bg-card border-none relative overflow-hidden shadow-sm rounded-3xl">
       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent" />
       <CardContent className="p-8 md:p-10 h-full flex flex-col">
-        <div className="flex items-center justify-between border-b border-gray-50 pb-6 mb-8">
+        <div className="flex items-center justify-between border-b border-border pb-6 mb-8">
           <div className="flex items-center gap-4">
             <div className="p-2.5 bg-accent/10 rounded-2xl">
               <ShieldCheck className="h-6 w-6 text-accent" />
@@ -31,7 +31,7 @@ export function ExaminerCard({ comment }: ExaminerCardProps) {
           </p>
         </div>
 
-        <div className="mt-10 flex flex-col items-end border-t border-gray-50 pt-6">
+        <div className="mt-10 flex flex-col items-end border-t border-border pt-6">
           <p className="font-display font-bold text-foreground italic text-xl tracking-tight leading-none">
             Maestria AI
           </p>

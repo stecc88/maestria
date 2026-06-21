@@ -130,7 +130,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                   </div>
 
                   {!isCorrect && (
-                    <div className="mt-1 pt-2 border-t border-gray-50">
+                    <div className="mt-1 pt-2 border-t border-border">
                       <p className="text-[10px] font-bold text-green-600 uppercase tracking-tighter mb-0.5">Risposta corretta:</p>
                       <p className="text-sm font-bold text-green-700">{item.correct_answer}</p>
                     </div>
@@ -260,7 +260,7 @@ export default async function TeacherTaskDetailPage({ params }: { params: { id: 
                    </div>
                 </div>
 
-                <div className="space-y-4 pt-4 border-t border-gray-50">
+                <div className="space-y-4 pt-4 border-t border-border">
                    <div>
                       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Livello Obiettivo</p>
                       <Badge variant="outline" className="font-bold">{task.students?.target_level}</Badge>

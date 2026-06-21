@@ -62,7 +62,7 @@ export default async function StudentTasksPage() {
     const config = TYPE_CONFIG[task.exercise_type] || TYPE_CONFIG["scrittura"]
 
     return (
-      <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-[2rem] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+      <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-3xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
         <div className={cn("absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", config.gradient)} />
 
         <CardContent className="p-8">
@@ -112,7 +112,7 @@ export default async function StudentTasksPage() {
               </div>
             )}
 
-            <div className="pt-6 border-t border-gray-50 flex items-center justify-between gap-4">
+            <div className="pt-6 border-t border-border flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                  {task.status === 'completed' ? (
                    <div className="flex items-center gap-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/20">
@@ -146,8 +146,8 @@ export default async function StudentTasksPage() {
   }
 
   const EmptyState = () => (
-    <div className="text-center py-20 bg-card rounded-[3rem] border-4 border-dashed border-border shadow-inner">
-      <div className="bg-muted w-28 h-28 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
+    <div className="text-center py-20 bg-card rounded-3xl border-4 border-dashed border-border shadow-inner">
+      <div className="bg-muted w-28 h-28 rounded-3xl flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
         <ClipboardList className="h-12 w-12 text-gray-200" />
       </div>
       <h3 className="text-3xl font-black text-foreground mb-4 tracking-tight">Tutto tranquillo qui! 🏝️</h3>
@@ -155,7 +155,7 @@ export default async function StudentTasksPage() {
         Non hai compiti in sospeso. Ottimo lavoro! Se vuoi nuove sfide, invia un testo libero al tuo insegnante.
       </p>
       <Link href="/student/write" className="inline-block mt-10">
-        <Button className="bg-primary hover:bg-primary-dark font-black px-12 py-8 rounded-[1.5rem] text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95 gap-3">
+        <Button className="bg-primary hover:bg-primary-dark font-black px-12 py-8 rounded-3xl text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95 gap-3">
           SCRIVI ORA <PenLine className="h-6 w-6" />
         </Button>
       </Link>
@@ -178,7 +178,7 @@ export default async function StudentTasksPage() {
       </div>
 
       <Tabs defaultValue="pending" className="w-full">
-        <TabsList className="bg-white/50 backdrop-blur border border-border p-2 h-16 rounded-[1.5rem] w-full md:w-fit justify-start gap-3 px-3 shadow-sm">
+        <TabsList className="bg-white/50 backdrop-blur border border-border p-2 h-16 rounded-3xl w-full md:w-fit justify-start gap-3 px-3 shadow-sm">
           <TabsTrigger value="pending" className="rounded-xl data-[state=active]:bg-gray-900 data-[state=active]:text-white font-black text-xs tracking-widest uppercase gap-3 px-8 transition-all">
             IN SOSPESO
             <Badge className={cn("bg-secondary text-white font-black h-6 min-w-[24px] px-1.5 rounded-lg border-none shadow-lg shadow-secondary/20", pendingTasks.length === 0 && "opacity-50")}>
@@ -213,8 +213,8 @@ export default async function StudentTasksPage() {
               {inProgressTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-border rounded-[3rem]">
-              <div className="bg-accent/10 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-border rounded-3xl">
+              <div className="bg-accent/10 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6">
                 <Clock className="h-10 w-10 text-accent" />
               </div>
               <p className="text-muted-foreground font-black uppercase tracking-widest">Nessun compito avviato</p>
@@ -228,8 +228,8 @@ export default async function StudentTasksPage() {
               {completedTasks.map(task => <TaskCard key={task.id} task={task} />)}
             </div>
           ) : (
-            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-border rounded-[3rem]">
-              <div className="bg-primary/10 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
+            <div className="text-center py-24 bg-white/50 border-4 border-dashed border-border rounded-3xl">
+              <div className="bg-primary/10 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="h-10 w-10 text-primary" />
               </div>
               <p className="text-muted-foreground font-black uppercase tracking-widest">Inizia a studiare!</p>

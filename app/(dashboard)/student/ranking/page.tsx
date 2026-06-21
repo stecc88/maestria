@@ -103,9 +103,9 @@ export default async function RankingPage() {
                    userId={user.id}
                  />
                ) : (
-                 <Card className="bg-card border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-[2.5rem] relative overflow-hidden group">
+                 <Card className="bg-card border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-3xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10" />
-                    <div className="h-20 w-20 bg-muted rounded-[1.5rem] flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
+                    <div className="h-20 w-20 bg-muted rounded-3xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
                        <Users className="h-10 w-10 text-gray-300" />
                     </div>
                     <div>

@@ -66,14 +66,14 @@ export default function PendingApprovalPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-xl w-full bg-card rounded-[3rem] shadow-2xl shadow-gray-200/50 p-10 md:p-16 text-center border border-gray-50 relative"
+        className="max-w-xl w-full bg-card rounded-3xl shadow-2xl shadow-gray-200/50 p-10 md:p-16 text-center border border-border relative"
       >
         <div className="flex justify-center mb-10">
           <div className="relative">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="w-24 h-24 bg-accent/10 rounded-[2rem] flex items-center justify-center border-2 border-accent/20"
+              className="w-24 h-24 bg-accent/10 rounded-3xl flex items-center justify-center border-2 border-accent/20"
             >
               <Clock className="w-10 h-10 text-accent" />
             </motion.div>
@@ -100,7 +100,7 @@ export default function PendingApprovalPage() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="p-6 bg-secondary/5 border-2 border-secondary/10 rounded-[1.5rem] flex items-start gap-4 text-left group hover:bg-secondary/10 transition-colors"
+              className="p-6 bg-secondary/5 border-2 border-secondary/10 rounded-3xl flex items-start gap-4 text-left group hover:bg-secondary/10 transition-colors"
             >
               <div className="p-3 bg-secondary/20 rounded-xl group-hover:rotate-12 transition-transform">
                 <Mail className="h-6 w-6 text-secondary fill-secondary/20" />

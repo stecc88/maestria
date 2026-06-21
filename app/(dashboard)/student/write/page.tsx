@@ -180,7 +180,7 @@ function WriteForm() {
                       "flex items-center gap-3 p-3 rounded-xl border-2 transition-all group",
                       textType === type.id
                         ? "border-primary bg-primary/5 text-primary shadow-sm"
-                        : "border-gray-50 bg-card text-muted-foreground hover:border-border"
+                        : "border-border bg-card text-muted-foreground hover:border-border"
                     )}
                   >
                     <type.icon className={cn("h-4 w-4 shrink-0", textType === type.id ? "text-primary" : "text-muted-foreground")} />
@@ -248,7 +248,7 @@ function WriteForm() {
                     onChange={(e) => setContent(e.target.value)}
                     className="min-h-[400px] border-none focus:ring-0 p-8 text-lg font-body leading-relaxed bg-card scrollbar-hide"
                   />
-                  <div className="bg-gray-50/50 border-t border-gray-50 p-4 flex justify-end">
+                  <div className="bg-gray-50/50 border-t border-border p-4 flex justify-end">
                     <Button
                       size="lg"
                       onClick={handleSubmit}

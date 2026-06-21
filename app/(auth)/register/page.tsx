@@ -110,7 +110,7 @@ export default function RegisterPage() {
         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-accent/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="w-full max-w-2xl bg-card rounded-[3rem] shadow-2xl shadow-gray-200/50 p-8 md:p-16 border border-gray-50 relative">
+      <div className="w-full max-w-2xl bg-card rounded-3xl shadow-2xl shadow-gray-200/50 p-8 md:p-16 border border-border relative">
         <div className="absolute top-10 right-10">
            <Link href="/">
              <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white font-black hover:scale-110 transition-transform">
@@ -142,7 +142,7 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => { setValue("role", "student"); setStep(2); }}
                     className={cn(
-                      "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                      "group relative flex flex-col items-center p-10 rounded-3xl border-2 transition-all duration-500 overflow-hidden",
                       role === "student" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-border hover:border-primary/20"
                     )}
                   >
@@ -158,7 +158,7 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => { setValue("role", "teacher"); setStep(2); }}
                     className={cn(
-                      "group relative flex flex-col items-center p-10 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                      "group relative flex flex-col items-center p-10 rounded-3xl border-2 transition-all duration-500 overflow-hidden",
                       role === "teacher" ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-border hover:border-primary/20"
                     )}
                   >
@@ -209,7 +209,7 @@ export default function RegisterPage() {
                 </div>
 
                 {role === "student" && (
-                  <div className="space-y-8 pt-6 border-t border-gray-50">
+                  <div className="space-y-8 pt-6 border-t border-border">
                     <div className="space-y-4">
                       <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Obiettivo QCER</label>
                       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
-                <div className="bg-muted p-8 rounded-[2rem] border border-border space-y-6">
+                <div className="bg-muted p-8 rounded-3xl border border-border space-y-6">
                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground border-b border-border pb-4">Conferma Dati</h3>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
@@ -280,7 +280,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 border-2 border-gray-50 rounded-[1.5rem] hover:bg-muted transition-colors cursor-pointer group">
+                <div className="flex items-start gap-4 p-6 border-2 border-border rounded-3xl hover:bg-muted transition-colors cursor-pointer group">
                   <div className="relative h-6 w-6 shrink-0 mt-1">
                     <input
                       type="checkbox"

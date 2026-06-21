@@ -62,7 +62,7 @@ export function CorrectionCard({ correction, onDeleteClick }: CorrectionCardProp
             </div>
           </div>
 
-          <div className="pt-4 border-t border-gray-50 flex justify-end">
+          <div className="pt-4 border-t border-border flex justify-end">
             <Link href={`/student/corrections/${correction.id}`}>
               <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/5 font-bold gap-2">
                 Vedi analisi <Eye className="h-4 w-4" />

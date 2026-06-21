@@ -80,7 +80,7 @@ export default function Levels() {
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -8 }}
               className={cn(
-                "group relative p-8 rounded-[2.5rem] border border-border shadow-xl shadow-gray-100/50 overflow-hidden transition-all duration-500",
+                "group relative p-8 rounded-3xl border border-border shadow-xl shadow-gray-100/50 overflow-hidden transition-all duration-500",
                 level.bg
               )}
             >

@@ -29,8 +29,8 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
   }, [])
 
   return (
-    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500 flex flex-col">
-      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50 shrink-0">
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group hover:shadow-2xl transition-all duration-500 flex flex-col">
+      <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50 shrink-0">
         <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
           <div className="p-1.5 bg-blue-500/10 rounded-lg group-hover:rotate-12 transition-transform">
             <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
@@ -93,7 +93,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="h-16 w-16 bg-muted rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-border"
+              className="h-16 w-16 bg-muted rounded-3xl flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-border"
             >
               <ClipboardList className="h-8 w-8 text-gray-200" />
             </motion.div>

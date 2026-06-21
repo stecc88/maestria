@@ -85,7 +85,7 @@ export function ExerciseArea({
         {exerciseType === "completamento" && content.items && (
           <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-4">
             {content.items.map((item: any) => (
-              <div key={item.id} className="flex flex-wrap items-center gap-2 text-lg py-2 border-b border-gray-50 last:border-0">
+              <div key={item.id} className="flex flex-wrap items-center gap-2 text-lg py-2 border-b border-border last:border-0">
                 <span className="text-muted-foreground text-sm font-bold w-6">{item.id}.</span>
                 <span>{item.sentence_before}</span>
                 <Select onValueChange={(val: string | null) => handleValueChange(item.id.toString(), val || "")}>
