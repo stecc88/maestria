@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { NotificationBell } from "@/components/shared/NotificationBell"
+import { ThemeToggle } from "@/components/theme/ThemeToggle"
 import { Sidebar } from "./Sidebar"
 import { cn } from "@/lib/utils"
 import { signOut } from "@/app/actions/auth"
@@ -51,7 +52,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 backdrop-blur-md px-4 md:px-8">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 backdrop-blur-md px-4 md:px-8">
       {/* Mobile Toggle & Logo */}
       <div className="flex items-center gap-4 md:hidden">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -81,12 +82,12 @@ export function Header({ user, studentData, teacherData, notifications }: Header
 
       {/* Desktop Breadcrumbs */}
       <div className="hidden md:flex items-center gap-2">
-        <nav className="flex items-center gap-1.5 text-xs font-medium text-gray-400">
+        <nav className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
            {breadcrumbs.map((label, i) => (
              <React.Fragment key={i}>
                 <span className={cn(
-                  "transition-colors hover:text-gray-900 capitalize font-bold",
-                  i === breadcrumbs.length - 1 && "text-gray-900"
+                  "transition-colors hover:text-foreground capitalize font-bold",
+                  i === breadcrumbs.length - 1 && "text-foreground"
                 )}>
                   {label}
                 </span>
@@ -97,11 +98,12 @@ export function Header({ user, studentData, teacherData, notifications }: Header
       </div>
 
       <div className="flex items-center gap-3 md:gap-5">
+        <ThemeToggle />
         <NotificationBell notifications={notifications} />
 
-        <div className="hidden md:flex items-center gap-3 pl-4 border-l border-gray-100">
+        <div className="hidden md:flex items-center gap-3 pl-4 border-l border-border">
           <div className="text-right">
-            <p className="text-xs font-black text-gray-900 leading-none">{user.full_name}</p>
+            <p className="text-xs font-black text-foreground leading-none">{user.full_name}</p>
             <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 opacity-70">
               {user.role}
             </p>
@@ -116,7 +118,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
           </Link>
           <button
             onClick={() => signOut()}
-            className="ml-2 p-2 rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all active:scale-90"
+            className="ml-2 p-2 rounded-xl bg-muted text-muted-foreground hover:bg-red-50 hover:text-red-500 transition-all active:scale-90"
             title="Esci"
           >
             <LogOut className="h-4.5 w-4.5" />

@@ -76,7 +76,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
   else if (user.role === 'admin') navItems = adminNavItems as any
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-100 shadow-[1px_0_0_0_rgba(0,0,0,0.01)] relative overflow-hidden">
+    <div className="flex flex-col h-full bg-card border-r border-border shadow-[1px_0_0_0_rgba(0,0,0,0.01)] relative overflow-hidden">
       {/* Decorative background element */}
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-primary/5 to-transparent -z-10" />
 
@@ -86,7 +86,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-500">
             M
           </div>
-          <span className="text-2xl font-black tracking-tighter text-gray-900">
+          <span className="text-2xl font-black tracking-tighter text-foreground">
             Maestria
           </span>
         </Link>
@@ -148,9 +148,9 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
       </ScrollArea>
 
       {/* Footer Card */}
-      <div className="p-4 mt-auto border-t border-gray-100 bg-gray-50/50 space-y-4">
+      <div className="p-4 mt-auto border-t border-border bg-muted/50 space-y-4">
         {user.role === 'student' && studentData && (
-           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+           <div className="bg-card p-4 rounded-2xl shadow-sm border border-border">
               <div className="flex justify-between items-end mb-2">
                 <div className="flex items-center gap-1.5">
                    <Zap className="h-3 w-3 text-accent fill-accent" />
@@ -190,7 +190,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
                 <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full" />
               </div>
               <div className="flex flex-col min-w-0">
-                <p className="text-xs font-black text-gray-900 truncate tracking-tight">{user.full_name}</p>
+                <p className="text-xs font-black text-foreground truncate tracking-tight">{user.full_name}</p>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest opacity-70">{user.role}</p>
               </div>
             </div>
