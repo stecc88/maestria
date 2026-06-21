@@ -26,7 +26,7 @@ export function ActivityBarChart({ data }: ActivityBarChartProps) {
   }, [])
 
   return (
-    <Card className="border-gray-100 h-full">
+    <Card className="border-border h-full">
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           <Activity className="h-5 w-5 text-primary" />

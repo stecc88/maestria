@@ -101,13 +101,13 @@ export default function ApprovalActions({ userId, userName }: ApprovalActionsPro
       {/* Simple Rejection Modal Overlay */}
       {showRejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-card rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center gap-3 mb-4 text-red-600">
               <AlertCircle className="h-6 w-6" />
               <h3 className="text-xl font-bold">Rifiuta Richiesta</h3>
             </div>
 
-            <p className="text-gray-600 mb-4">
+            <p className="text-muted-foreground mb-4">
               Indica il motivo del rifiuto per <strong>{userName}</strong>. Questo messaggio gli sarà inviato tramite notifica.
             </p>
 

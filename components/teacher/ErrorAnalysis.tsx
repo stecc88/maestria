@@ -15,7 +15,7 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
 
   return (
     <div className="space-y-8">
-      <Card className="border-gray-100">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle className="text-lg font-bold flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-secondary" />
@@ -26,10 +26,10 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
           {categories.map(([category, count]) => (
             <div key={category} className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="capitalize font-bold text-gray-700">{category}</span>
-                <span className="text-gray-400 font-medium">{count} volte</span>
+                <span className="capitalize font-bold text-foreground/90">{category}</span>
+                <span className="text-muted-foreground font-medium">{count} volte</span>
               </div>
-              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                 <div
                   className="h-full bg-secondary rounded-full transition-all duration-1000"
                   style={{ width: `${(count / max) * 100}%` }}
@@ -37,11 +37,11 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
               </div>
             </div>
           ))}
-          {categories.length === 0 && <p className="text-center text-gray-400 italic py-4">Dati sugli errori insufficienti.</p>}
+          {categories.length === 0 && <p className="text-center text-muted-foreground italic py-4">Dati sugli errori insufficienti.</p>}
         </CardContent>
       </Card>
 
-      <Card className="border-gray-100 bg-secondary/5 border-secondary/10">
+      <Card className="border-border bg-secondary/5 border-secondary/10">
         <CardHeader>
           <CardTitle className="text-lg font-bold flex items-center gap-2 text-secondary">
              <AlertCircle className="h-5 w-5" />
@@ -50,16 +50,16 @@ export function ErrorAnalysis({ errors, examples }: ErrorAnalysisProps) {
         </CardHeader>
         <CardContent className="space-y-4">
            {examples.slice(0, 4).map((ex, i) => (
-             <div key={i} className="p-3 bg-white rounded-xl border border-secondary/10 text-sm">
+             <div key={i} className="p-3 bg-card rounded-xl border border-secondary/10 text-sm">
                 <div className="flex items-center gap-2 mb-1">
                    <span className="text-[10px] font-black uppercase text-secondary">{ex.type}</span>
                    <span className="text-gray-300">|</span>
                    <span className="text-red-400 line-through italic">{ex.original}</span>
                 </div>
-                <p className="font-bold text-gray-900">{ex.corrected}</p>
+                <p className="font-bold text-foreground">{ex.corrected}</p>
              </div>
            ))}
-           {examples.length === 0 && <p className="text-center text-gray-400 italic py-4 text-sm">Non ci sono ancora esempi da mostrare.</p>}
+           {examples.length === 0 && <p className="text-center text-muted-foreground italic py-4 text-sm">Non ci sono ancora esempi da mostrare.</p>}
         </CardContent>
       </Card>
     </div>

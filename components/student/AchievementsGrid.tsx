@@ -4,27 +4,7 @@ import React from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-
-interface Achievement {
-  id: string
-  title: string
-  icon: string
-  description: string
-  unlocked: boolean
-}
-
-const ALL_ACHIEVEMENTS = [
-  { id: 'first_step', title: 'Primo passo', icon: '🎯', description: 'Inviato il primo testo' },
-  { id: 'on_fire', title: 'In fiamme', icon: '🔥', description: '7 giorni di striscia' },
-  { id: 'studious', title: 'Studioso/a', icon: '📚', description: '10 testi inviati' },
-  { id: 'perseverant', title: 'Perseverante', icon: '💪', description: '25 testi inviati' },
-  { id: 'excellence', title: 'Eccellenza', icon: '⭐', description: 'Punteggio 90+' },
-  { id: 'ascending', title: 'In ascesa', icon: '🚀', description: 'Salito di 2 livelli' },
-  { id: 'podium', title: 'Top 3', icon: '👑', description: 'Arrivato sul podio' },
-  { id: 'champion', title: 'Campione', icon: '🏆', description: 'Primo posto raggiunto' },
-  { id: 'applied', title: 'Applicato/a', icon: '✅', description: '10 compiti completati' },
-  { id: 'master', title: 'Maestro/a', icon: '🎓', description: 'Livello obiettivo raggiunto' },
-]
+import { ALL_ACHIEVEMENTS } from "@/lib/constants/achievements"
 
 interface AchievementsGridProps {
   unlockedIds: string[]
@@ -71,11 +51,11 @@ export function AchievementsGrid({ unlockedIds }: AchievementsGridProps) {
                   <div className="space-y-1">
                     <p className={cn(
                       "text-[10px] font-bold uppercase tracking-tight",
-                      isUnlocked ? "text-white" : "text-gray-500"
+                      isUnlocked ? "text-white" : "text-muted-foreground"
                     )}>
                       {achievement.title}
                     </p>
-                    <p className="text-[9px] text-gray-400 font-medium leading-tight line-clamp-2">
+                    <p className="text-[9px] text-muted-foreground font-medium leading-tight line-clamp-2">
                       {achievement.description}
                     </p>
                   </div>

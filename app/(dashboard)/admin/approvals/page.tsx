@@ -23,7 +23,7 @@ export default async function AdminApprovalsPage() {
     .order("created_at", { ascending: false })
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex items-center gap-4">
         <Link href="/admin">
           <Button variant="ghost" size="icon" className="rounded-full">
@@ -31,29 +31,29 @@ export default async function AdminApprovalsPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Richieste di Approvazione</h1>
-          <p className="text-gray-500">Controlla e gestisci i nuovi account registrati sulla piattaforma.</p>
+          <h1 className="text-3xl font-display font-bold text-foreground">Richieste di Approvazione</h1>
+          <p className="text-muted-foreground">Controlla e gestisci i nuovi account registrati sulla piattaforma.</p>
         </div>
       </div>
 
       <div className="space-y-4">
         {pendingUsers && pendingUsers.length > 0 ? (
           pendingUsers.map((user) => (
-            <Card key={user.id} className="border-none shadow-sm bg-white hover:shadow-md transition-shadow">
+            <Card key={user.id} className="border-none shadow-sm bg-card hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-start gap-4">
-                    <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <User className="h-6 w-6 text-gray-400" />
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                      <User className="h-6 w-6 text-muted-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{user.full_name}</h3>
+                      <h3 className="font-bold text-foreground text-lg">{user.full_name}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 mt-2">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Mail className="h-4 w-4" />
                           {user.email}
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
                           Registrato il {formatDate(user.created_at, "d MMMM yyyy HH:mm")}
                         </div>
@@ -82,11 +82,11 @@ export default async function AdminApprovalsPage() {
         ) : (
           <Card className="border-dashed border-2 bg-transparent py-20">
             <CardContent className="text-center">
-              <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="h-20 w-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                 <UserCheck className="h-10 w-10 text-gray-300" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Tutto in ordine</h3>
-              <p className="text-gray-500 max-w-sm mx-auto">
+              <h3 className="text-xl font-bold text-foreground mb-2">Tutto in ordine</h3>
+              <p className="text-muted-foreground max-w-sm mx-auto">
                 Non ci sono richieste in sospeso al momento. I nuovi utenti appariranno qui.
               </p>
               <Link href="/admin" className="mt-8 block">

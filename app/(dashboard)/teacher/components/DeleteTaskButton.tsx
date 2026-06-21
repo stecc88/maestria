@@ -59,7 +59,7 @@ export function DeleteTaskButton({
   if (isOpen) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="bg-card w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
           <div className="p-8 space-y-6">
             <div className="flex items-center gap-3 text-red-600">
               <div className="p-2 bg-red-50 rounded-xl">
@@ -68,8 +68,8 @@ export function DeleteTaskButton({
               <h3 className="text-xl font-display font-bold">Elimina Compito</h3>
             </div>
 
-            <p className="text-gray-600 leading-relaxed">
-              Sei sicuro di voler eliminare il compito <span className="font-bold text-gray-900">&quot;{taskTitle}&quot;</span>?
+            <p className="text-muted-foreground leading-relaxed">
+              Sei sicuro di voler eliminare il compito <span className="font-bold text-foreground">&quot;{taskTitle}&quot;</span>?
               <br /><br />
               Questa azione è <span className="font-bold">irreversibile</span> e cancellerà anche tutti gli invii degli studenti associati.
             </p>

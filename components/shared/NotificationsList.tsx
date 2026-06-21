@@ -68,7 +68,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
       case 'writing': return <MessageSquare className="h-5 w-5 text-blue-500" />;
       case 'task': return <CheckCircle2 className="h-5 w-5 text-green-500" />;
       case 'system': return <AlertCircle className="h-5 w-5 text-amber-500" />;
-      default: return <Bell className="h-5 w-5 text-gray-500" />;
+      default: return <Bell className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
@@ -90,7 +90,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
           >
             Non lette
             {notifications.filter(n => !n.read).length > 0 && (
-              <Badge className="bg-white text-primary hover:bg-white">{notifications.filter(n => !n.read).length}</Badge>
+              <Badge className="bg-card text-primary hover:bg-card">{notifications.filter(n => !n.read).length}</Badge>
             )}
           </Button>
         </div>
@@ -107,25 +107,25 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
           filteredNotifications.map((notification) => (
             <Card
               key={notification.id}
-              className={`border-none shadow-sm transition-all hover:shadow-md cursor-pointer ${!notification.read ? 'bg-white ring-1 ring-primary/20' : 'bg-gray-50/50'}`}
+              className={`border-none shadow-sm transition-all hover:shadow-md cursor-pointer ${!notification.read ? 'bg-card ring-1 ring-primary/20' : 'bg-gray-50/50'}`}
               onClick={() => !notification.read && markAsRead(notification.id)}
             >
               <CardContent className="p-6">
                 <div className="flex gap-4">
-                  <div className={`p-3 rounded-2xl flex-shrink-0 ${!notification.read ? 'bg-primary/10' : 'bg-gray-100'}`}>
+                  <div className={`p-3 rounded-2xl flex-shrink-0 ${!notification.read ? 'bg-primary/10' : 'bg-muted'}`}>
                     {getIcon(notification.type)}
                   </div>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
-                      <h3 className={`font-bold ${!notification.read ? 'text-gray-900' : 'text-gray-600'}`}>
+                      <h3 className={`font-bold ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {notification.title}
                       </h3>
                       {!notification.read && <div className="w-2 h-2 rounded-full bg-primary" />}
                     </div>
-                    <p className={`text-sm ${!notification.read ? 'text-gray-700' : 'text-gray-500'}`}>
+                    <p className={`text-sm ${!notification.read ? 'text-foreground/90' : 'text-muted-foreground'}`}>
                       {notification.message}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 pt-2">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pt-2">
                       <Clock className="h-3 w-3" />
                       {mounted ? formatRelative(notification.created_at) : '...'}
                     </div>
@@ -138,7 +138,7 @@ export default function NotificationsList({ initialNotifications, userId }: Noti
           <Card className="border-dashed border-2 bg-transparent py-20">
             <CardContent className="text-center">
               <Bell className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-400 font-medium">Non ci sono notifiche da mostrare.</p>
+              <p className="text-muted-foreground font-medium">Non ci sono notifiche da mostrare.</p>
             </CardContent>
           </Card>
         )}

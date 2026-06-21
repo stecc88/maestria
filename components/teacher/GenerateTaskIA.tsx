@@ -23,7 +23,6 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import toast from "react-hot-toast"
-import { Badge } from "@/components/ui/badge"
 import ReactMarkdown from 'react-markdown'
 
 interface GenerateTaskIAProps {
@@ -118,7 +117,7 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
         "flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all font-bold text-xs",
         exerciseType === id
           ? "border-primary bg-primary text-white"
-          : "border-gray-100 bg-white text-gray-400 hover:border-primary/20"
+          : "border-border bg-card text-muted-foreground hover:border-primary/20"
       )}
     >
       <Icon className="h-3 w-3" />
@@ -129,7 +128,7 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
   if (previewTask) {
     return (
       <Card className="border-emerald-200 bg-emerald-50/50 shadow-xl animate-in zoom-in-95 duration-300">
-        <CardHeader className="bg-white border-b border-emerald-100 rounded-t-3xl">
+        <CardHeader className="bg-card border-b border-emerald-100 rounded-t-3xl">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
                <Bot className="h-6 w-6 text-emerald-600" />
@@ -157,7 +156,7 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
            <div className="space-y-4">
               <Label className="text-emerald-700 font-black uppercase text-xs tracking-widest">Titolo del compito</Label>
               {isEditing ? (
-                <Input value={previewTask.title} onChange={e => setPreviewTask({...previewTask, title: e.target.value})} className="bg-white border-emerald-200 focus:ring-emerald-500" />
+                <Input value={previewTask.title} onChange={e => setPreviewTask({...previewTask, title: e.target.value})} className="bg-card border-emerald-200 focus:ring-emerald-500" />
               ) : (
                 <h3 className="text-2xl font-display font-bold text-emerald-950">{previewTask.title}</h3>
               )}
@@ -166,9 +165,9 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
            <div className="space-y-4">
               <Label className="text-emerald-700 font-black uppercase text-xs tracking-widest">Spiegazione Teorica</Label>
               {isEditing ? (
-                <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-white border-emerald-200 focus:ring-emerald-500 min-h-[150px]" />
+                <Textarea value={previewTask.theory_explanation} onChange={e => setPreviewTask({...previewTask, theory_explanation: e.target.value})} className="bg-card border-emerald-200 focus:ring-emerald-500 min-h-[150px]" />
               ) : (
-                <div className="p-6 bg-white rounded-2xl border border-emerald-100 prose prose-sm max-w-none text-emerald-900">
+                <div className="p-6 bg-card rounded-2xl border border-emerald-100 prose prose-sm max-w-none text-emerald-900">
                    <ReactMarkdown>{previewTask.theory_explanation}</ReactMarkdown>
                 </div>
               )}
@@ -206,7 +205,7 @@ export function GenerateTaskIA({ student, recentWritings }: GenerateTaskIAProps)
               Basa su questo testo:
             </Label>
             <Select onValueChange={(value: string | null) => setSelectedWritingId(value || "")}>
-              <SelectTrigger className="bg-white border-emerald-100 rounded-xl h-12">
+              <SelectTrigger className="bg-card border-emerald-100 rounded-xl h-12">
                 <SelectValue placeholder="Seleziona un testo..." />
               </SelectTrigger>
               <SelectContent>

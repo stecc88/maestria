@@ -7,11 +7,7 @@ import { Button } from "@/components/ui/button"
 import {
   ChevronLeft,
   Calendar,
-  Clock,
-  Mail,
-  TrendingUp,
-  Target,
-  FileText
+  Mail
 } from "lucide-react"
 import Link from "next/link"
 import { EvolutionChart } from "@/components/student/EvolutionChart"
@@ -19,7 +15,7 @@ import { RadarChart } from "@/components/student/RadarChart"
 import { ErrorAnalysis } from "@/components/teacher/ErrorAnalysis"
 import { StudentWritingHistory } from "@/components/teacher/StudentWritingHistory"
 import { GenerateTaskIA } from "@/components/teacher/GenerateTaskIA"
-import { formatDate, formatRelative } from "@/lib/utils/date"
+import { formatDate } from "@/lib/utils/date"
 import { SafeRelativeTime } from "@/components/ui/safe-relative-time"
 
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
@@ -83,18 +79,16 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
     }
   })
 
-  const mostFrequentError = Object.entries(errorStats).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
-
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">
       <header className="space-y-6">
         <Link href="/teacher/students">
-          <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1 -ml-2">
             <ChevronLeft className="h-4 w-4" /> Torna agli studenti
           </Button>
         </Link>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 bg-card p-8 rounded-3xl border border-border shadow-sm">
            <div className="flex items-center gap-6">
               <Avatar className="h-24 w-24 border-4 border-primary/10">
                  <AvatarImage src={studentProfile.avatar_url} />
@@ -103,8 +97,8 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                  </AvatarFallback>
               </Avatar>
               <div>
-                 <h1 className="text-4xl font-display font-bold text-gray-900">{studentProfile.full_name}</h1>
-                 <div className="flex items-center gap-3 mt-2 text-gray-500">
+                 <h1 className="text-4xl font-display font-bold text-foreground">{studentProfile.full_name}</h1>
+                 <div className="flex items-center gap-3 mt-2 text-muted-foreground">
                     <span className="flex items-center gap-1.5 text-sm">
                        <Mail className="h-4 w-4" /> {studentProfile.email}
                     </span>
@@ -114,14 +108,14 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
                     </span>
                  </div>
                  <div className="flex flex-wrap gap-2 mt-4">
-                    <Badge variant="outline" className="bg-gray-50 border-gray-200 text-gray-500 font-bold px-3 py-1">OBIETTIVO: {student.target_level}</Badge>
+                    <Badge variant="outline" className="bg-muted border-border text-muted-foreground font-bold px-3 py-1">OBIETTIVO: {student.target_level}</Badge>
                     <Badge className="bg-primary text-white border-none px-3 py-1">ATTUALE: {student.current_level || 'A1'}</Badge>
                  </div>
               </div>
            </div>
            <div className="text-right">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ultima attività</p>
-              <p className="text-xl font-bold text-gray-900 mt-1">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Ultima attività</p>
+              <p className="text-xl font-bold text-foreground mt-1">
                  <SafeRelativeTime date={student.last_activity} placeholder="Nessuna attività" />
               </p>
            </div>

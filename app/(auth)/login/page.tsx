@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -72,7 +71,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-card">
       {/* Left side - Decorative */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-900 flex-col items-center justify-center p-12 text-white relative overflow-hidden">
         {/* Background Gradients */}
@@ -107,7 +106,7 @@ export default function LoginPage() {
             <div className="h-1.5 w-24 bg-primary mx-auto rounded-full" />
           </div>
 
-          <p className="text-xl font-bold text-gray-400 max-w-md mx-auto leading-relaxed">
+          <p className="text-xl font-bold text-muted-foreground max-w-md mx-auto leading-relaxed">
             Accedi per continuare el tuo percorso verso la padronanza dell&apos;italiano.
           </p>
 
@@ -125,7 +124,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 bg-white relative">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 bg-card relative">
         <div className="absolute top-8 left-8 lg:hidden">
            <Link href="/">
              <Button variant="ghost" size="icon" className="rounded-xl h-12 w-12">
@@ -139,13 +138,13 @@ export default function LoginPage() {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest mb-2">
               <ShieldCheck className="h-3.5 w-3.5" /> Accesso Protetto
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Accedi ora</h1>
-            <p className="text-gray-500 font-bold text-lg">Benvenuto su <span className="text-primary">Maestria</span>, el futuro dell&apos;italiano.</p>
+            <h1 className="text-4xl font-black text-foreground tracking-tight">Accedi ora</h1>
+            <p className="text-muted-foreground font-bold text-lg">Benvenuto su <span className="text-primary">Maestria</span>, el futuro dell&apos;italiano.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1" htmlFor="email">
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1" htmlFor="email">
                 Indirizzo Email
               </label>
               <Input
@@ -153,7 +152,7 @@ export default function LoginPage() {
                 placeholder="tuo@email.com"
                 type="email"
                 disabled={isLoading}
-                className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 px-6 font-bold focus:bg-white focus:ring-primary/10 transition-all"
+                className="h-14 rounded-2xl border-border bg-gray-50/50 px-6 font-bold focus:bg-card focus:ring-primary/10 transition-all"
                 {...register("email")}
               />
               {errors.email && (
@@ -162,13 +161,13 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1" htmlFor="password">
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1" htmlFor="password">
                 Password
               </label>
               <PasswordInput
                 id="password"
                 disabled={isLoading}
-                className="h-14 rounded-2xl border-gray-100 bg-gray-50/50 px-6 font-bold focus:bg-white transition-all"
+                className="h-14 rounded-2xl border-border bg-gray-50/50 px-6 font-bold focus:bg-card transition-all"
                 {...register("password")}
               />
               {errors.password && (
@@ -190,16 +189,16 @@ export default function LoginPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-100" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.3em]">
-              <span className="bg-white px-4 text-gray-300 italic tracking-widest font-black uppercase">oppure</span>
+              <span className="bg-card px-4 text-gray-300 italic tracking-widest font-black uppercase">oppure</span>
             </div>
           </div>
 
           <Button
             variant="outline"
-            className="w-full border-gray-100 hover:border-primary/20 hover:bg-primary/5 h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all"
+            className="w-full border-border hover:border-primary/20 hover:bg-primary/5 h-14 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all"
             disabled={isLoading}
             onClick={() => {}}
           >
@@ -224,7 +223,7 @@ export default function LoginPage() {
             Continua con Google
           </Button>
 
-          <p className="text-center text-sm font-bold text-gray-400">
+          <p className="text-center text-sm font-bold text-muted-foreground">
             Non hai ancora un account? <br className="md:hidden" />
             <Link href="/register" className="text-primary font-black uppercase tracking-widest hover:underline ml-1">
               Registrati gratis &rarr;

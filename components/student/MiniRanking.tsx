@@ -18,9 +18,9 @@ interface MiniRankingProps {
 
 export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
   return (
-    <Card className="border-none shadow-xl shadow-gray-200/50 bg-white overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500">
-      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
-        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2.5">
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group hover:shadow-2xl transition-all duration-500">
+      <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
           <div className="p-1.5 bg-accent/10 rounded-lg group-hover:rotate-12 transition-transform">
             <Trophy className="h-3.5 w-3.5 text-accent" />
           </div>
@@ -38,18 +38,18 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="p-5 bg-gradient-to-br from-primary/5 via-white to-accent/5 border-b border-gray-50 relative"
+          className="p-5 bg-gradient-to-br from-primary/5 via-white to-accent/5 border-b border-border relative"
         >
           <div className="flex items-center justify-between">
              <div className="flex items-center gap-4">
                 <div className="relative">
-                  <div className="h-12 w-12 rounded-2xl bg-white flex items-center justify-center border-2 border-primary/20 shadow-lg font-display font-black text-xl text-primary transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                  <div className="h-12 w-12 rounded-2xl bg-card flex items-center justify-center border-2 border-primary/20 shadow-lg font-display font-black text-xl text-primary transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
                     #{userRank.rank || '-'}
                   </div>
                   <Sparkles className="absolute -top-2 -right-2 h-4 w-4 text-accent animate-pulse" />
                 </div>
                 <div>
-                   <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Il tuo Rango</p>
+                   <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Il tuo Rango</p>
                    <div className="flex items-center gap-2">
                       {userRank.diff > 0 ? (
                         <div className="flex items-center text-xs text-primary font-black bg-primary/10 px-2 py-0.5 rounded-full">
@@ -60,11 +60,11 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
                           <ArrowDown className="h-3 w-3 mr-0.5" /> {Math.abs(userRank.diff)}
                         </div>
                       ) : (
-                        <div className="flex items-center text-xs text-gray-400 font-black bg-gray-100 px-2 py-0.5 rounded-full">
+                        <div className="flex items-center text-xs text-muted-foreground font-black bg-muted px-2 py-0.5 rounded-full">
                           <Minus className="h-3 w-3 mr-0.5" /> 0
                         </div>
                       )}
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest italic">vs sett. scorsa</span>
+                      <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest italic">vs sett. scorsa</span>
                    </div>
                 </div>
              </div>
@@ -102,13 +102,13 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
                   </div>
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-black text-gray-900 truncate tracking-tight group-hover/item:text-primary transition-colors">{student.profiles.full_name}</p>
-                  <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1">
+                  <p className="text-sm font-black text-foreground truncate tracking-tight group-hover/item:text-primary transition-colors">{student.profiles.full_name}</p>
+                  <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1">
                     <span className="text-accent font-black">{student.xp_points}</span> XP
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-[10px] font-black border-gray-100 bg-gray-50/50 text-gray-600 rounded-xl px-2.5 py-1 group-hover/item:bg-primary group-hover/item:text-white group-hover/item:border-primary transition-all shadow-sm">
+              <Badge variant="outline" className="text-[10px] font-black border-border bg-gray-50/50 text-muted-foreground rounded-xl px-2.5 py-1 group-hover/item:bg-primary group-hover/item:text-white group-hover/item:border-primary transition-all shadow-sm">
                 LV {Math.floor(student.xp_points / 500) + 1}
               </Badge>
             </motion.div>

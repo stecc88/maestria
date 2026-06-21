@@ -4,6 +4,8 @@ import { NextResponse } from "next/server"
 import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { taskEvaluationSchema } from "@/lib/validations/ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
+import { refreshStudentAchievements } from "@/lib/utils/achievements"
+import { calculateNewStreak } from "@/lib/utils/streak"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -74,7 +76,7 @@ Fornisci:
 Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback": string, "error_overcome": boolean }`
 
       const geminiResponse = await fetchGeminiWithRetry(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -136,6 +138,23 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
       xp_amount: xpEarned
     })
 
+    // 5b. Actualizar racha y última actividad (completar una tarea también cuenta)
+    const { data: studentBefore } = await adminSupabase
+      .from("students")
+      .select("streak_days, last_activity")
+      .eq("id", user.id)
+      .single()
+
+    const newStreak = calculateNewStreak(studentBefore?.last_activity || null, studentBefore?.streak_days || 0)
+
+    await adminSupabase
+      .from("students")
+      .update({
+        last_activity: new Date().toISOString(),
+        streak_days: newStreak
+      })
+      .eq("id", user.id)
+
     // 6. Notify Teacher
     const studentName = Array.isArray(task.students)
       ? (task.students[0] as any).profiles.full_name
@@ -149,11 +168,14 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
       related_id: taskId
     })
 
+    const newAchievements = await refreshStudentAchievements(user.id)
+
     return NextResponse.json({
       score: finalScore,
       feedback: finalFeedback,
       error_overcome: errorOvercome,
-      xp_earned: xpEarned
+      xp_earned: xpEarned,
+      newAchievements
     })
 
   } catch (error: any) {

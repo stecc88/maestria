@@ -28,7 +28,7 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
   const hasData = data && data.length >= 2
 
   return (
-    <Card className="border-gray-100 md:col-span-1">
+    <Card className="border-border md:col-span-1">
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-primary" />
@@ -84,8 +84,8 @@ export function EvolutionChart({ data }: EvolutionChartProps) {
               <TrendingUp className="h-10 w-10 text-gray-300" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Non ci sono ancora dati sufficienti</p>
-              <p className="text-xs text-gray-500 mt-1">Invia almeno 2 scritti per vedere il tuo grafico di evoluzione.</p>
+              <p className="text-sm font-medium text-foreground">Non ci sono ancora dati sufficienti</p>
+              <p className="text-xs text-muted-foreground mt-1">Invia almeno 2 scritti per vedere il tuo grafico di evoluzione.</p>
             </div>
           </div>
         ) : (

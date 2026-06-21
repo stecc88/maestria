@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
 import { z } from "zod"
 
 /**
@@ -46,10 +45,6 @@ export async function fetchGeminiWithRetry(url: string, options: any, maxRetries
   }
 
   throw lastError;
-}
-
-export const getGeminiClient = () => {
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 }
 
 /**

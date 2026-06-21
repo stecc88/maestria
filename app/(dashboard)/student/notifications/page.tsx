@@ -24,8 +24,8 @@ export default async function StudentNotificationsPage() {
             <Bell className="h-5 w-5" />
             <span className="text-xs font-black uppercase tracking-[0.2em]">Centro Notifiche</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">Le tue Notifiche 🔔</h1>
-          <p className="text-gray-500 font-bold text-lg max-w-2xl leading-relaxed">
+          <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">Le tue Notifiche 🔔</h1>
+          <p className="text-muted-foreground font-bold text-lg max-w-2xl leading-relaxed">
             Rimani aggiornato su correzioni, nuovi compiti e progressi del tuo percorso.
           </p>
         </div>

@@ -58,7 +58,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-32 bg-white relative overflow-hidden">
+    <section id="features" className="py-32 bg-card relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -69,10 +69,10 @@ export default function Features() {
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em]">
             <Sparkles className="h-4 w-4" /> Innovazione Didattica
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tight">
             Tutto per la tua <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Eccellenza</span>
           </h2>
-          <p className="text-gray-500 font-bold text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground font-bold text-lg max-w-2xl mx-auto">
             Abbiamo unito la potenza dell&apos;intelligenza artificiale con la pedagogia italiana per offrirti un&apos;esperienza di apprendimento senza precedenti.
           </p>
         </motion.div>
@@ -86,7 +86,7 @@ export default function Features() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -10 }}
-              className="group bg-white p-10 rounded-[2.5rem] shadow-xl shadow-gray-100/50 border border-gray-50 hover:shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden"
+              className="group bg-card p-10 rounded-3xl shadow-xl shadow-gray-100/50 border border-border hover:shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
                  <feature.icon className="h-32 w-32" />
@@ -95,10 +95,10 @@ export default function Features() {
               <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-6 transition-transform shadow-inner`}>
                 <feature.icon className={`w-8 h-8 ${feature.color}`} />
               </div>
-              <h3 className="text-2xl font-black mb-4 text-gray-900 tracking-tight">
+              <h3 className="text-2xl font-black mb-4 text-foreground tracking-tight">
                 {feature.title}
               </h3>
-              <p className="text-gray-500 font-medium leading-relaxed">
+              <p className="text-muted-foreground font-medium leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

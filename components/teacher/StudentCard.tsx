@@ -5,7 +5,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Flame, Clock, ClipboardList, ChevronRight, Book } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Flame, Clock, ClipboardList, ChevronRight, BookOpen } from "lucide-react"
 import Link from "next/link"
 import { CourseAssigner } from "./courses/CourseAssigner"
 import {
@@ -14,14 +21,22 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { formatRelative } from "@/lib/utils/date"
+import toast from "react-hot-toast"
+
+interface Course {
+  id: string
+  name: string
+}
 
 interface StudentCardProps {
   student: any
-  courses: any[]
+  courses?: Course[]
+  onCourseAssigned?: (studentId: string, courseId: string | null) => void
 }
 
-export function StudentCard({ student, courses }: StudentCardProps) {
+export function StudentCard({ student, courses = [], onCourseAssigned }: StudentCardProps) {
   const [mounted, setMounted] = useState(false)
+  const [isAssigning, setIsAssigning] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -33,36 +48,53 @@ export function StudentCard({ student, courses }: StudentCardProps) {
   const avatarUrl = profile?.avatar_url;
   const assignedCourse = courses.find(c => c.id === student.course_id);
 
-  // Mock sparkline data
-  const sparkData = React.useMemo(() =>
-    Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) })),
-  [])
+  const currentCourseName = courses.find(c => c.id === student.course_id)?.name
 
-  const lastSeen = student.last_activity ? new Date(student.last_activity) : null
+  const handleCourseChange = async (value: string) => {
+    const newCourseId = value === "none" ? null : value
+    setIsAssigning(true)
+    try {
+      const response = await fetch("/api/students/assign-course", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId: student.id, courseId: newCourseId }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Errore")
+
+      toast.success("Corso assegnato")
+      onCourseAssigned?.(student.id, newCourseId)
+    } catch (error: any) {
+      toast.error(error.message)
+    } finally {
+      setIsAssigning(false)
+    }
+  }
+
+  // Puntajes reales de las últimas correcciones del alumno
+  const sparkData = React.useMemo(
+    () => (student.recentScores && student.recentScores.length > 0
+      ? student.recentScores.map((score: number) => ({ score }))
+      : []),
+    [student.recentScores]
+  )
 
   return (
     <Card className="hover:border-primary/30 hover:shadow-xl transition-all duration-300 group overflow-hidden">
       <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14 border-2 border-gray-100">
+            <Avatar className="h-14 w-14 border-2 border-border">
                <AvatarImage src={avatarUrl} />
                <AvatarFallback className="bg-primary text-white font-bold text-lg">
                  {fullName.split(' ').map((n:any) => n[0]).join('')}
                </AvatarFallback>
             </Avatar>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-display font-bold text-gray-900 text-lg leading-tight group-hover:text-primary transition-colors">
-                  {fullName}
-                </h3>
-                {assignedCourse && (
-                  <Badge variant="outline" className="h-5 px-1.5 border-primary/20 text-primary bg-primary/5 text-[9px] font-black uppercase">
-                    <Book className="h-2.5 w-2.5 mr-1" /> {assignedCourse.name}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-xs text-gray-400">{email}</p>
+              <h3 className="font-display font-bold text-foreground text-lg leading-tight group-hover:text-primary transition-colors">
+                {fullName}
+              </h3>
+              <p className="text-xs text-muted-foreground">{email}</p>
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -76,40 +108,59 @@ export function StudentCard({ student, courses }: StudentCardProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="mb-6">
+          <Select
+            value={student.course_id || "none"}
+            onValueChange={handleCourseChange}
+            disabled={isAssigning}
+          >
+            <SelectTrigger className="h-9 text-xs bg-muted border-border rounded-xl gap-2">
+              <BookOpen className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <SelectValue placeholder="Senza corso">
+                {currentCourseName || "Senza corso"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Senza corso</SelectItem>
+              {courses.map((course) => (
+                <SelectItem key={course.id} value={course.id}>{course.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6">
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiti</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Compiti</p>
               <div className="flex items-center gap-2 mt-1">
                  <ClipboardList className="h-3 w-3 text-primary" />
-                 <span className="text-sm font-black text-gray-700">0/0</span>
+                 <span className="text-sm font-black text-foreground/90">
+                   {student.taskStats?.completed ?? 0}/{student.taskStats?.total ?? 0}
+                 </span>
               </div>
            </div>
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Punteggi</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Punteggi</p>
               <div className="h-5 w-full mt-1">
                  <div style={{ width: '100%', height: 20 }}>
                     {mounted && (
-                        <ResponsiveContainer width="100%" height={20}>
-                            <LineChart data={sparkData}>
-                                <Line type="monotone" dataKey="score" stroke="#009246" strokeWidth={2} dot={false} />
-                            </LineChart>
-                        </ResponsiveContainer>
+                        sparkData.length > 0 ? (
+                          <ResponsiveContainer width="100%" height={20}>
+                              <LineChart data={sparkData}>
+                                  <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                              </LineChart>
+                          </ResponsiveContainer>
+                        ) : (
+                          <span className="text-[10px] font-bold text-muted-foreground">Nessun dato</span>
+                        )
                     )}
                  </div>
               </div>
            </div>
         </div>
 
-        <div className="mb-6">
-           <CourseAssigner
-             studentId={student.id}
-             currentCourseId={student.course_id}
-             courses={courses}
-           />
-        </div>
-
-        <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-           <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-medium">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
+           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
               <Clock className="h-3 w-3" />
               Attività: {mounted ? formatRelative(student.last_activity) : '...'}
            </div>

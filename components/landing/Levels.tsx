@@ -10,7 +10,7 @@ const levels = [
     name: "Principiante",
     description: "Prime parole e frasi elementari per iniziare el tuo viaggio.",
     gradient: "from-gray-400 to-gray-600",
-    bg: "bg-gray-50"
+    bg: "bg-muted"
   },
   {
     id: "A2",
@@ -51,7 +51,7 @@ const levels = [
 
 export default function Levels() {
   return (
-    <section id="levels" className="py-32 bg-white overflow-hidden relative">
+    <section id="levels" className="py-32 bg-card overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,10 +62,10 @@ export default function Levels() {
           <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[0.2em]">
             <Sparkles className="h-4 w-4" /> Quadro Comune Europeo
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tight">
             Percorso <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Personalizzato</span>
           </h2>
-          <p className="text-gray-500 font-bold text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground font-bold text-lg max-w-2xl mx-auto">
             La nostra IA analizza i tuoi testi per determinare el tuo livello QCER esatto e aiutarti a salire verso la padronanza.
           </p>
         </motion.div>
@@ -80,7 +80,7 @@ export default function Levels() {
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -8 }}
               className={cn(
-                "group relative p-8 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-100/50 overflow-hidden transition-all duration-500",
+                "group relative p-8 rounded-3xl border border-border shadow-xl shadow-gray-100/50 overflow-hidden transition-all duration-500",
                 level.bg
               )}
             >
@@ -94,10 +94,10 @@ export default function Levels() {
                 <Sparkles className="h-5 w-5 text-gray-200 group-hover:text-accent transition-colors" />
               </div>
 
-              <h3 className="text-2xl font-black text-gray-900 mb-3 tracking-tight">
+              <h3 className="text-2xl font-black text-foreground mb-3 tracking-tight">
                 {level.name}
               </h3>
-              <p className="text-gray-500 font-medium leading-relaxed">
+              <p className="text-muted-foreground font-medium leading-relaxed">
                 {level.description}
               </p>
             </motion.div>

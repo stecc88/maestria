@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme/ThemeProvider"
 
-const playfair = Playfair_Display({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-playfair"
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
 });
 
-const dmSans = DM_Sans({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-dm-sans"
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -25,11 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" className={cn(playfair.variable, dmSans.variable)}>
-      <body className="font-sans bg-cream min-h-screen">
-        <TooltipProvider>
-          {children}
-        </TooltipProvider>
+    <html lang="it" className={cn(spaceGrotesk.variable, plusJakarta.variable)} suppressHydrationWarning>
+      <body className="font-sans bg-background min-h-screen transition-colors duration-300">
+        <ThemeProvider>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

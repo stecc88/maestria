@@ -39,7 +39,7 @@ export function WeeklyChallenges() {
   }, [])
 
   return (
-    <Card className="bg-white/[0.02] border-white/5 text-white shadow-2xl rounded-[2rem] overflow-hidden">
+    <Card className="bg-white/[0.02] border-white/5 text-white shadow-2xl rounded-3xl overflow-hidden">
       <CardContent className="p-8 space-y-8">
         <div className="flex items-center justify-between border-b border-white/5 pb-6">
           <div className="flex items-center gap-3">
@@ -48,7 +48,7 @@ export function WeeklyChallenges() {
             </div>
             <h3 className="font-display font-bold text-xl text-white">Sfide Settimanali</h3>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest border border-white/5 min-w-[120px] justify-center">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-muted-foreground uppercase tracking-widest border border-white/5 min-w-[120px] justify-center">
              <Clock className="h-3.5 w-3.5" />
              Scade in: {mounted ? timeLeft : "..."}
           </div>
@@ -68,7 +68,7 @@ export function WeeklyChallenges() {
                   </div>
 
                   <div className="space-y-2 max-w-xs">
-                    <div className="flex justify-between text-[9px] font-black text-gray-500 uppercase tracking-tighter">
+                    <div className="flex justify-between text-[9px] font-black text-muted-foreground uppercase tracking-tighter">
                         <span>Progresso</span>
                         <span className={isCompleted ? "text-primary" : ""}>{challenge.current} / {challenge.target}</span>
                     </div>
@@ -84,7 +84,7 @@ export function WeeklyChallenges() {
 
                 <div className={cn(
                   "h-12 w-12 rounded-2xl flex items-center justify-center border-2 transition-all duration-500",
-                  isCompleted ? "bg-primary/20 border-primary text-primary" : "bg-white/5 border-white/5 text-gray-600"
+                  isCompleted ? "bg-primary/20 border-primary text-primary" : "bg-white/5 border-white/5 text-muted-foreground"
                 )}>
                   {isCompleted ? <CheckCircle2 className="h-6 w-6" /> : <Zap className="h-5 w-5 opacity-20" />}
                 </div>

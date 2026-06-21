@@ -76,41 +76,41 @@ export default function GuidesPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-display font-bold text-gray-900">✍️ Assistente alla scrittura</h2>
+            <h2 className="text-2xl font-display font-bold text-foreground">✍️ Assistente alla scrittura</h2>
           </div>
-          <p className="text-gray-600 mb-8">
+          <p className="text-muted-foreground mb-8">
             Non sai da dove cominciare? L&apos;IA ti guida passo dopo passo prima di scrivere.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="space-y-2">
-              <label htmlFor="assistant-type" className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Tipologia testuale</label>
+              <label htmlFor="assistant-type" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Tipologia testuale</label>
               <div className="relative">
                 <select
                   id="assistant-type"
                   aria-label="Tipologia testuale"
                   value={assistantType}
                   onChange={(e) => setAssistantType(e.target.value)}
-                  className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
+                  className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
                 >
                   {TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="assistant-level" className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Livello</label>
+              <label htmlFor="assistant-level" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Livello</label>
               <div className="relative">
                 <select
                   id="assistant-level"
                   aria-label="Livello"
                   value={assistantLevel}
                   onChange={(e) => setAssistantLevel(e.target.value)}
-                  className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
+                  className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
                 >
                   {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               </div>
             </div>
           </div>
@@ -128,14 +128,14 @@ export default function GuidesPage() {
       <div className="flex flex-col lg:flex-row gap-8 min-h-[calc(100vh-8rem)]">
         {/* Sidebar Filters */}
         <aside className="w-full lg:w-64 space-y-8 shrink-0">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-            <div className="flex items-center gap-2 font-bold text-gray-900 border-b border-gray-50 pb-4">
+          <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
+            <div className="flex items-center gap-2 font-bold text-foreground border-b border-border pb-4">
               <Filter className="h-4 w-4 text-primary" />
               <span>Filtri</span>
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Livello</label>
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Livello</label>
               <div className="flex flex-wrap gap-2">
                 {LEVELS.map(level => (
                   <button
@@ -145,7 +145,7 @@ export default function GuidesPage() {
                       "px-3 py-1 rounded-lg text-xs font-bold transition-all border",
                       selectedLevels.includes(level)
                         ? "bg-primary text-white border-primary shadow-sm"
-                        : "bg-gray-50 text-gray-500 border-gray-100 hover:border-primary/30"
+                        : "bg-muted text-muted-foreground border-border hover:border-primary/30"
                     )}
                   >
                     {level}
@@ -155,7 +155,7 @@ export default function GuidesPage() {
             </div>
 
             <div className="space-y-4">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tipologia testuale</label>
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Tipologia testuale</label>
               <div className="space-y-2">
                 {TYPES.map(type => (
                   <button
@@ -165,7 +165,7 @@ export default function GuidesPage() {
                       "w-full text-left px-3 py-2 rounded-xl text-sm transition-all flex items-center justify-between group",
                       selectedTypes.includes(type.id)
                         ? "bg-primary/5 text-primary font-bold"
-                        : "text-gray-500 hover:bg-gray-50"
+                        : "text-muted-foreground hover:bg-muted"
                     )}
                   >
                     {type.label}
@@ -193,17 +193,17 @@ export default function GuidesPage() {
           <header className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-display font-bold text-gray-900">Guide alla scrittura 📚</h1>
-                <p className="text-gray-500 mt-1">Impara a produrre testi in base alla tipologia e al livello QCER</p>
+                <h1 className="text-3xl font-display font-bold text-foreground">Guide alla scrittura 📚</h1>
+                <p className="text-muted-foreground mt-1">Impara a produrre testi in base alla tipologia e al livello QCER</p>
               </div>
               <div className="relative w-full md:w-72">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <label htmlFor="search-guides" className="sr-only">Cerca guide</label>
                 <Input
                   id="search-guides"
                   name="search"
                   placeholder="Cerca guide..."
-                  className="pl-10 bg-white border-gray-200 rounded-xl focus:ring-primary"
+                  className="pl-10 bg-card border-border rounded-xl focus:ring-primary"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -214,7 +214,7 @@ export default function GuidesPage() {
           {/* Recommended Section */}
           {!searchQuery && selectedLevels.length === 0 && selectedTypes.length === 0 && (
             <section className="space-y-4">
-              <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Star className="h-4 w-4 text-accent fill-accent" />
                 Consigliate per te
               </h2>
@@ -235,7 +235,7 @@ export default function GuidesPage() {
           {/* All Guides Grid */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-gray-900">Tutte le guide ({filteredGuides.length})</h2>
+              <h2 className="text-sm font-bold text-foreground">Tutte le guide ({filteredGuides.length})</h2>
             </div>
 
             {filteredGuides.length > 0 ? (
@@ -260,9 +260,9 @@ export default function GuidesPage() {
                 </AnimatePresence>
               </div>
             ) : (
-              <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+              <div className="text-center py-20 bg-card rounded-3xl border border-dashed border-border">
                 <BookOpen className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium">Non abbiamo trovato guide che corrispondano alla tua ricerca.</p>
+                <p className="text-muted-foreground font-medium">Non abbiamo trovato guide che corrispondano alla tua ricerca.</p>
                 <Button
                   variant="link"
                   className="text-primary"

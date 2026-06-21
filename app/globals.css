@@ -4,51 +4,76 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%; /* fondo gris-azulado muy claro */
-    --foreground: 222 47% 11%;
+    /* Modo chiaro - palette vibrante per un pubblico giovane */
+    --background: 250 60% 98%; /* lavanda chiarissimo */
+    --foreground: 250 30% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 250 30% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 168 76% 36%; /* verde esmeralda vibrante #14B88A approx */
-    --primary-rgb: 20, 184, 138;
+    --popover-foreground: 250 30% 12%;
+
+    --primary: 262 83% 58%; /* violetto elettrico #7C3AED */
+    --primary-rgb: 124, 58, 237;
     --primary-foreground: 0 0% 100%;
-    --secondary: 354 75% 60%; /* coral-rojo cálido #F0445C approx */
-    --secondary-rgb: 240, 68, 92;
+
+    --secondary: 350 95% 64%; /* corallo/rosa acceso #FB5C7E */
+    --secondary-rgb: 251, 92, 126;
     --secondary-foreground: 0 0% 100%;
-    --accent: 45 97% 58%; /* dorado/amarillo vibrante #FBC02D approx */
-    --accent-rgb: 251, 192, 45;
-    --accent-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+
+    --accent: 48 100% 56%; /* giallo/lime elettrico #FFD60A */
+    --accent-rgb: 255, 214, 10;
+    --accent-foreground: 250 30% 12%;
+
+    --muted: 250 40% 95%;
+    --muted-foreground: 250 12% 45%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 168 76% 36%;
+    --border: 250 30% 91%;
+    --input: 250 30% 91%;
+    --ring: 262 83% 58%;
     --radius: 1.25rem;
+
+    --chart-1: 262 83% 58%;
+    --chart-2: 350 95% 64%;
+    --chart-3: 48 100% 56%;
+    --chart-4: 199 89% 56%;
+    --chart-5: 142 71% 45%;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 32% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 32% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 212 26% 83%;
+    /* Modo scuro - stessa identità, su sfondo profondo */
+    --background: 250 35% 8%; /* blu notte profondo */
+    --foreground: 250 20% 96%;
+    --card: 250 30% 12%;
+    --card-foreground: 250 20% 96%;
+    --popover: 250 30% 12%;
+    --popover-foreground: 250 20% 96%;
+
+    --primary: 262 90% 68%; /* violetto più luminoso per contrasto */
+    --primary-rgb: 161, 119, 244;
+    --primary-foreground: 250 35% 8%;
+
+    --secondary: 350 95% 70%;
+    --secondary-rgb: 252, 121, 148;
+    --secondary-foreground: 250 35% 8%;
+
+    --accent: 48 100% 62%;
+    --accent-rgb: 255, 222, 51;
+    --accent-foreground: 250 35% 8%;
+
+    --muted: 250 25% 18%;
+    --muted-foreground: 250 12% 65%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 250 20% 96%;
+    --border: 250 25% 20%;
+    --input: 250 25% 20%;
+    --ring: 262 90% 68%;
+
+    --chart-1: 262 90% 68%;
+    --chart-2: 350 95% 70%;
+    --chart-3: 48 100% 62%;
+    --chart-4: 199 89% 65%;
+    --chart-5: 142 71% 55%;
   }
 }
 
@@ -58,7 +83,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground font-body antialiased selection:bg-primary/10 selection:text-primary;
+    @apply bg-background text-foreground font-body antialiased selection:bg-primary/20 selection:text-primary;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight;
@@ -82,8 +107,29 @@
     box-shadow: 0 0 0 1px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.05);
   }
 
+  .dark .premium-shadow {
+    box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 2px 4px rgba(0,0,0,.3), 0 12px 24px rgba(0,0,0,.4);
+  }
+
   .glass-card {
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
+  }
+
+  .dark .glass-card {
+    @apply bg-card/60 backdrop-blur-md border-white/5;
+  }
+
+  /* Hover playful para tarjetas interactivas, pensado para público joven */
+  .hover-pop {
+    @apply transition-all duration-300;
+  }
+  .hover-pop:hover {
+    transform: translateY(-3px) scale(1.01);
+  }
+
+  /* Glow sutil al enfocar elementos interactivos */
+  .focus-glow:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.35);
   }
 }
 
@@ -100,4 +146,21 @@
   .btn-shiny:hover::after {
     @apply translate-x-[100%];
   }
+}
+
+/* Animaciones globales reutilizables, livianas (CSS puro, sin JS extra) */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float-soft 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+  50% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+}
+.animate-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
 }

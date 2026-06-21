@@ -39,11 +39,11 @@ export default async function TeacherTasksPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       <header>
-        <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
+        <h1 className="text-3xl font-display font-bold text-foreground flex items-center gap-3">
           <ClipboardList className="h-8 w-8 text-primary" />
           Compiti Generati
         </h1>
-        <p className="text-gray-500 mt-1">Gestisci e controlla il progresso dei compiti che hai assegnato.</p>
+        <p className="text-muted-foreground mt-1">Gestisci e controlla il progresso dei compiti che hai assegnato.</p>
       </header>
 
       <TeacherTasksList initialTasks={tasks || []} />

@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { RankingHeader } from "@/components/student/RankingHeader"
 import { Podium } from "@/components/student/Podium"
 import { RankingTable } from "@/components/student/RankingTable"
-import { Users, Trophy, Sparkles, Medal } from "lucide-react"
+import { Users, Trophy, Medal } from "lucide-react"
 import { AchievementsGrid } from "@/components/student/AchievementsGrid"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -14,17 +15,32 @@ import { getLevelFromXP } from "@/lib/utils/levels"
 
 export default async function RankingPage() {
   const supabase = createClient()
+  const adminSupabase = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
   // 1. Fetch Global Ranking
-  const { data: students } = await supabase
+  const { data: students } = await adminSupabase
     .from("students")
     .select("id, xp_points, streak_days, target_level, teacher_id, achievements, profiles(full_name, avatar_url)")
     .order("xp_points", { ascending: false })
 
   if (!students) return <div>Caricamento classifica...</div>
+
+  // XP real ganado en los últimos 7 días, para mostrar una tendencia honesta
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  const { data: recentProgress } = await adminSupabase
+    .from("progress_history")
+    .select("student_id, xp_earned")
+    .gte("created_at", sevenDaysAgo.toISOString())
+
+  const weeklyXpByStudent: Record<string, number> = {}
+  for (const entry of recentProgress || []) {
+    weeklyXpByStudent[entry.student_id] = (weeklyXpByStudent[entry.student_id] || 0) + (entry.xp_earned || 0)
+  }
+  const studentsWithWeeklyXp = students.map((s) => ({ ...s, weeklyXp: weeklyXpByStudent[s.id] || 0 }))
 
   // 2. My Data
   const me = students.find(s => s.id === user.id)
@@ -33,7 +49,7 @@ export default async function RankingPage() {
 
   // 3. Class Ranking (students with same teacher)
   const myTeacherId = me?.teacher_id
-  const { data: classStudents } = await supabase
+  const { data: classStudents } = await adminSupabase
     .from("students")
     .select("id, xp_points, profiles(full_name, avatar_url), teachers:teacher_id(profiles(full_name))")
     .eq("teacher_id", myTeacherId || "")
@@ -57,10 +73,10 @@ export default async function RankingPage() {
               <Trophy className="h-5 w-5" />
               <span className="text-xs font-black uppercase tracking-[0.2em]">Hall of Fame</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
               Classifiche <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">& Premi</span> 🏆
             </h1>
-            <p className="text-gray-500 font-bold text-lg max-w-2xl leading-relaxed">
+            <p className="text-muted-foreground font-bold text-lg max-w-2xl leading-relaxed">
               Scala la vetta, sblocca obiettivi unici e competi con studenti da tutto il mondo. 🇮🇹
             </p>
           </div>
@@ -83,13 +99,13 @@ export default async function RankingPage() {
                       <Medal className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-black text-gray-900 tracking-tight">Classifica Globale</h2>
-                      <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1">Aggiornato in tempo reale • 🇮🇹 Global</p>
+                      <h2 className="text-3xl font-black text-foreground tracking-tight">Classifica Globale</h2>
+                      <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1">Aggiornato in tempo reale • 🇮🇹 Global</p>
                     </div>
                   </div>
 
                   <Podium topStudents={students.slice(0, 3)} />
-                  <RankingTable students={students.slice(0, 20)} userId={user.id} />
+                  <RankingTable students={studentsWithWeeklyXp.slice(0, 20)} userId={user.id} />
                </section>
              </div>
 
@@ -101,14 +117,14 @@ export default async function RankingPage() {
                    userId={user.id}
                  />
                ) : (
-                 <Card className="bg-white border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-[2.5rem] relative overflow-hidden group">
+                 <Card className="bg-card border-none shadow-xl shadow-gray-200/50 p-10 flex flex-col items-center justify-center text-center space-y-6 rounded-3xl relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-10" />
-                    <div className="h-20 w-20 bg-gray-100 rounded-[1.5rem] flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
+                    <div className="h-20 w-20 bg-muted rounded-3xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-inner">
                        <Users className="h-10 w-10 text-gray-300" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-gray-900 mb-2">Nessuna classe attiva</h3>
-                      <p className="text-gray-400 text-sm font-bold leading-relaxed">
+                      <h3 className="text-xl font-black text-foreground mb-2">Nessuna classe attiva</h3>
+                      <p className="text-muted-foreground text-sm font-bold leading-relaxed">
                         Unisciti a una classe inserendo el codice del tuo docente nel profilo per sfidare i tuoi compagni.
                       </p>
                     </div>

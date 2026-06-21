@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server"
 import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { correctionSchema } from "@/lib/validations/ai"
 import { calculateXpForCorrection } from "@/lib/utils/xp"
+import { refreshStudentAchievements } from "@/lib/utils/achievements"
+import { calculateNewStreak } from "@/lib/utils/streak"
 
 export async function POST(request: Request) {
   try {
@@ -72,7 +74,7 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
 }`
 
     const geminiResponse = await fetchGeminiWithRetry(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -155,12 +157,22 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       return Response.json({ error: "Errore durante il salvataggio della correzione" }, { status: 500 })
     }
 
+    // Leer streak y última actividad actuales para calcular la racha real
+    const { data: studentBefore } = await adminSupabase
+      .from("students")
+      .select("streak_days, last_activity")
+      .eq("id", user.id)
+      .single()
+
+    const newStreak = calculateNewStreak(studentBefore?.last_activity || null, studentBefore?.streak_days || 0)
+
     // Actualizar XP del alumno
     await adminSupabase
       .from("students")
       .update({
         current_level: correction.detected_level,
-        last_activity: new Date().toISOString()
+        last_activity: new Date().toISOString(),
+        streak_days: newStreak
       })
       .eq("id", user.id)
 
@@ -181,10 +193,13 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       xp_earned: xpEarned
     })
 
+    const newAchievements = await refreshStudentAchievements(user.id)
+
     return Response.json({
       success: true,
       correctionId: savedCorrection.id,
-      xpEarned
+      xpEarned,
+      newAchievements
     })
 
   } catch (error: any) {

@@ -24,7 +24,7 @@ const getCategoryStyle = (type: string) => {
   if (t.includes("lessic")) return { text: "text-accent-dark", underline: "border-accent/40", dot: "bg-accent", label: "Lessico" }
   if (t.includes("ortograf")) return { text: "text-blue-600", underline: "border-blue-400/40", dot: "bg-blue-400", label: "Ortografia" }
   if (t.includes("registro")) return { text: "text-purple-600", underline: "border-purple-400/40", dot: "bg-purple-400", label: "Registro" }
-  return { text: "text-gray-600", underline: "border-gray-300", dot: "bg-gray-400", label: type || "Altro" }
+  return { text: "text-muted-foreground", underline: "border-gray-300", dot: "bg-gray-400", label: type || "Altro" }
 }
 
 export function AnnotatedText({ originalText, correctedText, corrections }: AnnotatedTextProps) {
@@ -83,13 +83,13 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 p-1 rounded-2xl w-fit">
+        <div className="flex items-center gap-2 bg-muted border border-border p-1 rounded-2xl w-fit">
           <Button
             variant="ghost"
             size="sm"
             className={cn(
               "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-              !showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
+              !showOriginal ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
             )}
             onClick={() => setShowOriginal(false)}
           >
@@ -101,7 +101,7 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
             size="sm"
             className={cn(
               "rounded-xl gap-2 font-bold text-xs px-4 h-9 transition-all",
-              showOriginal ? "bg-white text-primary shadow-sm" : "text-gray-400 hover:text-gray-600"
+              showOriginal ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-muted-foreground"
             )}
             onClick={() => setShowOriginal(true)}
           >
@@ -111,7 +111,7 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
         </div>
 
         {usedCategories.length > 0 && (
-          <div className="flex items-center gap-3 flex-wrap text-[11px] text-gray-500">
+          <div className="flex items-center gap-3 flex-wrap text-[11px] text-muted-foreground">
             {usedCategories.map((cat) => {
               const style = getCategoryStyle(cat)
               return (
@@ -125,7 +125,7 @@ export function AnnotatedText({ originalText, correctedText, corrections }: Anno
         )}
       </div>
 
-      <p className="text-[11px] text-gray-400 italic px-1">
+      <p className="text-[11px] text-muted-foreground italic px-1">
         Le parole sottolineate corrispondono alle correzioni elencate qui sotto →
       </p>
 

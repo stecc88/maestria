@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { FileText, Search, Loader2, AlertTriangle, Trash2 } from "lucide-react"
+import { FileText, Loader2, AlertTriangle, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
@@ -70,7 +70,7 @@ export default function CorrectionsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="h-10 w-10 text-primary animate-spin" />
-        <p className="text-gray-500 font-medium">Caricamento correzioni...</p>
+        <p className="text-muted-foreground font-medium">Caricamento correzioni...</p>
       </div>
     )
   }
@@ -79,13 +79,13 @@ export default function CorrectionsPage() {
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 pb-20">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-gray-900 flex items-center gap-4 tracking-tight">
+          <h1 className="text-4xl font-black text-foreground flex items-center gap-4 tracking-tight">
              <div className="p-2 bg-primary/10 rounded-2xl">
                <FileText className="h-8 w-8 text-primary" />
              </div>
              Correzioni
           </h1>
-          <p className="text-gray-500 mt-2 font-bold text-lg">Archivio completo dei tuoi testi corretti e valutati.</p>
+          <p className="text-muted-foreground mt-2 font-bold text-lg">Archivio completo dei tuoi testi corretti e valutati.</p>
         </div>
       </header>
 
@@ -100,16 +100,16 @@ export default function CorrectionsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-24 bg-white rounded-[3rem] border-4 border-dashed border-gray-100 shadow-inner">
-          <div className="bg-gray-50 w-28 h-28 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
+        <div className="text-center py-24 bg-card rounded-3xl border-4 border-dashed border-border shadow-inner">
+          <div className="bg-muted w-28 h-28 rounded-3xl flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
             <FileText className="h-12 w-12 text-gray-200" />
           </div>
-          <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Ancora nessuna correzione</h3>
-          <p className="text-gray-400 font-bold max-w-sm mx-auto leading-relaxed mb-10">
+          <h3 className="text-3xl font-black text-foreground mb-4 tracking-tight">Ancora nessuna correzione</h3>
+          <p className="text-muted-foreground font-bold max-w-sm mx-auto leading-relaxed mb-10">
             Invia el tuo primo testo per ricevere una valutazione dettagliata dal nuestro esaminatore AI.
           </p>
           <Link href="/student/write">
-            <Button className="bg-primary hover:bg-primary-dark font-black px-12 py-8 rounded-[1.5rem] text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
+            <Button className="bg-primary hover:bg-primary-dark font-black px-12 py-8 rounded-3xl text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
               INIZIA A SCRIVERE ✍️
             </Button>
           </Link>
@@ -123,9 +123,9 @@ export default function CorrectionsPage() {
             <div className="h-16 w-16 bg-red-100 rounded-3xl flex items-center justify-center mx-auto">
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
-            <SheetTitle className="text-2xl font-black text-center text-gray-900">Sei sicuro?</SheetTitle>
-            <SheetDescription className="text-center text-gray-500 font-medium text-lg leading-relaxed">
-              Stai per eliminare: <span className="text-gray-900 font-black italic">&quot;{correctionToDelete?.writings?.title || 'Senza titolo'}&quot;</span>.
+            <SheetTitle className="text-2xl font-black text-center text-foreground">Sei sicuro?</SheetTitle>
+            <SheetDescription className="text-center text-muted-foreground font-medium text-lg leading-relaxed">
+              Stai per eliminare: <span className="text-foreground font-black italic">&quot;{correctionToDelete?.writings?.title || 'Senza titolo'}&quot;</span>.
               Questa azione non può essere annullata.
             </SheetDescription>
           </SheetHeader>
@@ -134,7 +134,7 @@ export default function CorrectionsPage() {
               variant="outline"
               onClick={() => setCorrectionToDelete(null)}
               disabled={isDeleting}
-              className="py-6 rounded-2xl font-bold border-gray-100 hover:bg-gray-50"
+              className="py-6 rounded-2xl font-bold border-border hover:bg-muted"
             >
               Annulla
             </Button>

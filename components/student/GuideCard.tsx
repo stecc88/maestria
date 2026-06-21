@@ -4,7 +4,7 @@ import React from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Star, ArrowRight, BookOpen } from "lucide-react"
+import { Star, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { GuideDetail } from "./GuideDetail"
@@ -32,8 +32,8 @@ export function GuideCard({ guide, isFavorite, onToggleFavorite, featured }: Gui
   return (
     <Sheet>
       <Card className={cn(
-        "group h-full flex flex-col transition-all duration-300 border-gray-100",
-        featured ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/5" : "bg-white hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
+        "group h-full flex flex-col transition-all duration-300 border-border",
+        featured ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/5" : "bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5"
       )}>
         <CardContent className="p-6 flex-1 flex flex-col">
           <div className="flex items-start justify-between mb-4">
@@ -69,16 +69,16 @@ export function GuideCard({ guide, isFavorite, onToggleFavorite, featured }: Gui
           </div>
 
           <div className="space-y-2 flex-1">
-            <h3 className="font-display font-bold text-lg text-gray-900 group-hover:text-primary transition-colors">
+            <h3 className="font-display font-bold text-lg text-foreground group-hover:text-primary transition-colors">
               {guide.title}
             </h3>
-            <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {guide.description}
             </p>
           </div>
 
           <div className="mt-6 flex items-center justify-between">
-            <Badge variant="outline" className="text-[10px] uppercase tracking-widest bg-gray-50 border-gray-100 text-gray-400">
+            <Badge variant="outline" className="text-[10px] uppercase tracking-widest bg-muted border-border text-muted-foreground">
               {typeLabels[guide.type] || guide.type.replace('_', ' ')}
             </Badge>
             <SheetTrigger render={
