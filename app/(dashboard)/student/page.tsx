@@ -64,51 +64,40 @@ export default async function StudentDashboard() {
   const userRank = rankError ? { rank: 0, diff: 0 } : (rankData || { rank: 0, diff: 0 })
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background Decorations */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-[100px]" />
-        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[150px]" />
-      </div>
+    // Sin blobs decorativos fixed/blur: en una pantalla con tanta densidad
+    // de datos (stats, gráficos, ranking) restan jerarquía en vez de sumar
+    // atmósfera. Fondo plano y limpio.
+    <div className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6 lg:px-8">
+      <WelcomeCard
+        name={student.profiles.full_name}
+        targetLevel={student.target_level}
+        currentLevel={student.current_level}
+        streak={student.streak_days}
+        xp={student.xp_points}
+      />
 
-      <div className="max-w-7xl mx-auto space-y-8 py-6 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      {/* Las stats van antes de las tareas: contexto rápido de "¿cómo voy?"
+          antes de mostrar qué falta hacer — el orden natural en que un
+          estudiante lee su propio progreso. */}
+      <StatsCards
+        writings={writingsCount || 0}
+        avgScore={avgScore}
+        completedTasks={completedTasks || 0}
+      />
 
-        {/* 1. Header compacto: identidad + progreso de nivel + acción principal */}
-        <WelcomeCard
-          name={student.profiles.full_name}
-          targetLevel={student.target_level}
-          currentLevel={student.current_level}
-          streak={student.streak_days}
-          xp={student.xp_points}
-        />
-
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-          <div className="xl:col-span-8 space-y-8">
-
-            {/* 2. Zona de acción: lo primero que el alumno debe ver es qué tiene pendiente */}
-            <PendingTasks tasks={pendingTasks || []} />
-
-            {/* 3. Estadísticas (sin duplicar la racha, ya está en el header) */}
-            <StatsCards
-              writings={writingsCount || 0}
-              avgScore={avgScore}
-              completedTasks={completedTasks || 0}
-            />
-
-            {/* 4. Progreso unificado: un gráfico a la vez, con propósito explicado */}
-            <ProgressSection evolutionData={evolutionData || []} radarData={radarData} />
-          </div>
-
-          {/* 5. Sidebar: primero feedback de aprendizaje, ranking social al final */}
-          <aside className="xl:col-span-4 space-y-8">
-            <LatestCorrections corrections={latestCorrections || []} />
-            <MiniRanking
-              topStudents={topStudents || []}
-              userRank={userRank}
-            />
-          </aside>
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        <div className="xl:col-span-8 space-y-6">
+          <PendingTasks tasks={pendingTasks || []} />
+          <ProgressSection evolutionData={evolutionData || []} radarData={radarData} />
         </div>
+
+        <aside className="xl:col-span-4 space-y-6">
+          <LatestCorrections corrections={latestCorrections || []} />
+          <MiniRanking
+            topStudents={topStudents || []}
+            userRank={userRank}
+          />
+        </aside>
       </div>
     </div>
   )
