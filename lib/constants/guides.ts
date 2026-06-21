@@ -11,8 +11,6 @@ import {
   MapPin,
   Utensils,
   AlertCircle,
-  MessageSquare,
-  FileEdit,
   ClipboardList,
   Mail,
   Star

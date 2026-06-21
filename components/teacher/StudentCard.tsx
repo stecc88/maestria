@@ -74,8 +74,6 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
     Array.from({ length: 5 }).map(() => ({ score: 60 + Math.floor(Math.random() * 30) })),
   [])
 
-  const lastSeen = student.last_activity ? new Date(student.last_activity) : null
-
   return (
     <Card className="hover:border-primary/30 hover:shadow-xl transition-all duration-300 group overflow-hidden">
       <CardContent className="p-6">

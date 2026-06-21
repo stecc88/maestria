@@ -12,11 +12,9 @@ import {
   CheckCircle2,
   Clock,
   PlayCircle,
-  Trophy,
   ClipboardList,
   RefreshCw,
-  ChevronRight,
-  AlertCircle
+  ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils/date";
