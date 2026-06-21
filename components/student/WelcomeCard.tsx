@@ -55,31 +55,31 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
                 </div>
                 <span className="text-sm font-black text-primary uppercase tracking-widest">Studente Premium</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight leading-tight">
+              <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4 tracking-tight leading-tight">
                 Ciao, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{name.split(' ')[0]}</span>! 👋
               </h1>
-              <p className="text-gray-500 font-bold text-lg leading-relaxed max-w-xl">
+              <p className="text-muted-foreground font-bold text-lg leading-relaxed max-w-xl">
                 Il tuo viaggio verso l&apos;italiano perfetto continua. Quale sarà la tua próxima sfida oggi?
               </p>
             </motion.div>
 
             <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-gray-100 rounded-2xl px-5 py-3 transition-all hover:shadow-md">
+              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-border rounded-2xl px-5 py-3 transition-all hover:shadow-md">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Target className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Obiettivo</p>
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Obiettivo</p>
                   <Badge className={cn("mt-0.5 font-black border-none", LEVEL_COLORS[targetLevel] || "bg-primary")}>{targetLevel}</Badge>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-gray-100 rounded-2xl px-5 py-3 transition-all hover:shadow-md">
+              <div className="flex items-center gap-3 bg-white/50 backdrop-blur shadow-sm border border-border rounded-2xl px-5 py-3 transition-all hover:shadow-md">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Zap className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Attuale</p>
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Attuale</p>
                   <Badge className={cn("mt-0.5 font-black border-none text-white", LEVEL_COLORS[currentLevel] || "bg-blue-500")}>{currentLevel}</Badge>
                 </div>
               </div>
@@ -99,18 +99,18 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
             </div>
           </div>
 
-          <div className="lg:col-span-4 lg:border-l lg:border-gray-100 lg:pl-10 relative">
+          <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-10 relative">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                  <div className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-accent animate-pulse" />
-                    <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{levelInfo.next?.name || "Prossimo Livello"}</span>
+                    <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">{levelInfo.next?.name || "Prossimo Livello"}</span>
                  </div>
-                 <span className="text-sm font-black text-gray-900">{xp} <span className="text-gray-300">/</span> {nextLevelXp} XP</span>
+                 <span className="text-sm font-black text-foreground">{xp} <span className="text-gray-300">/</span> {nextLevelXp} XP</span>
               </div>
 
               <div className="space-y-3">
-                <div className="h-4 w-full bg-gray-100 rounded-full overflow-hidden p-1 shadow-inner">
+                <div className="h-4 w-full bg-muted rounded-full overflow-hidden p-1 shadow-inner">
                   <motion.div
                     className="h-full bg-gradient-to-r from-primary via-accent to-primary rounded-full relative"
                     initial={{ width: 0 }}
@@ -128,7 +128,7 @@ export function WelcomeCard({ name, targetLevel, currentLevel = "A1", streak, xp
                   </motion.div>
                 </div>
                 <div className="flex justify-between items-center px-1">
-                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                   <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                      {levelInfo.next ? `Mancano ${nextLevelXp - xp} XP` : "Livello Massimo"}
                    </p>
                    <p className="text-[10px] text-primary font-black uppercase tracking-widest">

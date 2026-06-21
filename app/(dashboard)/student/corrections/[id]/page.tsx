@@ -63,7 +63,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
     cat.toLowerCase().includes('lessic') ? 'bg-accent/10 text-accent-dark' :
     cat.toLowerCase().includes('ortograf') ? 'bg-blue-50 text-blue-600' :
     cat.toLowerCase().includes('registro') ? 'bg-purple-50 text-purple-600' :
-    'bg-gray-100 text-gray-600'
+    'bg-muted text-muted-foreground'
   )
 
   return (
@@ -91,13 +91,13 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
           <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
             <TrendingUp className="h-4 w-4 text-primary" />
           </div>
-          <h3 className="text-lg font-display font-bold text-gray-900">Analisi qualitativa</h3>
+          <h3 className="text-lg font-display font-bold text-foreground">Analisi qualitativa</h3>
         </div>
 
-        <Card className="relative border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+        <Card className="relative border-none shadow-sm rounded-3xl bg-card overflow-hidden">
           <CardContent className="p-5 md:p-7">
             <Tabs defaultValue="strengths" className="w-full">
-              <TabsList className="bg-gray-50 p-1 h-11 rounded-xl w-full flex gap-1 mb-6">
+              <TabsList className="bg-muted p-1 h-11 rounded-xl w-full flex gap-1 mb-6">
                 <TabsTrigger value="strengths" className="flex-1 rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
                   ✅ Punti di forza
                 </TabsTrigger>
@@ -120,7 +120,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                       <div className="p-1.5 bg-green-100 rounded-lg shrink-0 mt-0.5">
                         <CheckCircle2 className="h-4 w-4 text-green-600" />
                       </div>
-                      <p className="text-gray-700 text-[14px] leading-[1.7] font-medium">{pro}</p>
+                      <p className="text-foreground/90 text-[14px] leading-[1.7] font-medium">{pro}</p>
                     </div>
                   ))}
                 </div>
@@ -137,7 +137,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                       <div className="p-1.5 bg-red-100 rounded-lg shrink-0 mt-0.5">
                         <Target className="h-4 w-4 text-red-500" />
                       </div>
-                      <p className="text-gray-700 text-[14px] leading-[1.7] font-medium">{con}</p>
+                      <p className="text-foreground/90 text-[14px] leading-[1.7] font-medium">{con}</p>
                     </div>
                   ))}
                 </div>
@@ -154,9 +154,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                       <Badge className="bg-amber-100 text-amber-700 border-none text-[10px] font-black uppercase tracking-wider">
                         {sug.category}
                       </Badge>
-                      <p className="font-bold text-gray-900 text-[14px] leading-snug">{sug.tip}</p>
-                      <div className="bg-white rounded-xl p-3 border border-amber-100">
-                        <p className="text-xs text-gray-500 italic leading-relaxed">&ldquo;{sug.example}&rdquo;</p>
+                      <p className="font-bold text-foreground text-[14px] leading-snug">{sug.tip}</p>
+                      <div className="bg-card rounded-xl p-3 border border-amber-100">
+                        <p className="text-xs text-muted-foreground italic leading-relaxed">&ldquo;{sug.example}&rdquo;</p>
                       </div>
                     </div>
                   ))}
@@ -168,9 +168,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-white">
+        <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
           <CardContent className="p-7 space-y-5 h-full flex flex-col">
-            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">
+            <h4 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest text-center">
               Progresso per livelli
             </h4>
             <div className="space-y-2.5 flex-1">
@@ -184,11 +184,11 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                   )}>
                     <div className={cn(
                       "w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-all",
-                      isMet ? "bg-primary text-white" : "bg-gray-100 text-gray-400"
+                      isMet ? "bg-primary text-white" : "bg-muted text-muted-foreground"
                     )}>
                       {l}
                     </div>
-                    <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                       <div
                         className={cn("h-full rounded-full transition-all duration-700", isMet ? "bg-primary" : "bg-transparent")}
                         style={{ width: isMet ? '100%' : '0%' }}
@@ -252,8 +252,8 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               <FileSearch className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-display font-bold text-gray-900">Analisi del Testo</h3>
-              <p className="text-gray-400 text-xs">Dove hai sbagliato e come migliorare</p>
+              <h3 className="text-lg font-display font-bold text-foreground">Analisi del Testo</h3>
+              <p className="text-muted-foreground text-xs">Dove hai sbagliato e come migliorare</p>
             </div>
           </div>
           <Badge className="bg-primary/5 text-primary border-primary/10 font-bold px-4 py-1.5 rounded-full">
@@ -273,7 +273,7 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-white">
+          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-card">
             <CardContent className="p-6 md:p-9">
               <AnnotatedText
                 originalText={correction.writings.content}
@@ -283,9 +283,9 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-white">
+          <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
             <CardContent className="p-6 space-y-4 h-full">
-              <h4 className="font-bold text-gray-900 text-sm px-1">Correzioni nel dettaglio</h4>
+              <h4 className="font-bold text-foreground text-sm px-1">Correzioni nel dettaglio</h4>
 
               {inlineCorrections.length === 0 ? (
                 <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
@@ -296,27 +296,27 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
               ) : (
                 <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
                   {inlineCorrections.map((c: any, i: number) => (
-                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-gray-100 overflow-hidden">
-                      <div className="px-4 py-2.5 bg-white border-b border-gray-100 flex items-center gap-2">
+                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-border overflow-hidden">
+                      <div className="px-4 py-2.5 bg-card border-b border-border flex items-center gap-2">
                         <span className={getCategoryDot(c.error_type || "altro")} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                           {c.error_type}
                         </span>
                       </div>
 
                       <div className="p-4 space-y-3">
                         <div>
-                          <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Hai scritto</p>
-                          <p className="text-sm text-gray-500 line-through leading-relaxed">{c.original}</p>
+                          <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Hai scritto</p>
+                          <p className="text-sm text-muted-foreground line-through leading-relaxed">{c.original}</p>
                         </div>
 
                         <div>
                           <p className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Forma corretta</p>
-                          <p className="text-sm font-bold text-gray-900 leading-relaxed">{c.corrected}</p>
+                          <p className="text-sm font-bold text-foreground leading-relaxed">{c.corrected}</p>
                         </div>
 
-                        <div className="pt-2 border-t border-gray-100">
-                          <p className="text-xs text-gray-500 leading-relaxed italic">{c.explanation}</p>
+                        <div className="pt-2 border-t border-border">
+                          <p className="text-xs text-muted-foreground leading-relaxed italic">{c.explanation}</p>
                         </div>
                       </div>
                     </div>

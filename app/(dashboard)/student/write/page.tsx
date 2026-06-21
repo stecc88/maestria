@@ -151,11 +151,11 @@ function WriteForm() {
       {/* App-like Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-gray-900 tracking-tight mb-2">Nuova Scrittura</h1>
-          <p className="text-gray-500 font-medium">Affina il tuo italiano con feedback istantaneo dell&apos;IA.</p>
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight mb-2">Nuova Scrittura</h1>
+          <p className="text-muted-foreground font-medium">Affina il tuo italiano con feedback istantaneo dell&apos;IA.</p>
         </div>
         <div className="flex items-center gap-3">
-           <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-gray-100 shadow-sm text-[10px] font-black uppercase tracking-widest text-gray-400">
+           <div className="flex items-center gap-2 px-3 py-1.5 bg-card rounded-lg border border-border shadow-sm text-[10px] font-black uppercase tracking-widest text-muted-foreground">
              {lastSaved ? (
                <><CheckCircle2 className="h-3 w-3 text-primary" /> Salvato {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</>
              ) : (
@@ -170,7 +170,7 @@ function WriteForm() {
         <div className="lg:col-span-8 space-y-10">
           {/* Step 1: Type Selection */}
           <div className="space-y-4">
-             <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 ml-1">1. Tipo di testo</Label>
+             <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">1. Tipo di testo</Label>
              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {TEXT_TYPES.map((type) => (
                   <button
@@ -180,10 +180,10 @@ function WriteForm() {
                       "flex items-center gap-3 p-3 rounded-xl border-2 transition-all group",
                       textType === type.id
                         ? "border-primary bg-primary/5 text-primary shadow-sm"
-                        : "border-gray-50 bg-white text-gray-400 hover:border-gray-200"
+                        : "border-gray-50 bg-card text-muted-foreground hover:border-border"
                     )}
                   >
-                    <type.icon className={cn("h-4 w-4 shrink-0", textType === type.id ? "text-primary" : "text-gray-400")} />
+                    <type.icon className={cn("h-4 w-4 shrink-0", textType === type.id ? "text-primary" : "text-muted-foreground")} />
                     <span className="text-[11px] font-bold truncate tracking-tight">{type.label}</span>
                   </button>
                 ))}
@@ -192,7 +192,7 @@ function WriteForm() {
 
           {/* Step 2: Level Selection */}
           <div className="space-y-4">
-             <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 ml-1">2. Livello obiettivo</Label>
+             <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">2. Livello obiettivo</Label>
              <div className="flex flex-wrap gap-2">
                 {LEVELS.map((l) => (
                   <button
@@ -202,7 +202,7 @@ function WriteForm() {
                       "h-10 px-6 rounded-full font-bold text-xs transition-all",
                       level === l
                         ? "bg-gray-900 text-white shadow-lg shadow-black/10"
-                        : "bg-white border border-gray-100 text-gray-400 hover:border-gray-300"
+                        : "bg-card border border-border text-muted-foreground hover:border-gray-300"
                     )}
                   >
                     {l}
@@ -215,7 +215,7 @@ function WriteForm() {
           <div className="space-y-6 pt-4">
              <div className="space-y-3">
                <div className="flex items-center justify-between px-1">
-                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">3. Istruzioni (opzionale)</Label>
+                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">3. Istruzioni (opzionale)</Label>
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="h-3.5 w-3.5 text-gray-300 cursor-help" />
@@ -227,18 +227,18 @@ function WriteForm() {
                  placeholder="Cosa devi scrivere? Es: 'Scrivi un'email per prenotare un hotel...'"
                  value={prompt}
                  onChange={(e) => setPrompt(e.target.value)}
-                 className="bg-gray-50/50 border-gray-100 min-h-[60px] text-sm focus:bg-white transition-colors rounded-xl"
+                 className="bg-gray-50/50 border-border min-h-[60px] text-sm focus:bg-card transition-colors rounded-xl"
                />
              </div>
 
              <div className="space-y-3">
                <div className="flex items-center justify-between px-1">
-                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">4. Il tuo testo</Label>
+                  <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">4. Il tuo testo</Label>
                   <div className="text-right">
                     <p className={cn("text-[10px] font-black uppercase tracking-widest", wordCount > 0 ? "text-primary" : "text-gray-300")}>
                       {wordCount} Parole
                     </p>
-                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Target: {WORD_RANGES[level]} parole</p>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Target: {WORD_RANGES[level]} parole</p>
                   </div>
                </div>
                <Card className="border-none shadow-sm overflow-hidden ring-1 ring-gray-100">
@@ -246,7 +246,7 @@ function WriteForm() {
                     placeholder="Scrivi qui..."
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="min-h-[400px] border-none focus:ring-0 p-8 text-lg font-body leading-relaxed bg-white scrollbar-hide"
+                    className="min-h-[400px] border-none focus:ring-0 p-8 text-lg font-body leading-relaxed bg-card scrollbar-hide"
                   />
                   <div className="bg-gray-50/50 border-t border-gray-50 p-4 flex justify-end">
                     <Button
@@ -282,7 +282,7 @@ function WriteForm() {
 
 export default function WritePage() {
   return (
-    <Suspense fallback={<div className="p-20 text-center text-gray-400 font-bold uppercase tracking-widest animate-pulse">Caricamento...</div>}>
+    <Suspense fallback={<div className="p-20 text-center text-muted-foreground font-bold uppercase tracking-widest animate-pulse">Caricamento...</div>}>
       <WriteForm />
     </Suspense>
   )

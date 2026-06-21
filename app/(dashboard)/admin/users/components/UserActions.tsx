@@ -155,12 +155,12 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-card rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center gap-3 mb-4 text-red-600">
               <AlertTriangle className="h-6 w-6" />
               <h3 className="text-xl font-bold">Elimina Utente</h3>
             </div>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Sei sicuro di voler eliminare <strong>{user.full_name}</strong>? Questa azione è permanente e cancellerà tutti i dati associati.
             </p>
             <div className="flex items-center justify-end gap-3">
@@ -179,9 +179,9 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
       {/* Role Change Confirmation Modal */}
       {showRoleConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-card rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <h3 className="text-xl font-bold mb-4">Cambia Ruolo</h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Confermi il cambio di ruolo per <strong>{user.full_name}</strong> in <span className="font-bold">{roleLabels[newRole] || newRole}</span>?
             </p>
             <div className="flex items-center justify-end gap-3">
@@ -200,7 +200,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
       {/* Reassign Student Modal */}
       {showReassignModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
+          <div className="bg-card rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold">Riassegna Studente</h3>
                 <Button variant="ghost" size="icon" onClick={() => setShowReassignModal(false)}>
@@ -208,7 +208,7 @@ export default function UserActions({ user, teachers }: UserActionsProps) {
                 </Button>
             </div>
 
-            <p className="text-gray-600 mb-4 text-sm">
+            <p className="text-muted-foreground mb-4 text-sm">
                 Seleziona un nuovo insegnante per <strong>{user.full_name}</strong>.
             </p>
 

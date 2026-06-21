@@ -59,7 +59,7 @@ export function Header({ user, studentData, teacherData, notifications }: Header
           <SheetTrigger
             render={
               <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Menu className="h-5 w-5 text-gray-600" />
+                <Menu className="h-5 w-5 text-muted-foreground" />
               </Button>
             }
           />

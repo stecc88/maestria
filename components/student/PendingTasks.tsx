@@ -29,9 +29,9 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
   }, [])
 
   return (
-    <Card className="border-none shadow-xl shadow-gray-200/50 bg-white overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500 flex flex-col">
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500 flex flex-col">
       <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50 shrink-0">
-        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2.5">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
           <div className="p-1.5 bg-blue-500/10 rounded-lg group-hover:rotate-12 transition-transform">
             <ClipboardList className="h-3.5 w-3.5 text-blue-500" />
           </div>
@@ -57,19 +57,19 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-black text-gray-900 leading-snug mb-2 group-hover/item:text-blue-600 transition-colors flex items-center gap-2">
+                    <h4 className="text-sm font-black text-foreground leading-snug mb-2 group-hover/item:text-blue-600 transition-colors flex items-center gap-2">
                       {task.title}
                       {i === 0 && <Sparkles className="h-3 w-3 text-accent animate-pulse" />}
                     </h4>
                     <div className="flex items-center gap-3">
                       <Badge variant="outline" className={cn(
                         "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border shadow-sm",
-                        TYPE_COLORS[task.exercise_type] || "bg-gray-50 text-gray-500 border-gray-100"
+                        TYPE_COLORS[task.exercise_type] || "bg-muted text-muted-foreground border-border"
                       )}>
                         {task.exercise_type}
                       </Badge>
-                      <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400">
-                        <div className="p-1 bg-gray-100 rounded-md">
+                      <div className="flex items-center gap-1.5 text-[10px] font-black text-muted-foreground">
+                        <div className="p-1 bg-muted rounded-md">
                           <Calendar className="h-2.5 w-2.5" />
                         </div>
                         <span>{mounted ? formatDate(task.due_date, 'd MMM') : '...'}</span>
@@ -79,7 +79,7 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
                   <Link href={`/student/tasks/${task.id}`}>
                     <Button
                       size="icon"
-                      className="rounded-xl bg-gray-50 hover:bg-blue-600 text-gray-400 hover:text-white h-10 w-10 transition-all shadow-sm group-hover/item:shadow-lg group-hover/item:-translate-y-1"
+                      className="rounded-xl bg-muted hover:bg-blue-600 text-muted-foreground hover:text-white h-10 w-10 transition-all shadow-sm group-hover/item:shadow-lg group-hover/item:-translate-y-1"
                     >
                       <ArrowRight className="h-5 w-5" />
                     </Button>
@@ -93,11 +93,11 @@ export function PendingTasks({ tasks }: PendingTasksProps) {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="h-16 w-16 bg-gray-50 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-gray-100"
+              className="h-16 w-16 bg-muted rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-border"
             >
               <ClipboardList className="h-8 w-8 text-gray-200" />
             </motion.div>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Sei in pari! 🚀</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Sei in pari! 🚀</p>
             <p className="text-[10px] text-gray-300 font-bold mt-1">Nessun compito in scadenza</p>
           </div>
         )}

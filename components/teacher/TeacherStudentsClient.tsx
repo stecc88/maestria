@@ -59,26 +59,26 @@ export function TeacherStudentsClient({ initialStudents, initialCourses }: Teach
     <div className="space-y-8 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900 flex items-center gap-3">
+          <h1 className="text-3xl font-display font-bold text-foreground flex items-center gap-3">
              <Users className="h-8 w-8 text-primary" />
              Studenti
           </h1>
-          <p className="text-gray-500 mt-1">Lista completa degli studenti sotto la tua supervisione.</p>
+          <p className="text-muted-foreground mt-1">Lista completa degli studenti sotto la tua supervisione.</p>
         </div>
         <div className="flex items-center gap-3">
            <div className="relative w-full md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Cerca per nome..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-white border-gray-200 rounded-xl"
+                className="pl-10 bg-card border-border rounded-xl"
               />
            </div>
            <Button
              variant="outline"
              onClick={() => setIsCourseManagerOpen(true)}
-             className="rounded-xl gap-2 border-gray-200 font-bold shrink-0"
+             className="rounded-xl gap-2 border-border font-bold shrink-0"
            >
               <BookOpen className="h-4 w-4" /> Gestisci corsi
            </Button>
@@ -91,7 +91,7 @@ export function TeacherStudentsClient({ initialStudents, initialCourses }: Teach
           onClick={() => setActiveCourseFilter("all")}
           className={cn(
             "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0",
-            activeCourseFilter === "all" ? "bg-primary text-white" : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+            activeCourseFilter === "all" ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:bg-muted"
           )}
         >
           Tutti ({students.length})
@@ -104,7 +104,7 @@ export function TeacherStudentsClient({ initialStudents, initialCourses }: Teach
               onClick={() => setActiveCourseFilter(course.id)}
               className={cn(
                 "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0",
-                activeCourseFilter === course.id ? "bg-primary text-white" : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                activeCourseFilter === course.id ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:bg-muted"
               )}
             >
               {course.name} ({count})
@@ -115,15 +115,15 @@ export function TeacherStudentsClient({ initialStudents, initialCourses }: Teach
           onClick={() => setActiveCourseFilter("none")}
           className={cn(
             "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0",
-            activeCourseFilter === "none" ? "bg-primary text-white" : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+            activeCourseFilter === "none" ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:bg-muted"
           )}
         >
           Senza corso ({students.filter((s) => !s.course_id).length})
         </button>
       </div>
 
-      <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-         <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+      <div className="flex items-center justify-between border-b border-border pb-4">
+         <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
            Mostrando {filteredStudents.length} studenti
          </p>
       </div>
@@ -138,9 +138,9 @@ export function TeacherStudentsClient({ initialStudents, initialCourses }: Teach
            />
          ))}
          {filteredStudents.length === 0 && (
-           <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-100">
+           <div className="col-span-full py-20 text-center bg-card rounded-3xl border-2 border-dashed border-border">
               <Users className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-500 font-medium">
+              <p className="text-muted-foreground font-medium">
                 {students.length === 0
                   ? "Non hai ancora studenti registrati con il tuo codice."
                   : "Nessuno studente corrisponde ai filtri selezionati."}

@@ -18,7 +18,7 @@ export function RankingTable({ students, userId }: RankingTableProps) {
       <div className="overflow-x-auto scrollbar-hide">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/5 text-[10px] font-black text-gray-500 uppercase tracking-widest bg-white/[0.02]">
+            <tr className="border-b border-white/5 text-[10px] font-black text-muted-foreground uppercase tracking-widest bg-white/[0.02]">
               <th className="px-6 py-5">Posto</th>
               <th className="px-6 py-5">Studente</th>
               <th className="px-6 py-5">Livello</th>
@@ -47,7 +47,7 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                   <td className="px-6 py-4">
                     <span className={cn(
                       "font-display font-black text-lg",
-                      rank === 1 ? "text-accent" : rank === 2 ? "text-slate-400" : rank === 3 ? "text-orange-500" : "text-gray-600"
+                      rank === 1 ? "text-accent" : rank === 2 ? "text-slate-400" : rank === 3 ? "text-orange-500" : "text-muted-foreground"
                     )}>
                       #{rank}
                     </span>
@@ -75,19 +75,19 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                         )}>
                           {student.profiles.full_name}
                         </p>
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Studente Attivo</p>
+                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Studente Attivo</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge variant="outline" className="text-[10px] font-black border-white/10 bg-white/5 text-gray-400 uppercase px-2 py-0">
+                    <Badge variant="outline" className="text-[10px] font-black border-white/10 bg-white/5 text-muted-foreground uppercase px-2 py-0">
                       {student.target_level}
                     </Badge>
                   </td>
                   <td className="px-6 py-4">
                      <div className="flex flex-col">
                         <span className="font-black text-sm text-gray-200">{student.xp_points.toLocaleString()}</span>
-                        <span className="text-[8px] font-black text-gray-600 uppercase tracking-tighter">Punti Esperienza</span>
+                        <span className="text-[8px] font-black text-muted-foreground uppercase tracking-tighter">Punti Esperienza</span>
                      </div>
                   </td>
                   <td className="px-6 py-4">
@@ -98,7 +98,7 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                       )}>
                         <Flame className={cn(
                           "h-3.5 w-3.5",
-                          student.streak_days > 0 ? "text-secondary fill-secondary" : "text-gray-700"
+                          student.streak_days > 0 ? "text-secondary fill-secondary" : "text-foreground/90"
                         )} />
                       </div>
                       <span className="font-bold text-sm text-white">{student.streak_days}</span>
@@ -111,7 +111,7 @@ export function RankingTable({ students, userId }: RankingTableProps) {
                       ) : trend < 0 ? (
                         <ArrowDown className="h-3.5 w-3.5 text-secondary" />
                       ) : (
-                        <Minus className="h-3.5 w-3.5 text-gray-600" />
+                        <Minus className="h-3.5 w-3.5 text-muted-foreground" />
                       )}
                     </div>
                   </td>

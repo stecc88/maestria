@@ -80,8 +80,8 @@ export function CourseManagerSheet({ open, onOpenChange, courses }: CourseManage
           <div className="h-12 w-12 bg-primary/10 rounded-2xl flex items-center justify-center">
             <BookOpen className="h-6 w-6 text-primary" />
           </div>
-          <SheetTitle className="text-2xl font-black text-gray-900">Gestisci corsi</SheetTitle>
-          <SheetDescription className="text-gray-500">
+          <SheetTitle className="text-2xl font-black text-foreground">Gestisci corsi</SheetTitle>
+          <SheetDescription className="text-muted-foreground">
             Crea e organizza i corsi per dividere i tuoi studenti (es. &quot;7mo&quot;, &quot;9no&quot;).
           </SheetDescription>
         </SheetHeader>
@@ -92,7 +92,7 @@ export function CourseManagerSheet({ open, onOpenChange, courses }: CourseManage
             value={newCourseName}
             onChange={(e) => setNewCourseName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-            className="bg-gray-50 border-gray-100 rounded-xl"
+            className="bg-muted border-border rounded-xl"
           />
           <Button
             onClick={handleCreate}
@@ -105,29 +105,29 @@ export function CourseManagerSheet({ open, onOpenChange, courses }: CourseManage
         </div>
 
         <div className="space-y-2">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-1">
             Corsi esistenti ({courses.length})
           </p>
 
           {courses.length === 0 ? (
-            <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+            <div className="text-center py-10 bg-muted rounded-2xl border border-dashed border-border">
               <BookOpen className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-sm text-gray-400 font-medium">Non hai ancora creato nessun corso</p>
+              <p className="text-sm text-muted-foreground font-medium">Non hai ancora creato nessun corso</p>
             </div>
           ) : (
             <div className="space-y-2">
               {courses.map((course) => (
                 <div
                   key={course.id}
-                  className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl"
+                  className="flex items-center justify-between p-3 bg-card border border-border rounded-xl"
                 >
-                  <span className="font-bold text-gray-900 text-sm">{course.name}</span>
+                  <span className="font-bold text-foreground text-sm">{course.name}</span>
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={() => handleDelete(course.id)}
                     disabled={deletingId === course.id}
-                    className="h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-red-50"
+                    className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50"
                   >
                     {deletingId === course.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />

@@ -95,7 +95,7 @@ export default function TaskDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="h-10 w-10 text-primary animate-spin" />
-        <p className="text-gray-500 font-medium font-display">Caricamento attività...</p>
+        <p className="text-muted-foreground font-medium font-display">Caricamento attività...</p>
       </div>
     )
   }
@@ -108,16 +108,16 @@ export default function TaskDetailPage() {
     <div className="max-w-4xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">
       <header className="space-y-4">
         <Link href="/student/tasks">
-          <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 -ml-2">
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1 -ml-2">
             <ChevronLeft className="h-4 w-4" /> Torna ai compiti
           </Button>
         </Link>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-display font-bold text-gray-900">{task.title}</h1>
+            <h1 className="text-4xl font-display font-bold text-foreground">{task.title}</h1>
             <div className="flex flex-wrap items-center gap-4 mt-2">
-              <span className="flex items-center gap-1.5 text-sm text-gray-500 font-medium">
+              <span className="flex items-center gap-1.5 text-sm text-muted-foreground font-medium">
                 <User className="h-4 w-4 text-primary" />
                 Prof. {task.teachers?.profiles?.full_name}
               </span>

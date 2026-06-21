@@ -94,7 +94,7 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
   }
 
   return (
-    <div className="border-2 border-primary/20 rounded-2xl bg-white overflow-hidden">
+    <div className="border-2 border-primary/20 rounded-2xl bg-card overflow-hidden">
       <div className="bg-primary/5 px-4 py-3 flex items-center justify-between border-b border-primary/10">
         <span className="font-bold text-primary text-sm flex items-center gap-2">
           <Sparkles className="h-4 w-4" /> Assistente alla scrittura
@@ -104,7 +104,7 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
           aria-label="Chiudi"
           title="Chiudi"
         >
-          <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-muted-foreground" />
         </button>
       </div>
 
@@ -113,7 +113,7 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
               msg.role === "ai"
-                ? "bg-gray-50 text-gray-800 rounded-tl-none"
+                ? "bg-muted text-gray-800 rounded-tl-none"
                 : "bg-primary text-white rounded-tr-none"
             }`}>
               {msg.text}
@@ -122,8 +122,8 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-50 rounded-2xl rounded-tl-none px-4 py-3">
-              <span className="text-gray-400 text-sm animate-pulse">Sto pensando...</span>
+            <div className="bg-muted rounded-2xl rounded-tl-none px-4 py-3">
+              <span className="text-muted-foreground text-sm animate-pulse">Sto pensando...</span>
             </div>
           </div>
         )}
@@ -140,7 +140,7 @@ export function WritingAssistant({ textType, level, onSchemaReady }: WritingAssi
         </div>
       )}
 
-      <div className="border-t border-gray-100 p-3 flex gap-2">
+      <div className="border-t border-border p-3 flex gap-2">
         <label htmlFor="assistant-input" className="sr-only">Rispondi qui</label>
         <Textarea
           id="assistant-input"

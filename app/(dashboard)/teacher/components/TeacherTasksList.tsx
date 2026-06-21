@@ -105,7 +105,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
           <Clock className="h-3 w-3" /> Avviato
         </Badge>;
       default:
-        return <Badge className="bg-gray-100 text-gray-700 border-none flex gap-1 items-center px-3 py-1">
+        return <Badge className="bg-muted text-foreground/90 border-none flex gap-1 items-center px-3 py-1">
           <Calendar className="h-3 w-3" /> In sospeso
         </Badge>;
     }
@@ -120,13 +120,13 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="flex bg-white rounded-2xl p-1 shadow-sm border border-gray-100 w-full md:w-auto overflow-x-auto">
+        <div className="flex bg-card rounded-2xl p-1 shadow-sm border border-border w-full md:w-auto overflow-x-auto">
           {["all", "pending", "in_progress", "completed"].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
-                filter === f ? "bg-primary text-white shadow-md" : "text-gray-500 hover:text-primary hover:bg-primary/5"
+                filter === f ? "bg-primary text-white shadow-md" : "text-muted-foreground hover:text-primary hover:bg-primary/5"
               }`}
             >
               {f === "all" ? "Tutti" : f === "pending" ? "In sospeso" : f === "in_progress" ? "In corso" : "Completati"}
@@ -135,11 +135,11 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
         </div>
 
         <div className="relative w-full md:w-80 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
           <input
             type="text"
             placeholder="Cerca per titolo o studente..."
-            className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm transition-all"
+            className="w-full pl-11 pr-4 py-3.5 bg-card border border-border rounded-2xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -170,10 +170,10 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                             </AvatarFallback>
                           </Avatar>
                           <div className="space-y-1">
-                            <h3 className="font-bold text-gray-900 group-hover:text-primary transition-colors text-lg leading-tight">
+                            <h3 className="font-bold text-foreground group-hover:text-primary transition-colors text-lg leading-tight">
                               {task.title}
                             </h3>
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                                <span className="flex items-center gap-1"><User className="h-3 w-3" /> {profile?.full_name}</span>
                                <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {mounted ? formatDate(task.created_at, "d MMM yyyy") : "..."}</span>
                             </div>
@@ -185,15 +185,15 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                       </div>
 
                       {isCompleted && submission && (
-                        <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-3">
+                        <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Risultato esercizio</span>
+                              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Risultato esercizio</span>
                               <Badge className={cn("rounded-lg px-2 py-0.5 font-black text-[11px]", getScoreBadgeColor(score))}>
                                  {score}/100
                               </Badge>
                            </div>
                            <div className="max-h-24 overflow-y-auto pr-2 scrollbar-hide">
-                              <p className="text-xs text-gray-600 leading-relaxed">
+                              <p className="text-xs text-muted-foreground leading-relaxed">
                                  {submission.ai_feedback}
                               </p>
                            </div>
@@ -202,7 +202,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
                     </div>
 
                     {/* Right: Actions */}
-                    <div className="bg-gray-50/50 p-6 md:w-64 border-t md:border-t-0 md:border-l border-gray-100 flex flex-col justify-center gap-3">
+                    <div className="bg-gray-50/50 p-6 md:w-64 border-t md:border-t-0 md:border-l border-border flex flex-col justify-center gap-3">
                       <div className="hidden md:flex justify-end mb-2">
                         {getStatusBadge(task.status)}
                       </div>
@@ -247,7 +247,7 @@ export default function TeacherTasksList({ initialTasks }: TeacherTasksListProps
           <Card className="border-dashed border-2 bg-transparent py-20">
             <CardContent className="text-center">
               <ClipboardList className="h-12 w-12 text-gray-200 mx-auto mb-4" />
-              <p className="text-gray-400 font-medium">Nessun compito trovato con questi criteri.</p>
+              <p className="text-muted-foreground font-medium">Nessun compito trovato con questi criteri.</p>
             </CardContent>
           </Card>
         )}

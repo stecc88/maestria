@@ -79,17 +79,17 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14 border-2 border-gray-100">
+            <Avatar className="h-14 w-14 border-2 border-border">
                <AvatarImage src={avatarUrl} />
                <AvatarFallback className="bg-primary text-white font-bold text-lg">
                  {fullName.split(' ').map((n:any) => n[0]).join('')}
                </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-display font-bold text-gray-900 text-lg leading-tight group-hover:text-primary transition-colors">
+              <h3 className="font-display font-bold text-foreground text-lg leading-tight group-hover:text-primary transition-colors">
                 {fullName}
               </h3>
-              <p className="text-xs text-gray-400">{email}</p>
+              <p className="text-xs text-muted-foreground">{email}</p>
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -109,8 +109,8 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
             onValueChange={handleCourseChange}
             disabled={isAssigning}
           >
-            <SelectTrigger className="h-9 text-xs bg-gray-50 border-gray-100 rounded-xl gap-2">
-              <BookOpen className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+            <SelectTrigger className="h-9 text-xs bg-muted border-border rounded-xl gap-2">
+              <BookOpen className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
               <SelectValue placeholder="Senza corso">
                 {currentCourseName || "Senza corso"}
               </SelectValue>
@@ -126,14 +126,14 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
 
         <div className="grid grid-cols-2 gap-4 mb-6">
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiti</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Compiti</p>
               <div className="flex items-center gap-2 mt-1">
                  <ClipboardList className="h-3 w-3 text-primary" />
-                 <span className="text-sm font-black text-gray-700">0/0</span>
+                 <span className="text-sm font-black text-foreground/90">0/0</span>
               </div>
            </div>
            <div className="p-3 bg-cream rounded-xl border border-primary/5">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Punteggi</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Punteggi</p>
               <div className="h-5 w-full mt-1">
                  <div style={{ width: '100%', height: 20 }}>
                     {mounted && (
@@ -149,7 +149,7 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-           <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-medium">
+           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
               <Clock className="h-3 w-3" />
               Attività: {mounted ? formatRelative(student.last_activity) : '...'}
            </div>

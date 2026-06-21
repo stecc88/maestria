@@ -63,11 +63,11 @@ export function AchievementsGrid({ unlockedIds }: AchievementsGridProps) {
                   <div className="space-y-1">
                     <p className={cn(
                       "text-[10px] font-bold uppercase tracking-tight",
-                      isUnlocked ? "text-white" : "text-gray-500"
+                      isUnlocked ? "text-white" : "text-muted-foreground"
                     )}>
                       {achievement.title}
                     </p>
-                    <p className="text-[9px] text-gray-400 font-medium leading-tight line-clamp-2">
+                    <p className="text-[9px] text-muted-foreground font-medium leading-tight line-clamp-2">
                       {achievement.description}
                     </p>
                   </div>

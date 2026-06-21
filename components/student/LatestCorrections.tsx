@@ -20,9 +20,9 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
   }, [])
 
   return (
-    <Card className="border-none shadow-sm bg-white overflow-hidden">
+    <Card className="border-none shadow-sm bg-card overflow-hidden">
       <CardHeader className="pb-3 border-b border-gray-50 flex flex-row items-center justify-between">
-        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+        <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
           <FileText className="h-3.5 w-3.5 text-primary" />
           <span>Ultime Correzioni</span>
         </CardTitle>
@@ -42,14 +42,14 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
                       <span className="text-[8px] font-black text-primary/40 uppercase">pts</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-sm font-bold text-gray-900 truncate leading-none mb-1.5">
+                      <h4 className="text-sm font-bold text-foreground truncate leading-none mb-1.5">
                         {correction.writings.title || 'Senza titolo'}
                       </h4>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="text-[9px] font-black bg-blue-50/50 text-blue-600 border-none px-1 py-0 uppercase">
                           {correction.detected_level}
                         </Badge>
-                        <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400">
+                        <div className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground">
                           <Calendar className="h-3 w-3" />
                           <span>{mounted ? formatDate(correction.created_at, 'd MMM') : '...'}</span>
                         </div>
@@ -67,10 +67,10 @@ export function LatestCorrections({ corrections }: LatestCorrectionsProps) {
           </div>
         ) : (
           <div className="p-8 text-center">
-            <div className="h-10 w-10 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
               <FileText className="h-5 w-5 text-gray-300" />
             </div>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Nessuna correzione</p>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Nessuna correzione</p>
           </div>
         )}
       </CardContent>

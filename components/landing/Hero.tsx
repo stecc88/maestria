@@ -23,7 +23,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-white">
+    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-card">
       {/* Background Decorations */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
         <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
@@ -49,7 +49,7 @@ export default function Hero() {
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-8xl font-black leading-[0.9] mb-8 tracking-tighter text-gray-900"
+              className="text-5xl md:text-8xl font-black leading-[0.9] mb-8 tracking-tighter text-foreground"
             >
               Domina <br />
               <span className="bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient">l&apos;italiano.</span>
@@ -57,9 +57,9 @@ export default function Hero() {
 
             <motion.p
               variants={itemVariants}
-              className="text-xl md:text-2xl text-gray-500 font-bold mb-12 max-w-xl leading-relaxed"
+              className="text-xl md:text-2xl text-muted-foreground font-bold mb-12 max-w-xl leading-relaxed"
             >
-              L&apos;IA che corregge i tuoi testi come un esaminatore professionista, rileva il tuo livello <span className="text-gray-900 font-black">A1-C2</span> e crea un piano su misura.
+              L&apos;IA che corregge i tuoi testi come un esaminatore professionista, rileva il tuo livello <span className="text-foreground font-black">A1-C2</span> e crea un piano su misura.
             </motion.p>
 
             <motion.div
@@ -88,7 +88,7 @@ export default function Hero() {
                 "Livelli A1-C2",
                 "Certificazioni CILS"
               ].map((text, i) => (
-                <div key={i} className="flex items-center gap-2.5 text-sm font-black text-gray-400 uppercase tracking-widest">
+                <div key={i} className="flex items-center gap-2.5 text-sm font-black text-muted-foreground uppercase tracking-widest">
                   <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                   {text}
                 </div>
@@ -112,7 +112,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Document Decoration */}
-            <div className="relative bg-white rounded-[3rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-10 md:p-12 border border-gray-50 min-h-[450px] overflow-hidden group">
+            <div className="relative bg-card rounded-[3rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-10 md:p-12 border border-gray-50 min-h-[450px] overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-white to-accent/5 opacity-50" />
 
               <div className="space-y-6 relative z-10">
@@ -120,7 +120,7 @@ export default function Hero() {
                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                       <GraduationCap className="h-6 w-6 text-primary" />
                    </div>
-                   <div className="h-3 w-32 bg-gray-100 rounded-full animate-pulse" />
+                   <div className="h-3 w-32 bg-muted rounded-full animate-pulse" />
                 </div>
 
                 <div className="space-y-4">
@@ -162,7 +162,7 @@ export default function Hero() {
                   initial={{ opacity: 0, x: -40 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 3.5 }}
-                  className="absolute left-[-10px] bottom-[80px] bg-white text-gray-900 p-5 rounded-2xl text-xs font-black shadow-2xl max-w-[200px] border border-gray-100"
+                  className="absolute left-[-10px] bottom-[80px] bg-card text-foreground p-5 rounded-2xl text-xs font-black shadow-2xl max-w-[200px] border border-border"
                 >
                    <div className="flex items-center gap-2 mb-2">
                       <div className="w-2 h-2 rounded-full bg-primary" />
@@ -172,9 +172,9 @@ export default function Hero() {
                 </motion.div>
 
                 <div className="pt-12 space-y-3">
-                  <div className="h-3 w-full bg-gray-50 rounded-full animate-pulse delay-75" />
-                  <div className="h-3 w-5/6 bg-gray-50 rounded-full animate-pulse delay-100" />
-                  <div className="h-3 w-4/6 bg-gray-50 rounded-full animate-pulse delay-150" />
+                  <div className="h-3 w-full bg-muted rounded-full animate-pulse delay-75" />
+                  <div className="h-3 w-5/6 bg-muted rounded-full animate-pulse delay-100" />
+                  <div className="h-3 w-4/6 bg-muted rounded-full animate-pulse delay-150" />
                 </div>
               </div>
 

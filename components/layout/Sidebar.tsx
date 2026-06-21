@@ -95,7 +95,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
       <ScrollArea className="flex-1 px-4 py-6">
         {/* Nav Group: Main */}
         <div className="space-y-1.5 mb-10">
-          <p className="px-4 mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Navigazione</p>
+          <p className="px-4 mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground">Navigazione</p>
           {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
@@ -107,11 +107,11 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
                   "flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group relative",
                   isActive
                     ? "bg-gray-900 text-white shadow-xl shadow-gray-200"
-                    : "text-gray-500 hover:bg-primary/5 hover:text-primary"
+                    : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
                 )}
               >
                 <div className="flex items-center gap-3 relative z-10">
-                  <item.icon className={cn("h-5 w-5 transition-transform duration-300 group-hover:scale-110", isActive ? "text-primary" : "text-gray-400 group-hover:text-primary")} />
+                  <item.icon className={cn("h-5 w-5 transition-transform duration-300 group-hover:scale-110", isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary")} />
                   <span className="text-sm font-black tracking-tight uppercase text-[11px]">{item.label}</span>
                 </div>
 
@@ -130,7 +130,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
 
         {/* Account Group */}
         <div className="space-y-1.5">
-          <p className="px-4 mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Account</p>
+          <p className="px-4 mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground">Account</p>
           <Link
              href={`/${user.role}/profile`}
              onClick={isMobile ? onClose : undefined}
@@ -138,10 +138,10 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
                "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 uppercase text-[11px] font-black",
                pathname.includes('/profile')
                 ? "bg-gray-900 text-white shadow-xl shadow-gray-200"
-                : "text-gray-500 hover:bg-primary/5 hover:text-primary"
+                : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
              )}
           >
-            <Settings className={cn("h-5 w-5 transition-transform group-hover:rotate-45", pathname.includes('/profile') ? "text-primary" : "text-gray-400")} />
+            <Settings className={cn("h-5 w-5 transition-transform group-hover:rotate-45", pathname.includes('/profile') ? "text-primary" : "text-muted-foreground")} />
             <span>Profilo</span>
           </Link>
         </div>
@@ -154,11 +154,11 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
               <div className="flex justify-between items-end mb-2">
                 <div className="flex items-center gap-1.5">
                    <Zap className="h-3 w-3 text-accent fill-accent" />
-                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">LIVELLO {studentData.current_level}</span>
+                   <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">LIVELLO {studentData.current_level}</span>
                 </div>
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{studentData.xp_points} XP</span>
               </div>
-              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden p-0.5">
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden p-0.5">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${xpPercentage}%` }}
@@ -172,7 +172,7 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
           <div className="p-4 bg-gray-900 rounded-2xl shadow-lg border border-white/5 group">
             <div className="flex items-center gap-2 mb-1.5">
                <Users className="h-3 w-3 text-primary" />
-               <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Codice Classe</p>
+               <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Codice Classe</p>
             </div>
             <p className="text-lg font-black text-white tracking-[0.2em] font-display group-hover:text-primary transition-colors">{teacherData.teacher_code}</p>
           </div>
@@ -191,12 +191,12 @@ export function Sidebar({ user, studentData, isMobile, onClose, teacherData }: S
               </div>
               <div className="flex flex-col min-w-0">
                 <p className="text-xs font-black text-foreground truncate tracking-tight">{user.full_name}</p>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest opacity-70">{user.role}</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-70">{user.role}</p>
               </div>
             </div>
             <button
               onClick={() => signOut()}
-              className="p-2.5 rounded-xl bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all duration-300 active:scale-90"
+              className="p-2.5 rounded-xl bg-muted text-muted-foreground hover:bg-red-50 hover:text-red-500 transition-all duration-300 active:scale-90"
               title="Esci"
             >
               <LogOut className="h-4.5 w-4.5" />

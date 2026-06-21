@@ -26,9 +26,9 @@ export function RadarChart({ data }: RadarChartProps) {
   const hasData = data && data.length > 0
 
   return (
-    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white min-h-[400px] flex flex-col">
+    <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-card min-h-[400px] flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-2">
+        <CardTitle className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
           <Target className="h-3.5 w-3.5 text-secondary" />
           <span>Profilo prestazionale</span>
         </CardTitle>
@@ -65,7 +65,7 @@ export function RadarChart({ data }: RadarChartProps) {
               <Target className="h-8 w-8 text-gray-200" />
             </div>
             <div>
-              <p className="text-xs font-medium text-gray-900">Nessun dato</p>
+              <p className="text-xs font-medium text-foreground">Nessun dato</p>
             </div>
           </div>
         ) : (

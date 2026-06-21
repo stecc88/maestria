@@ -127,7 +127,7 @@ export default function ExerciseDetailPage() {
             <Sparkles className="h-6 w-6 text-accent" />
           </motion.div>
         </div>
-        <p className="text-gray-500 font-bold text-xl animate-pulse">Caricamento esercizio...</p>
+        <p className="text-muted-foreground font-bold text-xl animate-pulse">Caricamento esercizio...</p>
       </div>
     )
   }
@@ -141,7 +141,7 @@ export default function ExerciseDetailPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white p-6 md:p-10 rounded-[2rem] border-2 border-gray-100 shadow-xl shadow-gray-200/50 leading-[3] text-lg md:text-xl text-gray-800 font-medium"
+        className="bg-card p-6 md:p-10 rounded-[2rem] border-2 border-border shadow-xl shadow-gray-200/50 leading-[3] text-lg md:text-xl text-gray-800 font-medium"
       >
         {parts.map((part: string, i: number) => {
           const match = part.match(/\{\{\s*(\d+)\s*\}\}/)
@@ -220,17 +220,17 @@ export default function ExerciseDetailPage() {
             >
               <Card className={cn(
                 "relative overflow-hidden border-4 transition-all duration-300",
-                !result && "border-gray-100 hover:border-primary/20 hover:shadow-xl shadow-gray-200/50",
+                !result && "border-border hover:border-primary/20 hover:shadow-xl shadow-gray-200/50",
                 result && feedback?.isCorrect && "border-green-500 bg-green-50/30",
                 result && !feedback?.isCorrect && "border-red-500 bg-red-50/30"
               )}>
-                <div className="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-gray-50 rounded-full flex items-end justify-start p-6 text-4xl font-black text-gray-100 -z-0">
+                <div className="absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 bg-muted rounded-full flex items-end justify-start p-6 text-4xl font-black text-gray-100 -z-0">
                   {item.id}
                 </div>
 
                 <CardContent className="p-6 md:p-8 space-y-6 relative z-10">
                   <div className="flex items-start gap-4">
-                    <p className="text-xl md:text-2xl font-black text-gray-900 leading-tight italic">
+                    <p className="text-xl md:text-2xl font-black text-foreground leading-tight italic">
                       &quot;{item.statement}&quot;
                     </p>
                   </div>
@@ -250,15 +250,15 @@ export default function ExerciseDetailPage() {
                           className={cn(
                             "group relative flex items-center p-5 rounded-2xl border-2 transition-all text-left font-bold",
                             !result && isSelected && "border-primary bg-primary text-white shadow-lg shadow-primary/20",
-                            !result && !isSelected && "border-gray-100 bg-gray-50/50 text-gray-600 hover:border-primary/30 hover:bg-white",
+                            !result && !isSelected && "border-border bg-gray-50/50 text-muted-foreground hover:border-primary/30 hover:bg-card",
                             result && isCorrect && "border-green-500 bg-green-500 text-white shadow-lg",
                             result && isWrong && "border-red-500 bg-red-500 text-white shadow-lg",
-                            result && !isCorrect && !isWrong && "border-gray-100 bg-gray-50 opacity-50"
+                            result && !isCorrect && !isWrong && "border-border bg-muted opacity-50"
                           )}
                         >
                           <span className={cn(
                             "flex items-center justify-center w-8 h-8 rounded-lg mr-4 text-sm font-black transition-colors",
-                            isSelected || (result && isCorrect) ? "bg-white/20 text-white" : "bg-gray-200 text-gray-500 group-hover:bg-primary/10 group-hover:text-primary"
+                            isSelected || (result && isCorrect) ? "bg-white/20 text-white" : "bg-gray-200 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                           )}>
                             {key.toUpperCase()}
                           </span>
@@ -300,16 +300,16 @@ export default function ExerciseDetailPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-32">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 -mx-4 px-4 py-4 md:rounded-b-[2rem] md:mx-0 shadow-sm">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-border -mx-4 px-4 py-4 md:rounded-b-[2rem] md:mx-0 shadow-sm">
         <div className="flex items-center justify-between gap-4 mb-4">
           <Link href="/student/exercises">
-            <Button variant="ghost" size="sm" className="text-gray-500 hover:text-primary gap-1 font-bold">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary gap-1 font-bold">
               <ChevronLeft className="h-4 w-4" /> Esci
             </Button>
           </Link>
 
           <div className="flex-1 text-center truncate px-4">
-            <h1 className="text-lg md:text-xl font-black text-gray-900 truncate">{exercise.title}</h1>
+            <h1 className="text-lg md:text-xl font-black text-foreground truncate">{exercise.title}</h1>
           </div>
 
           <div className={cn(
@@ -323,7 +323,7 @@ export default function ExerciseDetailPage() {
         </div>
 
         {/* Progress Bar */}
-        <div className="relative h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+        <div className="relative h-3 w-full bg-muted rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${result ? 100 : progressPercentage}%` }}
@@ -418,7 +418,7 @@ export default function ExerciseDetailPage() {
                     transition={{ delay: 1.2 }}
                   >
                     <Link href="/student/exercises">
-                      <Button className="bg-white text-gray-900 hover:bg-gray-100 font-black px-8 py-6 rounded-2xl gap-2 text-lg shadow-xl shadow-white/10 group">
+                      <Button className="bg-card text-foreground hover:bg-muted font-black px-8 py-6 rounded-2xl gap-2 text-lg shadow-xl shadow-white/10 group">
                         <RotateCcw className="h-6 w-6 group-hover:rotate-180 transition-transform duration-500" />
                         PROVA UN ALTRO ESERCIZIO
                       </Button>
@@ -443,13 +443,13 @@ export default function ExerciseDetailPage() {
                   <BookOpen className="h-6 w-6 text-accent" />
                 </div>
                 <div className="text-left">
-                  <h2 className="text-xl font-black text-gray-900">Prima di iniziare</h2>
-                  <p className="text-sm text-gray-500 font-bold uppercase tracking-wider">Ripasso grammaticale</p>
+                  <h2 className="text-xl font-black text-foreground">Prima di iniziare</h2>
+                  <p className="text-sm text-muted-foreground font-bold uppercase tracking-wider">Ripasso grammaticale</p>
                 </div>
              </div>
              <motion.div
                animate={{ rotate: showTheory ? 0 : 180 }}
-               className="p-2 bg-white rounded-full shadow-sm"
+               className="p-2 bg-card rounded-full shadow-sm"
              >
                <ChevronDown className="h-6 w-6 text-accent" />
              </motion.div>
@@ -463,7 +463,7 @@ export default function ExerciseDetailPage() {
                  className="overflow-hidden"
                >
                  <CardContent className="p-8 pt-0 border-t border-accent/10 bg-white/50">
-                   <div className="prose prose-sm md:prose-base max-w-none text-gray-700 leading-relaxed font-medium mt-6 prose-p:mb-4 prose-strong:text-accent prose-headings:text-gray-900 prose-headings:font-black">
+                   <div className="prose prose-sm md:prose-base max-w-none text-foreground/90 leading-relaxed font-medium mt-6 prose-p:mb-4 prose-strong:text-accent prose-headings:text-foreground prose-headings:font-black">
                      <ReactMarkdown>{exercise.theory}</ReactMarkdown>
                    </div>
                  </CardContent>
@@ -475,14 +475,14 @@ export default function ExerciseDetailPage() {
         {/* Exercise Body */}
         <section className="space-y-6">
           <div className="flex items-center justify-between mb-4 px-2">
-            <h2 className="text-xl font-black text-gray-900 flex items-center gap-3">
+            <h2 className="text-xl font-black text-foreground flex items-center gap-3">
                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                  <Sparkles className="h-6 w-6 text-primary" />
                </div>
                Esercizio
             </h2>
             {!result && (
-              <span className="text-sm font-black text-gray-400 uppercase tracking-widest">
+              <span className="text-sm font-black text-muted-foreground uppercase tracking-widest">
                 {answeredCount}/{totalItems} completati
               </span>
             )}
@@ -500,7 +500,7 @@ export default function ExerciseDetailPage() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <h3 className="text-2xl font-black text-gray-900 mt-12 mb-6 px-2">Analisi degli errori 🧐</h3>
+              <h3 className="text-2xl font-black text-foreground mt-12 mb-6 px-2">Analisi degli errori 🧐</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {result.blank_feedback.map((f: any, idx: number) => (
                   <motion.div
@@ -520,10 +520,10 @@ export default function ExerciseDetailPage() {
                       {f.id}
                     </div>
                     <div className="space-y-2">
-                      <p className="font-black text-gray-900 text-lg">
+                      <p className="font-black text-foreground text-lg">
                         {f.isCorrect ? "Ottimo! ✅" : `Risposta: ${f.correctAnswer} ❌`}
                       </p>
-                      <p className="text-gray-600 leading-relaxed font-medium text-sm italic">
+                      <p className="text-muted-foreground leading-relaxed font-medium text-sm italic">
                         &quot;{f.explanation}&quot;
                       </p>
                     </div>
@@ -537,7 +537,7 @@ export default function ExerciseDetailPage() {
         {!result && (
           <footer className={cn(
             "pt-10 flex flex-col items-center gap-4",
-            "fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-100 z-40 md:relative md:bg-transparent md:border-none md:p-0"
+            "fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-border z-40 md:relative md:bg-transparent md:border-none md:p-0"
           )}>
             <Button
               size="lg"
@@ -547,7 +547,7 @@ export default function ExerciseDetailPage() {
                 "w-full md:w-auto h-16 md:h-20 px-12 md:px-16 rounded-2xl md:rounded-3xl text-xl font-black gap-3 shadow-2xl transition-all",
                 answeredCount === totalItems
                   ? "bg-primary hover:scale-105 active:scale-95 shadow-primary/30"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-200 text-muted-foreground cursor-not-allowed"
               )}
             >
               {isSubmitting ? (
@@ -561,7 +561,7 @@ export default function ExerciseDetailPage() {
                 </>
               )}
             </Button>
-            <p className="text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-[0.2em] hidden md:block">
+            <p className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em] hidden md:block">
                Verifica le tue risposte prima di procedere
             </p>
           </footer>

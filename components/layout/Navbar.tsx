@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 
 export default function Navbar() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100">
+    <nav className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
@@ -17,28 +17,28 @@ export default function Navbar() {
               >
                 M
               </motion.div>
-              <span className="text-2xl font-black tracking-tighter text-gray-900 group-hover:text-primary transition-colors">Maestria</span>
+              <span className="text-2xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">Maestria</span>
             </Link>
           </div>
 
           <div className="hidden md:flex items-center gap-10">
-            <Link href="#features" className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-primary transition-all">
+            <Link href="#features" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
               Funzionalità
             </Link>
-            <Link href="#how-it-works" className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-primary transition-all">
+            <Link href="#how-it-works" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
               Metodo
             </Link>
-            <Link href="#teachers" className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-primary transition-all">
+            <Link href="#teachers" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
               Docenti
             </Link>
-            <Link href="#levels" className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-primary transition-all">
+            <Link href="#levels" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">
               Livelli
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
             <Link href="/login">
-              <Button variant="ghost" className="font-black text-xs uppercase tracking-widest text-gray-600 hover:text-primary hover:bg-primary/5 hidden sm:inline-flex px-6">
+              <Button variant="ghost" className="font-black text-xs uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 hidden sm:inline-flex px-6">
                 Accedi
               </Button>
             </Link>
