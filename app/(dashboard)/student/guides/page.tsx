@@ -28,6 +28,7 @@ export default function GuidesPage() {
   const [favorites, setFavorites] = useState<string[]>([])
   const [assistantType, setAssistantType] = useState("narrativo")
   const [assistantLevel, setAssistantLevel] = useState("B1")
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false)
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -71,58 +72,76 @@ export default function GuidesPage() {
 
   return (
     <div className="space-y-12">
-      {/* Writing Assistant Section */}
-      <section className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl p-8 border border-primary/10 shadow-sm">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-display font-bold text-foreground">✍️ Assistente alla scrittura</h2>
-          </div>
-          <p className="text-muted-foreground mb-8">
-            Non sai da dove cominciare? L&apos;IA ti guida passo dopo passo prima di scrivere.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="space-y-2">
-              <label htmlFor="assistant-type" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Tipologia testuale</label>
-              <div className="relative">
-                <select
-                  id="assistant-type"
-                  aria-label="Tipologia testuale"
-                  value={assistantType}
-                  onChange={(e) => setAssistantType(e.target.value)}
-                  className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
-                >
-                  {TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="assistant-level" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Livello</label>
-              <div className="relative">
-                <select
-                  id="assistant-level"
-                  aria-label="Livello"
-                  value={assistantLevel}
-                  onChange={(e) => setAssistantLevel(e.target.value)}
-                  className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
-                >
-                  {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              </div>
+      {/* Writing Assistant - colapsado por defecto, es una herramienta secundaria */}
+      <section className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl border border-primary/10 shadow-sm overflow-hidden">
+        <button
+          onClick={() => setIsAssistantOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between gap-3 p-6 text-left hover:bg-primary/5 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <Sparkles className="h-5 w-5 text-primary shrink-0" />
+            <div>
+              <p className="font-display font-bold text-foreground">Non sai da dove iniziare?</p>
+              <p className="text-xs text-muted-foreground">L&apos;IA ti guida passo dopo passo prima di scrivere</p>
             </div>
           </div>
+          <ChevronDown className={cn("h-5 w-5 text-primary transition-transform shrink-0", isAssistantOpen && "rotate-180")} />
+        </button>
 
-          <WritingAssistant
-            textType={assistantType}
-            level={assistantLevel}
-            onSchemaReady={(schema) => {
-              router.push(`/student/write?schema=${encodeURIComponent(schema)}&type=${assistantType}&level=${assistantLevel}`)
-            }}
-          />
-        </div>
+        <AnimatePresence>
+          {isAssistantOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <div className="max-w-4xl mx-auto px-6 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="space-y-2">
+                    <label htmlFor="assistant-type" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Tipologia testuale</label>
+                    <div className="relative">
+                      <select
+                        id="assistant-type"
+                        aria-label="Tipologia testuale"
+                        value={assistantType}
+                        onChange={(e) => setAssistantType(e.target.value)}
+                        className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
+                      >
+                        {TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="assistant-level" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Livello</label>
+                    <div className="relative">
+                      <select
+                        id="assistant-level"
+                        aria-label="Livello"
+                        value={assistantLevel}
+                        onChange={(e) => setAssistantLevel(e.target.value)}
+                        className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary outline-none appearance-none cursor-pointer"
+                      >
+                        {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
+
+                <WritingAssistant
+                  textType={assistantType}
+                  level={assistantLevel}
+                  onSchemaReady={(schema) => {
+                    router.push(`/student/write?schema=${encodeURIComponent(schema)}&type=${assistantType}&level=${assistantLevel}`)
+                  }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       <div className="flex flex-col lg:flex-row gap-8 min-h-[calc(100vh-8rem)]">
