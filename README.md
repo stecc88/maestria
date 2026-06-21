@@ -33,20 +33,50 @@ Mientras el profesor mantiene el control pedagógico: organiza a sus alumnos en 
 
 ## 🧩 Partes que componen la app
 
-### 1. Corrección de escritura con IA (`/student/write` → `/api/correct`)
-El alumno escribe un texto (email, narrativo, argumentativo, etc.) indicando nivel objetivo y tipo de texto. Gemini lo evalúa como lo haría un examinador real: nivel detectado, puntaje sobre 100, coherencia/léxico/gramática/cumplimiento de la consigna, fortalezas, debilidades, sugerencias, y cada corrección puntual con su explicación.
+### 1. Corrección de escritura con IA — *Scrittura* (`/student/write` → `/api/correct`)
+
+Es el corazón pedagógico de la plataforma. El alumno elige un **tipo de texto** (email formal/informal, narrativo, descriptivo, argumentativo, reclamo, artículo de opinión) y un **nivel CEFR objetivo** (A1-C2), opcionalmente pega la consigna del ejercicio, y escribe su texto en italiano.
+
+Al enviarlo, Gemini actúa como **un examinador real de un examen de certificación internacional** (CILS/CELI/PLIDA) y devuelve, en segundos:
+- **Nivel CEFR detectado** según la calidad real del texto (no necesariamente el nivel que el alumno eligió como objetivo)
+- **Puntaje sobre 100**, desglosado en 4 criterios oficiales de evaluación: coherencia textual, léxico, gramática y cumplimiento de la consigna
+- Si el texto **cumple o no** los requisitos mínimos para ese nivel
+- Fortalezas y debilidades concretas, con ejemplos tomados literalmente de lo que escribió
+- **Correcciones línea por línea**: cada error señalado con el fragmento original, la forma correcta, y la explicación gramatical del *por qué*
+- Próximos pasos de estudio concretos
+
+Esto simula exactamente la dinámica de una **prueba de producción escrita** de un examen de italiano como lengua extranjera: se evalúa con los mismos criterios (coherencia, léxico, gramática, adecuación a la consigna) que usaría un examinador humano certificado, para que el alumno se entrene bajo el mismo estándar con el que después va a ser evaluado en un examen real.
 
 ### 2. Resultado de corrección (`/student/corrections/[id]`)
-La pantalla de feedback, diseñada con un criterio pedagógico explícito: primero la evidencia concreta (el texto del alumno con sus errores, en modo **"Pratica"** con *tap-to-reveal* para activar recuerdo activo), después la reflexión sintetizada (fortalezas/debilidades/sugerencias), y al final las acciones a futuro (próximos pasos, progreso por nivel CEFR).
 
-### 3. Ejercicios CILS (`/student/exercises`)
-Práctica de estructuras gramaticales al estilo examen oficial (completar con artículos/pronombres, conjugar verbos, elección múltiple, situaciones comunicativas), generados por IA para cualquier nivel A2-C1, con corrección automática y feedback pedagógico detallado por cada error.
+(ver arriba la descripción pedagógica del flujo: evidencia → reflexión → acción)
+
+### 3. Ejercicios CILS — *Esercizi CILS* (`/student/exercises`)
+
+Mientras "Scrittura" entrena la **producción libre** de texto, **Esercizi CILS** entrena específicamente el tipo de ejercicios de **análisis de estructuras de la lengua** que aparecen en la parte de gramática/comprensión de los exámenes de certificación internacional de italiano (CILS y similares) — el formato real de "completa el texto", no redacción libre.
+
+Hay 4 tipos de prueba, generados por IA en el momento, para cualquier nivel A2-C1, sobre un texto nuevo e inédito cada vez:
+
+1. **Aggettivi e pronomi** — completar un texto con la forma correcta de adjetivos/pronombres
+2. **Forme verbali** — completar un texto conjugando los verbos indicados entre paréntesis
+3. **Scelta multipla** — elegir, entre 4 opciones, la palabra correcta para cada espacio del texto
+4. **Situazioni comunicative** — identificar en qué contexto comunicativo real (un anuncio, un mensaje, una conversación) se usaría cada expresión dada
+
+Cada prueba viene con una sección teórica ("Prima di iniziare") que explica la regla gramatical antes de practicar, y al corregir, el alumno recibe **feedback pedagógico explicado**, no solo "correcto/incorrecto" — la misma profundidad explicativa que en la corrección de escritura, pero aplicada al formato de examen de gramática.
+
+Esto convierte a Maestria en una herramienta de **preparación específica para examen**, no solo de práctica general de escritura: el alumno entrena tanto la producción libre (Scrittura) como el formato exacto de ejercicios estructurales que va a encontrar el día del examen real (Esercizi CILS).
 
 ### 4. Tareas dirigidas (`/student/tasks`, generadas desde `/teacher/students/[id]`)
+
 El profesor puede generar, con un clic, una tarea de práctica (escritura libre, completar, transformar oraciones, o reescribir) basada específicamente en los errores reales que la IA detectó en el alumno — no genérica.
 
-### 5. Guías de escritura (`/student/guides`)
-Biblioteca de guías por tipo de texto y nivel CEFR, más un asistente de IA opcional para alumnos que no saben por dónde empezar a escribir (les hace preguntas guiadas y arma un esquema).
+### 5. Guías de escritura — *Guide* (`/student/guides`)
+
+Es la biblioteca de **material de consulta y apoyo previo a escribir**, organizada por tipo de texto y nivel CEFR. Cada guía explica la estructura esperada de ese tipo de texto (por ejemplo: cómo abrir y cerrar un email formal, qué conectores usar en un texto argumentativo, qué tiempos verbales son típicos de un narrativo), con frases y fórmulas hechas en italiano listas para reutilizar.
+
+Sirve como el paso **antes** de "Scrittura": el alumno que no sabe cómo encarar un tipo de texto específico (o nunca escribió un reclamo formal en italiano, por ejemplo) puede consultar la guía correspondiente primero. Además incluye un **asistente de IA opcional** (colapsado por defecto) para quien está completamente bloqueado: le hace preguntas guiadas paso a paso y le arma un esquema de ideas para empezar a escribir, que se puede enviar directo a la página de escritura.
+
+En conjunto, **Guide → Scrittura → Esercizi CILS** forman el ciclo de aprendizaje completo: primero aprender la estructura (Guide), después producir un texto real y recibir evaluación de examinador (Scrittura), y en paralelo entrenar el formato específico de ejercicios de examen (Esercizi CILS).
 
 ### 6. Gamificación (XP, niveles, racha, logros, ranking)
 Sistema de niveles (Novizio → Maestro) basado en XP ganado por cada corrección y tarea completada, racha de días consecutivos de actividad real, 10 logros desbloqueables según métricas verificables (no inventadas), y un ranking entre compañeros.
