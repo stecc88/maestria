@@ -42,8 +42,6 @@ export async function POST(request: Request) {
       .eq("id", teacherUser.id)
       .single()
 
-    // El constraint de la tabla tasks ahora acepta directamente los valores en italiano
-
     // 1. Save Task
     const { data: newTask, error: taskError } = await adminSupabase
       .from("tasks")

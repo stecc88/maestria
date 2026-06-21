@@ -10,8 +10,8 @@ export default async function TeacherStudentsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Check role, fetch students and courses in parallel
-  const [profileResult, studentsResult, coursesResult] = await Promise.all([
+  // Parallelize profile check and students fetch
+  const [profileRes, studentsRes] = await Promise.all([
     adminSupabase
       .from("profiles")
       .select("role")
@@ -20,17 +20,11 @@ export default async function TeacherStudentsPage() {
     adminSupabase
       .from("students")
       .select("*, profiles(*)")
-      .eq("teacher_id", user.id),
-    adminSupabase
-      .from("courses")
-      .select("id, name")
       .eq("teacher_id", user.id)
-      .order("name"),
   ])
 
-  const { data: profile } = profileResult
-  const { data: students } = studentsResult
-  const { data: courses } = coursesResult
+  const { data: profile } = profileRes
+  const { data: students } = studentsRes
 
   if (profile?.role !== 'teacher') {
     redirect("/")

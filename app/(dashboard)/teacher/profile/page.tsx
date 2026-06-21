@@ -11,8 +11,8 @@ export default async function TeacherProfilePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/login")
 
-  // Fetch Teacher, Profile Data and Stats in parallel
-  const [teacherResult, studentCountResult, taskCountResult] = await Promise.all([
+  // Parallelize data fetching
+  const [teacherRes, studentCountRes, taskCountRes] = await Promise.all([
     adminSupabase
       .from("teachers")
       .select("*, profiles(*)")
@@ -25,12 +25,12 @@ export default async function TeacherProfilePage() {
     adminSupabase
       .from("tasks")
       .select("*", { count: "exact", head: true })
-      .eq("teacher_id", user.id),
+      .eq("teacher_id", user.id)
   ])
 
-  const { data: teacher } = teacherResult
-  const { count: studentCount } = studentCountResult
-  const { count: taskCount } = taskCountResult
+  const { data: teacher } = teacherRes
+  const { count: studentCount } = studentCountRes
+  const { count: taskCount } = taskCountRes
 
   if (!teacher) redirect("/teacher")
 
