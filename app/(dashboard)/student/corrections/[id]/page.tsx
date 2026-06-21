@@ -126,7 +126,10 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
 
           <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
             <CardContent className="p-6 space-y-4 h-full">
-              <h4 className="font-bold text-foreground text-sm px-1">Correzioni nel dettaglio</h4>
+              <div>
+                <h4 className="font-bold text-foreground text-sm">Perché è successo</h4>
+                <p className="text-[11px] text-muted-foreground">La spiegazione di ogni correzione che hai scoperto sopra</p>
+              </div>
 
               {inlineCorrections.length === 0 ? (
                 <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
@@ -135,31 +138,16 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
                   <p className="text-[11px] text-primary/60 mt-1">Testo grammaticalmente perfetto.</p>
                 </div>
               ) : (
-                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
                   {inlineCorrections.map((c: any, i: number) => (
-                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-border overflow-hidden">
-                      <div className="px-4 py-2.5 bg-card border-b border-border flex items-center gap-2">
+                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-border p-4 space-y-2">
+                      <div className="flex items-center gap-2 flex-wrap text-xs">
                         <span className={getCategoryDot(c.error_type || "altro")} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                          {c.error_type}
-                        </span>
+                        <span className="text-muted-foreground line-through">{c.original}</span>
+                        <span className="text-muted-foreground/50">→</span>
+                        <span className="font-bold text-primary">{c.corrected}</span>
                       </div>
-
-                      <div className="p-4 space-y-3">
-                        <div>
-                          <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Hai scritto</p>
-                          <p className="text-sm text-muted-foreground line-through leading-relaxed">{c.original}</p>
-                        </div>
-
-                        <div>
-                          <p className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Forma corretta</p>
-                          <p className="text-sm font-bold text-foreground leading-relaxed">{c.corrected}</p>
-                        </div>
-
-                        <div className="pt-2 border-t border-border">
-                          <p className="text-xs text-muted-foreground leading-relaxed italic">{c.explanation}</p>
-                        </div>
-                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{c.explanation}</p>
                     </div>
                   ))}
                 </div>
