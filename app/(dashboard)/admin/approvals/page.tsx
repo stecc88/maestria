@@ -23,7 +23,7 @@ export default async function AdminApprovalsPage() {
     .order("created_at", { ascending: false })
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex items-center gap-4">
         <Link href="/admin">
           <Button variant="ghost" size="icon" className="rounded-full">
