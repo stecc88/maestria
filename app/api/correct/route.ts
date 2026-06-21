@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { correctionSchema } from "@/lib/validations/ai"
 import { calculateXpForCorrection } from "@/lib/utils/xp"
+import { refreshStudentAchievements } from "@/lib/utils/achievements"
 
 export async function POST(request: Request) {
   try {
@@ -181,10 +182,13 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       xp_earned: xpEarned
     })
 
+    const newAchievements = await refreshStudentAchievements(user.id)
+
     return Response.json({
       success: true,
       correctionId: savedCorrection.id,
-      xpEarned
+      xpEarned,
+      newAchievements
     })
 
   } catch (error: any) {

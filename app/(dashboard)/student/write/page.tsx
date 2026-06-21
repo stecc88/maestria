@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils"
 import { ContextualGuide } from "@/components/student/ContextualGuide"
 import toast from "react-hot-toast"
+import { ALL_ACHIEVEMENTS } from "@/lib/constants/achievements"
 
 const TEXT_TYPES = [
   { id: "email_formal", label: "Email formale", icon: Mail },
@@ -136,6 +137,16 @@ function WriteForm() {
 
       if (correctionId) {
         localStorage.removeItem("maestria_draft")
+
+        if (Array.isArray(data.newAchievements) && data.newAchievements.length > 0) {
+          data.newAchievements.forEach((achId: string) => {
+            const achievement = ALL_ACHIEVEMENTS.find((a) => a.id === achId)
+            if (achievement) {
+              toast.success(`${achievement.icon} Traguardo sbloccato: ${achievement.title}!`, { duration: 4000 })
+            }
+          })
+        }
+
         router.push(`/student/corrections/${correctionId}`)
       } else {
         throw new Error(data.error || "Errore di correzione")

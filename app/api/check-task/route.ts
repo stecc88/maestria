@@ -4,6 +4,7 @@ import { NextResponse } from "next/server"
 import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { taskEvaluationSchema } from "@/lib/validations/ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
+import { refreshStudentAchievements } from "@/lib/utils/achievements"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -149,11 +150,14 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
       related_id: taskId
     })
 
+    const newAchievements = await refreshStudentAchievements(user.id)
+
     return NextResponse.json({
       score: finalScore,
       feedback: finalFeedback,
       error_overcome: errorOvercome,
-      xp_earned: xpEarned
+      xp_earned: xpEarned,
+      newAchievements
     })
 
   } catch (error: any) {
