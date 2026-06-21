@@ -5,7 +5,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Flame, Clock, ClipboardList, ChevronRight } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Flame, Clock, ClipboardList, ChevronRight, BookOpen } from "lucide-react"
 import Link from "next/link"
 import {
   LineChart,
@@ -13,13 +20,22 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { formatRelative } from "@/lib/utils/date"
+import toast from "react-hot-toast"
+
+interface Course {
+  id: string
+  name: string
+}
 
 interface StudentCardProps {
   student: any
+  courses?: Course[]
+  onCourseAssigned?: (studentId: string, courseId: string | null) => void
 }
 
-export function StudentCard({ student }: StudentCardProps) {
+export function StudentCard({ student, courses = [], onCourseAssigned }: StudentCardProps) {
   const [mounted, setMounted] = useState(false)
+  const [isAssigning, setIsAssigning] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -29,6 +45,29 @@ export function StudentCard({ student }: StudentCardProps) {
   const fullName = profile?.full_name || "Studente";
   const email = profile?.email || "";
   const avatarUrl = profile?.avatar_url;
+
+  const currentCourseName = courses.find(c => c.id === student.course_id)?.name
+
+  const handleCourseChange = async (value: string) => {
+    const newCourseId = value === "none" ? null : value
+    setIsAssigning(true)
+    try {
+      const response = await fetch("/api/students/assign-course", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId: student.id, courseId: newCourseId }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Errore")
+
+      toast.success("Corso assegnato")
+      onCourseAssigned?.(student.id, newCourseId)
+    } catch (error: any) {
+      toast.error(error.message)
+    } finally {
+      setIsAssigning(false)
+    }
+  }
 
   // Mock sparkline data
   const sparkData = React.useMemo(() =>
@@ -40,7 +79,7 @@ export function StudentCard({ student }: StudentCardProps) {
   return (
     <Card className="hover:border-primary/30 hover:shadow-xl transition-all duration-300 group overflow-hidden">
       <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-14 w-14 border-2 border-gray-100">
                <AvatarImage src={avatarUrl} />
@@ -64,6 +103,27 @@ export function StudentCard({ student }: StudentCardProps) {
                 {student.streak_days}
              </div>
           </div>
+        </div>
+
+        <div className="mb-6">
+          <Select
+            value={student.course_id || "none"}
+            onValueChange={handleCourseChange}
+            disabled={isAssigning}
+          >
+            <SelectTrigger className="h-9 text-xs bg-gray-50 border-gray-100 rounded-xl gap-2">
+              <BookOpen className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+              <SelectValue placeholder="Senza corso">
+                {currentCourseName || "Senza corso"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Senza corso</SelectItem>
+              {courses.map((course) => (
+                <SelectItem key={course.id} value={course.id}>{course.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
