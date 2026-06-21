@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select"
 import { Flame, Clock, ClipboardList, ChevronRight, BookOpen } from "lucide-react"
 import Link from "next/link"
+import { CourseAssigner } from "./courses/CourseAssigner"
 import {
   LineChart,
   Line,
@@ -45,6 +46,7 @@ export function StudentCard({ student, courses = [], onCourseAssigned }: Student
   const fullName = profile?.full_name || "Studente";
   const email = profile?.email || "";
   const avatarUrl = profile?.avatar_url;
+  const assignedCourse = courses.find(c => c.id === student.course_id);
 
   const currentCourseName = courses.find(c => c.id === student.course_id)?.name
 
