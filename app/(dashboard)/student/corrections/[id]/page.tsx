@@ -87,6 +87,89 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
       </div>
 
       <section className="space-y-5">
+        <div className="flex items-center justify-between flex-wrap gap-3 px-1">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+              <FileSearch className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-display font-bold text-foreground">Analisi del Testo</h3>
+              <p className="text-muted-foreground text-xs">Dove hai sbagliato e come migliorare</p>
+            </div>
+          </div>
+          <Badge className="bg-primary/5 text-primary border-primary/10 font-bold px-4 py-1.5 rounded-full">
+            {inlineCorrections.length} correzioni
+          </Badge>
+        </div>
+
+        {errorCategories.length > 0 && (
+          <div className="flex flex-wrap gap-2 px-1">
+            {errorCategories.map((cat) => (
+              <div key={cat} className={getCategoryChip(cat)}>
+                <span className={getCategoryDot(cat)} />
+                {cat} × {groupedErrors[cat].length}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-card">
+            <CardContent className="p-6 md:p-9">
+              <AnnotatedText
+                originalText={correction.writings.content}
+                correctedText={correction.corrected_text}
+                corrections={inlineCorrections}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
+            <CardContent className="p-6 space-y-4 h-full">
+              <h4 className="font-bold text-foreground text-sm px-1">Correzioni nel dettaglio</h4>
+
+              {inlineCorrections.length === 0 ? (
+                <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
+                  <Sparkles className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <p className="font-bold text-primary text-sm">Nessun errore rilevato!</p>
+                  <p className="text-[11px] text-primary/60 mt-1">Testo grammaticalmente perfetto.</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                  {inlineCorrections.map((c: any, i: number) => (
+                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-border overflow-hidden">
+                      <div className="px-4 py-2.5 bg-card border-b border-border flex items-center gap-2">
+                        <span className={getCategoryDot(c.error_type || "altro")} />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                          {c.error_type}
+                        </span>
+                      </div>
+
+                      <div className="p-4 space-y-3">
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Hai scritto</p>
+                          <p className="text-sm text-muted-foreground line-through leading-relaxed">{c.original}</p>
+                        </div>
+
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Forma corretta</p>
+                          <p className="text-sm font-bold text-foreground leading-relaxed">{c.corrected}</p>
+                        </div>
+
+                        <div className="pt-2 border-t border-border">
+                          <p className="text-xs text-muted-foreground leading-relaxed italic">{c.explanation}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section className="space-y-5">
         <div className="flex items-center gap-3 px-1">
           <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
             <TrendingUp className="h-4 w-4 text-primary" />
@@ -244,89 +327,6 @@ export default async function CorrectionResultPage({ params }: { params: { id: s
           </CardContent>
         </Card>
       </div>
-
-      <section className="space-y-5">
-        <div className="flex items-center justify-between flex-wrap gap-3 px-1">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
-              <FileSearch className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-lg font-display font-bold text-foreground">Analisi del Testo</h3>
-              <p className="text-muted-foreground text-xs">Dove hai sbagliato e come migliorare</p>
-            </div>
-          </div>
-          <Badge className="bg-primary/5 text-primary border-primary/10 font-bold px-4 py-1.5 rounded-full">
-            {inlineCorrections.length} correzioni
-          </Badge>
-        </div>
-
-        {errorCategories.length > 0 && (
-          <div className="flex flex-wrap gap-2 px-1">
-            {errorCategories.map((cat) => (
-              <div key={cat} className={getCategoryChip(cat)}>
-                <span className={getCategoryDot(cat)} />
-                {cat} × {groupedErrors[cat].length}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <Card className="lg:col-span-7 h-full border-none shadow-sm rounded-3xl bg-card">
-            <CardContent className="p-6 md:p-9">
-              <AnnotatedText
-                originalText={correction.writings.content}
-                correctedText={correction.corrected_text}
-                corrections={inlineCorrections}
-              />
-            </CardContent>
-          </Card>
-
-          <Card className="lg:col-span-5 h-full border-none shadow-sm rounded-3xl bg-card">
-            <CardContent className="p-6 space-y-4 h-full">
-              <h4 className="font-bold text-foreground text-sm px-1">Correzioni nel dettaglio</h4>
-
-              {inlineCorrections.length === 0 ? (
-                <div className="text-center py-12 px-6 bg-primary/5 rounded-2xl border border-dashed border-primary/20 h-full flex flex-col items-center justify-center">
-                  <Sparkles className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <p className="font-bold text-primary text-sm">Nessun errore rilevato!</p>
-                  <p className="text-[11px] text-primary/60 mt-1">Testo grammaticalmente perfetto.</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
-                  {inlineCorrections.map((c: any, i: number) => (
-                    <div key={i} className="rounded-2xl bg-gray-50/60 border border-border overflow-hidden">
-                      <div className="px-4 py-2.5 bg-card border-b border-border flex items-center gap-2">
-                        <span className={getCategoryDot(c.error_type || "altro")} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                          {c.error_type}
-                        </span>
-                      </div>
-
-                      <div className="p-4 space-y-3">
-                        <div>
-                          <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Hai scritto</p>
-                          <p className="text-sm text-muted-foreground line-through leading-relaxed">{c.original}</p>
-                        </div>
-
-                        <div>
-                          <p className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Forma corretta</p>
-                          <p className="text-sm font-bold text-foreground leading-relaxed">{c.corrected}</p>
-                        </div>
-
-                        <div className="pt-2 border-t border-border">
-                          <p className="text-xs text-muted-foreground leading-relaxed italic">{c.explanation}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
     </div>
   )
 }
