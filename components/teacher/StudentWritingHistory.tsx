@@ -22,7 +22,7 @@ export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) 
 
   return (
     <Card className="border-border shadow-sm overflow-hidden">
-      <CardHeader className="border-b border-gray-50 flex flex-row items-center justify-between">
+      <CardHeader className="border-b border-border flex flex-row items-center justify-between">
         <CardTitle className="text-lg font-bold">Cronologia scritti</CardTitle>
         <Badge variant="outline" className="font-bold">{writings.length} testi</Badge>
       </CardHeader>
@@ -50,7 +50,7 @@ export function StudentWritingHistory({ writings }: StudentWritingHistoryProps) 
                  <span className="text-[10px] text-muted-foreground uppercase tracking-tighter">{w.writing_type.replace('_', ' ')}</span>
               </div>
 
-              <div className="flex justify-end border-t border-gray-50 pt-3">
+              <div className="flex justify-end border-t border-border pt-3">
                 {w.corrections?.[0]?.id && (
                   <Link href={`/student/corrections/${w.corrections[0].id}`}>
                     <Button size="sm" variant="ghost" className="text-primary hover:bg-primary/5 font-bold gap-2">

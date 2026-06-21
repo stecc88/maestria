@@ -86,7 +86,7 @@ export default function Features() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -10 }}
-              className="group bg-card p-10 rounded-[2.5rem] shadow-xl shadow-gray-100/50 border border-gray-50 hover:shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden"
+              className="group bg-card p-10 rounded-3xl shadow-xl shadow-gray-100/50 border border-border hover:shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
                  <feature.icon className="h-32 w-32" />

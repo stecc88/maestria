@@ -67,7 +67,7 @@ export default function Hero() {
               className="flex flex-col sm:flex-row gap-5 mb-12"
             >
               <Link href="/register">
-                <Button className="bg-gray-900 hover:bg-black text-white text-lg px-10 py-8 h-auto rounded-[1.5rem] shadow-2xl shadow-gray-900/20 relative group overflow-hidden transition-all border-none">
+                <Button className="bg-gray-900 hover:bg-black text-white text-lg px-10 py-8 h-auto rounded-3xl shadow-2xl shadow-gray-900/20 relative group overflow-hidden transition-all border-none">
                   <span className="relative z-10 font-black uppercase tracking-widest">Inizia ora — gratis</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </Button>
@@ -112,7 +112,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Document Decoration */}
-            <div className="relative bg-card rounded-[3rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-10 md:p-12 border border-gray-50 min-h-[450px] overflow-hidden group">
+            <div className="relative bg-card rounded-3xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] p-10 md:p-12 border border-border min-h-[450px] overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-white to-accent/5 opacity-50" />
 
               <div className="space-y-6 relative z-10">

@@ -18,8 +18,8 @@ interface MiniRankingProps {
 
 export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
   return (
-    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-[2rem] group hover:shadow-2xl transition-all duration-500">
-      <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
+    <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group hover:shadow-2xl transition-all duration-500">
+      <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/50">
         <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
           <div className="p-1.5 bg-accent/10 rounded-lg group-hover:rotate-12 transition-transform">
             <Trophy className="h-3.5 w-3.5 text-accent" />
@@ -38,7 +38,7 @@ export function MiniRanking({ topStudents, userRank }: MiniRankingProps) {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="p-5 bg-gradient-to-br from-primary/5 via-white to-accent/5 border-b border-gray-50 relative"
+          className="p-5 bg-gradient-to-br from-primary/5 via-white to-accent/5 border-b border-border relative"
         >
           <div className="flex items-center justify-between">
              <div className="flex items-center gap-4">

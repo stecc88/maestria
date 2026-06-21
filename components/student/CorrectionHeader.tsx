@@ -46,7 +46,7 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
   }, [score])
 
   return (
-    <div className="relative bg-card rounded-[2rem] p-8 md:p-12 border border-border shadow-sm overflow-hidden">
+    <div className="relative bg-card rounded-3xl p-8 md:p-12 border border-border shadow-sm overflow-hidden">
       {/* Diagonal Watermark Stamp */}
       <motion.div
         initial={{ scale: 2, opacity: 0, rotate: -25 }}
@@ -55,7 +55,7 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
         className="absolute -right-16 -top-16 md:right-8 md:top-8 pointer-events-none select-none z-0"
       >
         <div className={cn(
-          "border-[12px] p-8 md:p-14 rounded-[3rem]",
+          "border-[12px] p-8 md:p-14 rounded-3xl",
           examCompliant ? "border-primary text-primary" : "border-secondary text-secondary"
         )}>
           <span className="text-8xl md:text-[10rem] font-display font-black uppercase tracking-tighter">
@@ -71,7 +71,7 @@ export function CorrectionHeader({ level, targetLevel, score, examCompliant, xpE
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={cn(
-              "text-white text-5xl md:text-6xl font-display font-bold w-28 h-28 md:w-36 md:h-36 flex items-center justify-center rounded-[2rem] shadow-2xl transition-all",
+              "text-white text-5xl md:text-6xl font-display font-bold w-28 h-28 md:w-36 md:h-36 flex items-center justify-center rounded-3xl shadow-2xl transition-all",
               levelColors[level] || "bg-gray-400"
             )}
           >

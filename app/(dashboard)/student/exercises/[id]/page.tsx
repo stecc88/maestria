@@ -141,7 +141,7 @@ export default function ExerciseDetailPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card p-6 md:p-10 rounded-[2rem] border-2 border-border shadow-xl shadow-gray-200/50 leading-[3] text-lg md:text-xl text-gray-800 font-medium"
+        className="bg-card p-6 md:p-10 rounded-3xl border-2 border-border shadow-xl shadow-gray-200/50 leading-[3] text-lg md:text-xl text-gray-800 font-medium"
       >
         {parts.map((part: string, i: number) => {
           const match = part.match(/\{\{\s*(\d+)\s*\}\}/)
@@ -433,7 +433,7 @@ export default function ExerciseDetailPage() {
 
       <div className="space-y-8 px-1 md:px-0">
         {/* Theory Section */}
-        <Card className="border-2 border-accent/20 bg-accent/5 rounded-[2rem] overflow-hidden">
+        <Card className="border-2 border-accent/20 bg-accent/5 rounded-3xl overflow-hidden">
            <button
              onClick={() => setShowTheory(!showTheory)}
              className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-accent/10 transition-colors"

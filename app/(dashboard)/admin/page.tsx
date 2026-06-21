@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((stat, i) => (
-            <Card key={stat.label} className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-[2rem] hover:shadow-2xl transition-all duration-500">
+            <Card key={stat.label} className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-3xl hover:shadow-2xl transition-all duration-500">
               <div className={cn("absolute top-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", stat.gradient)} />
               <CardContent className="p-8">
                 <div className="flex items-center gap-6">
@@ -116,7 +116,7 @@ export default async function AdminDashboard() {
             <div className="space-y-4">
               {pendingUsers && pendingUsers.length > 0 ? (
                 pendingUsers.map((user, i) => (
-                  <Card key={user.id} className="group border-none shadow-lg shadow-gray-200/50 bg-card rounded-[2rem] hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <Card key={user.id} className="group border-none shadow-lg shadow-gray-200/50 bg-card rounded-3xl hover:shadow-xl transition-all duration-300 overflow-hidden">
                     <CardContent className="p-8">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div className="flex items-start gap-5">
@@ -164,7 +164,7 @@ export default async function AdminDashboard() {
                   </Card>
                 ))
               ) : (
-                <div className="text-center py-20 bg-white/50 rounded-[3rem] border-4 border-dashed border-border">
+                <div className="text-center py-20 bg-white/50 rounded-3xl border-4 border-dashed border-border">
                   <UserCheck className="h-16 w-16 text-gray-200 mx-auto mb-6" />
                   <p className="text-muted-foreground font-black uppercase tracking-widest">Nessuna approvazione pendente</p>
                 </div>
@@ -174,7 +174,7 @@ export default async function AdminDashboard() {
 
           {/* Quick Links & Tips */}
           <div className="lg:col-span-4 space-y-10">
-            <Card className="border-none shadow-2xl shadow-blue-500/10 bg-card overflow-hidden rounded-[2.5rem] group relative">
+            <Card className="border-none shadow-2xl shadow-blue-500/10 bg-card overflow-hidden rounded-3xl group relative">
               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 group-hover:rotate-12 transition-transform">
                 <Users className="h-32 w-32 text-blue-600" />
               </div>
@@ -196,7 +196,7 @@ export default async function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-xl shadow-primary/10 bg-gradient-to-br from-primary/10 to-accent/10 p-8 rounded-[2.5rem] relative overflow-hidden">
+            <Card className="border-none shadow-xl shadow-primary/10 bg-gradient-to-br from-primary/10 to-accent/10 p-8 rounded-3xl relative overflow-hidden">
               <div className="absolute -bottom-10 -right-10 opacity-10">
                 <Sparkles className="h-40 w-40 text-primary" />
               </div>

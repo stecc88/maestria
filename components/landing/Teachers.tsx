@@ -61,7 +61,7 @@ export default function Teachers() {
 
             <div className="pt-6">
               <Link href="/register">
-                <Button className="bg-primary hover:bg-primary-dark text-white text-lg px-10 py-8 h-auto rounded-[1.5rem] font-black uppercase tracking-widest transition-all shadow-2xl shadow-primary/20 group border-none">
+                <Button className="bg-primary hover:bg-primary-dark text-white text-lg px-10 py-8 h-auto rounded-3xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-primary/20 group border-none">
                   <span className="relative z-10 flex items-center gap-3">
                     DIVENTA UN DOCENTE <ArrowRight className="h-5 w-5" />
                   </span>
@@ -76,7 +76,7 @@ export default function Teachers() {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-[3rem] p-10 border border-white/10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] overflow-hidden group">
+            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-10 border border-white/10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] overflow-hidden group">
                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
                <div className="relative z-10 space-y-10">
@@ -95,17 +95,17 @@ export default function Teachers() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
-                    <div className="h-32 bg-white/5 rounded-[1.5rem] border border-white/5 p-6 space-y-4">
+                    <div className="h-32 bg-white/5 rounded-3xl border border-white/5 p-6 space-y-4">
                        <div className="h-2 w-12 bg-primary/40 rounded-full" />
                        <div className="h-8 w-20 bg-white/10 rounded-lg" />
                     </div>
-                    <div className="h-32 bg-white/5 rounded-[1.5rem] border border-white/5 p-6 space-y-4">
+                    <div className="h-32 bg-white/5 rounded-3xl border border-white/5 p-6 space-y-4">
                        <div className="h-2 w-12 bg-blue-500/40 rounded-full" />
                        <div className="h-8 w-20 bg-white/10 rounded-lg" />
                     </div>
                   </div>
 
-                  <div className="h-48 bg-white/5 rounded-[2rem] border border-white/5 p-8 flex items-center justify-center">
+                  <div className="h-48 bg-white/5 rounded-3xl border border-white/5 p-8 flex items-center justify-center">
                      <div className="text-center space-y-3">
                         <Users className="h-10 w-10 text-muted-foreground mx-auto" />
                         <p className="text-xs font-black text-muted-foreground tracking-[0.2em] uppercase">Monitoraggio Attivo</p>

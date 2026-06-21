@@ -64,7 +64,7 @@ export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-card p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-50 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group"
+        className="bg-card p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-border flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden group"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-white to-accent/5 opacity-50" />
 
@@ -103,7 +103,7 @@ export function TeacherStats({ stats, teacherCode }: TeacherStatsProps) {
             transition={{ delay: i * 0.1 }}
             whileHover={{ y: -5 }}
           >
-            <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-[2rem] hover:shadow-2xl transition-all duration-500">
+            <Card className="group relative overflow-hidden border-none shadow-xl shadow-gray-200/50 bg-card rounded-3xl hover:shadow-2xl transition-all duration-500">
               <div className={cn("absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity", item.gradient)} />
               <CardContent className="p-8">
                 <div className={cn("p-4 rounded-2xl w-fit mb-6 transition-all duration-500 group-hover:rotate-6 shadow-inner", item.bg, item.color)}>

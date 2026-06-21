@@ -16,7 +16,7 @@ export function ClassRanking({ students, teacherName, userId }: ClassRankingProp
   const myPosition = myIndex + 1
 
   return (
-    <Card className="bg-white/[0.02] border-white/5 text-white shadow-2xl rounded-[2rem] overflow-hidden">
+    <Card className="bg-white/[0.02] border-white/5 text-white shadow-2xl rounded-3xl overflow-hidden">
       <CardContent className="p-8 space-y-8">
         <div className="flex items-center justify-between border-b border-white/5 pb-6">
           <div className="flex items-center gap-3">

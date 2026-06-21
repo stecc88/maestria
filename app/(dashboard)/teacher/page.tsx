@@ -92,7 +92,7 @@ export default async function TeacherDashboard() {
               Gestisci la tua classe, monitora i progressi e genera nuove sfide per i tuoi studenti.
             </p>
           </div>
-          <div className="flex items-center gap-4 p-5 bg-card rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-50 group hover:scale-105 transition-transform duration-300">
+          <div className="flex items-center gap-4 p-5 bg-card rounded-3xl shadow-xl shadow-gray-200/50 border border-border group hover:scale-105 transition-transform duration-300">
             <div className="p-3 bg-primary/10 rounded-2xl group-hover:rotate-12 transition-transform">
               <Users className="h-6 w-6 text-primary" />
             </div>
@@ -117,8 +117,8 @@ export default async function TeacherDashboard() {
           <div className="lg:col-span-8 space-y-10">
             <ActivityBarChart data={activityData} />
 
-            <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-[2rem] group">
-              <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-8 bg-gradient-to-r from-white to-gray-50/30">
+            <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group">
+              <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-8 bg-gradient-to-r from-white to-gray-50/30">
                 <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-3">
                   <div className="p-1.5 bg-primary/10 rounded-lg group-hover:rotate-12 transition-transform">
                     <Users className="h-4 w-4 text-primary" />
@@ -135,7 +135,7 @@ export default async function TeacherDashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left">
                     <thead>
-                      <tr className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] border-b border-gray-50 bg-gray-50/20">
+                      <tr className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] border-b border-border bg-gray-50/20">
                         <th className="px-8 py-5">Studente</th>
                         <th className="px-8 py-5">Livello</th>
                         <th className="px-8 py-5">Ultimo Accesso</th>
@@ -197,8 +197,8 @@ export default async function TeacherDashboard() {
           </div>
 
           <div className="lg:col-span-4 space-y-10">
-             <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-[2rem] group">
-               <CardHeader className="pb-4 border-b border-gray-50 flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/30">
+             <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group">
+               <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/30">
                  <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
                    <div className="p-1.5 bg-accent/10 rounded-lg group-hover:rotate-12 transition-transform">
                      <Bell className="h-3.5 w-3.5 text-accent" />
@@ -235,7 +235,7 @@ export default async function TeacherDashboard() {
                </CardContent>
              </Card>
 
-             <Card className="border-none shadow-2xl shadow-primary/20 bg-gray-900 text-white overflow-hidden rounded-[2.5rem] relative group">
+             <Card className="border-none shadow-2xl shadow-primary/20 bg-gray-900 text-white overflow-hidden rounded-3xl relative group">
                 <div className="absolute -top-10 -right-10 p-6 opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700">
                   <Sparkles className="h-40 w-40" />
                 </div>

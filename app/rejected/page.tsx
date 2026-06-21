@@ -21,11 +21,11 @@ export default function RejectedPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-xl w-full bg-card rounded-[3rem] shadow-2xl shadow-gray-200/50 p-10 md:p-16 text-center border border-gray-50 relative"
+        className="max-w-xl w-full bg-card rounded-3xl shadow-2xl shadow-gray-200/50 p-10 md:p-16 text-center border border-border relative"
       >
         <div className="flex justify-center mb-10">
           <div className="relative">
-            <div className="w-24 h-24 bg-secondary/10 rounded-[2rem] flex items-center justify-center border-2 border-secondary/20">
+            <div className="w-24 h-24 bg-secondary/10 rounded-3xl flex items-center justify-center border-2 border-secondary/20">
               <XCircle className="w-10 h-10 text-secondary" />
             </div>
             <motion.div
@@ -53,7 +53,7 @@ export default function RejectedPage() {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="p-8 bg-muted rounded-[2rem] border-2 border-border mb-10 text-left relative overflow-hidden"
+          className="p-8 bg-muted rounded-3xl border-2 border-border mb-10 text-left relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5">
              <AlertCircle className="h-20 w-20 text-foreground" />

@@ -129,7 +129,7 @@ export default function GuidesPage() {
         {/* Sidebar Filters */}
         <aside className="w-full lg:w-64 space-y-8 shrink-0">
           <div className="bg-card p-6 rounded-2xl border border-border shadow-sm space-y-6">
-            <div className="flex items-center gap-2 font-bold text-foreground border-b border-gray-50 pb-4">
+            <div className="flex items-center gap-2 font-bold text-foreground border-b border-border pb-4">
               <Filter className="h-4 w-4 text-primary" />
               <span>Filtri</span>
             </div>

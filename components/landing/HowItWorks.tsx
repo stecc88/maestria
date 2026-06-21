@@ -87,7 +87,7 @@ export function HowItWorks() {
               transition={{ delay: i * 0.1 }}
               className="relative z-10"
             >
-              <div className="group bg-card p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white hover:border-primary/20 transition-all duration-500 h-full">
+              <div className="group bg-card p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-white hover:border-primary/20 transition-all duration-500 h-full">
                 <div className="flex items-center gap-4 mb-8">
                   <div className={`w-14 h-14 ${step.bg} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner`}>
                     <step.icon className={`w-7 h-7 ${step.color}`} />
