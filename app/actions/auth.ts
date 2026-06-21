@@ -176,6 +176,36 @@ export async function validateTeacherCode(code: string) {
   }
 }
 
+export async function joinTeacherWithCode(code: string) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: "Non autorizzato" }
+
+  const adminSupabase = createAdminClient()
+
+  const { data: teacher } = await adminSupabase
+    .from('teachers')
+    .select('id, profiles(full_name)')
+    .ilike('teacher_code', code.trim())
+    .single()
+
+  if (!teacher) {
+    return { success: false, error: "Codice insegnante non valido" }
+  }
+
+  const { error } = await adminSupabase
+    .from('students')
+    .update({ teacher_id: teacher.id, teacher_code_used: code.trim() })
+    .eq('id', user.id)
+
+  if (error) {
+    return { success: false, error: "Errore durante l'iscrizione alla classe" }
+  }
+
+  const teacherProfile = Array.isArray(teacher.profiles) ? teacher.profiles[0] : teacher.profiles
+  return { success: true, teacherName: teacherProfile?.full_name || "Insegnante" }
+}
+
 export async function resendVerificationEmail(email: string) {
   const supabase = createClient()
   const { error } = await supabase.auth.resend({
