@@ -11,8 +11,6 @@ import {
   ClipboardList,
   Clock,
   CheckCircle2,
-  Calendar,
-  ChevronRight,
   User,
   ExternalLink,
   Sparkles,

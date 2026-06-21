@@ -7,11 +7,7 @@ import { Button } from "@/components/ui/button"
 import {
   ChevronLeft,
   Calendar,
-  Clock,
-  Mail,
-  TrendingUp,
-  Target,
-  FileText
+  Mail
 } from "lucide-react"
 import Link from "next/link"
 import { EvolutionChart } from "@/components/student/EvolutionChart"
@@ -82,8 +78,6 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
        })
     }
   })
-
-  const mostFrequentError = Object.entries(errorStats).sort((a, b) => b[1] - a[1])[0]?.[0] || ""
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">

@@ -13,9 +13,7 @@ import {
   Check,
   CheckCircle2,
   XCircle,
-  ArrowLeft,
   Sparkles,
-  ShieldCheck,
   ChevronRight
 } from "lucide-react"
 

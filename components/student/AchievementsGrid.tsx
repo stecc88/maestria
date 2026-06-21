@@ -5,14 +5,6 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
-interface Achievement {
-  id: string
-  title: string
-  icon: string
-  description: string
-  unlocked: boolean
-}
-
 const ALL_ACHIEVEMENTS = [
   { id: 'first_step', title: 'Primo passo', icon: '🎯', description: 'Inviato il primo testo' },
   { id: 'on_fire', title: 'In fiamme', icon: '🔥', description: '7 giorni di striscia' },

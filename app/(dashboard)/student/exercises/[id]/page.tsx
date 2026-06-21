@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ChevronLeft,
-  GraduationCap,
   Sparkles,
   BookOpen,
   ChevronDown,

@@ -14,7 +14,6 @@ import {
   Sparkles,
   Info,
   Clock,
-  Save,
   CheckCircle2
 } from "lucide-react"
 import { Card } from "@/components/ui/card"

@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import {
   ChevronRight,
   Bell,
-  Clock,
   Users,
   Calendar,
   Sparkles,

@@ -5,13 +5,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
-  BookOpen,
   ListChecks,
   Lightbulb,
   AlertTriangle,
   PenLine,
-  ArrowRight,
-  ClipboardList
+  ArrowRight
 } from "lucide-react"
 import { GuideContent } from "@/lib/constants/guides"
 import Link from "next/link"
