@@ -4,6 +4,7 @@ import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { correctionSchema } from "@/lib/validations/ai"
 import { calculateXpForCorrection } from "@/lib/utils/xp"
 import { refreshStudentAchievements } from "@/lib/utils/achievements"
+import { calculateNewStreak } from "@/lib/utils/streak"
 
 export async function POST(request: Request) {
   try {
@@ -156,12 +157,22 @@ Rispondi UNICAMENTE con JSON valido senza markdown, senza testo aggiuntivo, esat
       return Response.json({ error: "Errore durante il salvataggio della correzione" }, { status: 500 })
     }
 
+    // Leer streak y última actividad actuales para calcular la racha real
+    const { data: studentBefore } = await adminSupabase
+      .from("students")
+      .select("streak_days, last_activity")
+      .eq("id", user.id)
+      .single()
+
+    const newStreak = calculateNewStreak(studentBefore?.last_activity || null, studentBefore?.streak_days || 0)
+
     // Actualizar XP del alumno
     await adminSupabase
       .from("students")
       .update({
         current_level: correction.detected_level,
-        last_activity: new Date().toISOString()
+        last_activity: new Date().toISOString(),
+        streak_days: newStreak
       })
       .eq("id", user.id)
 

@@ -5,6 +5,7 @@ import { validateAiResponse, fetchGeminiWithRetry } from "@/lib/gemini/client"
 import { taskEvaluationSchema } from "@/lib/validations/ai"
 import { calculateXpForTask } from "@/lib/utils/xp"
 import { refreshStudentAchievements } from "@/lib/utils/achievements"
+import { calculateNewStreak } from "@/lib/utils/streak"
 
 export async function POST(request: Request) {
   const supabase = createClient()
@@ -136,6 +137,23 @@ Rispondi UNICAMENTE con JSON valido senza markdown: { "score": number, "feedback
       student_id: user.id,
       xp_amount: xpEarned
     })
+
+    // 5b. Actualizar racha y última actividad (completar una tarea también cuenta)
+    const { data: studentBefore } = await adminSupabase
+      .from("students")
+      .select("streak_days, last_activity")
+      .eq("id", user.id)
+      .single()
+
+    const newStreak = calculateNewStreak(studentBefore?.last_activity || null, studentBefore?.streak_days || 0)
+
+    await adminSupabase
+      .from("students")
+      .update({
+        last_activity: new Date().toISOString(),
+        streak_days: newStreak
+      })
+      .eq("id", user.id)
 
     // 6. Notify Teacher
     const studentName = Array.isArray(task.students)
