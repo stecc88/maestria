@@ -70,39 +70,25 @@ export default async function TeacherDashboard() {
   const teacherFirstName = profile?.full_name?.split(' ')[0] || "Professore";
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background Decorations */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute top-[20%] -left-[10%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-[100px]" />
-        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-secondary/5 rounded-full blur-[150px]" />
-      </div>
+    // Sin blobs decorativos fixed/blur: la pantalla ya tiene chart +
+    // tabla + notificaciones compitiendo por atención, no necesita más capas.
+    <div className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6 lg:px-8">
+      {/* Header simple: una sola jerarquía tipográfica (el saludo), el resto
+          en texto normal. El código de clase ya vive en TeacherStats — no
+          duplicarlo acá arriba en su propia card grande. */}
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight flex items-center gap-2">
+            <GraduationCap className="h-6 w-6 text-primary" />
+            Bentornato, Prof. {teacherFirstName} 👋
+          </h1>
+          <p className="text-muted-foreground">
+            Gestisci la tua classe, monitora i progressi e genera nuove sfide per i tuoi studenti.
+          </p>
+        </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto space-y-10 py-8 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-3 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20">
-              <GraduationCap className="h-5 w-5" />
-              <span className="text-xs font-black uppercase tracking-[0.2em]">Pannello Docente</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
-              Bentornato, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prof. {teacherFirstName}</span> 👋
-            </h1>
-            <p className="text-muted-foreground font-bold text-lg max-w-2xl leading-relaxed">
-              Gestisci la tua classe, monitora i progressi e genera nuove sfide per i tuoi studenti.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 p-5 bg-card rounded-3xl shadow-xl shadow-gray-200/50 border border-border group hover:scale-105 transition-transform duration-300">
-            <div className="p-3 bg-primary/10 rounded-2xl group-hover:rotate-12 transition-transform">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Codice Classe</p>
-              <p className="text-2xl font-black text-primary font-display">{teacher.teacher_code}</p>
-            </div>
-          </div>
-        </header>
-
+      <div className="space-y-6">
         <TeacherStats
           stats={{
             activeStudents: activeThisWeek,
@@ -113,8 +99,8 @@ export default async function TeacherDashboard() {
           teacherCode={teacher.teacher_code}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-8 space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-8 space-y-6">
             <ActivityBarChart data={activityData} />
 
             <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group">
@@ -196,7 +182,7 @@ export default async function TeacherDashboard() {
             </Card>
           </div>
 
-          <div className="lg:col-span-4 space-y-10">
+          <div className="lg:col-span-4 space-y-6">
              <Card className="border-none shadow-xl shadow-gray-200/50 bg-card overflow-hidden rounded-3xl group">
                <CardHeader className="pb-4 border-b border-border flex flex-row items-center justify-between px-6 bg-gradient-to-r from-white to-gray-50/30">
                  <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2.5">
